@@ -9,6 +9,7 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .fontDesign(.rounded)
+                .padding(10)
             GameView()
         }
     }
@@ -17,19 +18,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-    }
-}
-
-struct GameView: NSViewRepresentable {
-    func updateNSView(_ nsView: MTKView, context: Context) {
-        print("Hi")
-    }
-    
-    func makeNSView(context: Context) -> MTKView {
-        let mtkView = MTKView()
-        
-        mtkView.device = MTLCreateSystemDefaultDevice()
-        
-        return mtkView
     }
 }

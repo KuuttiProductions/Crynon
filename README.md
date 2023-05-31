@@ -1,6 +1,9 @@
 # Metal-Engine-13
-This is a engine made in Metal by KudeKube
 
+##About
+This is a game-engine made in Swift/Metal by KudeKube.
+
+##Plans
 Initial plans are 3D rendering with semi-advanced shading and gameloop systems.
 Upgrades from Metal-Test-12 are as such:
 - Much more robust rendering system.
