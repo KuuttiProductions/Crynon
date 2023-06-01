@@ -21,13 +21,12 @@ extension Renderer: MTKViewDelegate {
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
-        renderCommandEncoder?.setRenderPipelineState(s.pipeline)
+        renderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
         renderCommandEncoder?.setVertexBuffer(s.vertexBuffer, offset: 0, index: 0)
         renderCommandEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: s.vertices.count)
         renderCommandEncoder?.endEncoding()
         
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
-        print("##")
     }
 }
