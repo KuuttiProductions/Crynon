@@ -16,6 +16,7 @@
 		513C1F4A2A28E064003155B0 /* GPLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F492A28E064003155B0 /* GPLibrary.swift */; };
 		513C1F4C2A28E32D003155B0 /* VertexShaderLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4B2A28E32D003155B0 /* VertexShaderLibrary.swift */; };
 		513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */; };
+		513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */; };
 		5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8A12A23AD0F00F02654 /* ContentView.swift */; };
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
@@ -34,6 +35,7 @@
 		513C1F492A28E064003155B0 /* GPLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPLibrary.swift; sourceTree = "<group>"; };
 		513C1F4B2A28E32D003155B0 /* VertexShaderLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexShaderLibrary.swift; sourceTree = "<group>"; };
 		513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FragmentShaderLibrary.swift; sourceTree = "<group>"; };
+		513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexDescriptorLibrary.swift; sourceTree = "<group>"; };
 		5148D89C2A23AD0F00F02654 /* Metal Engine#13.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Engine#13.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5148D8A12A23AD0F00F02654 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5148D8A32A23AD1000F02654 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				513C1F472A28DBBB003155B0 /* RenderPipelineStateLibrary.swift */,
 				513C1F4B2A28E32D003155B0 /* VertexShaderLibrary.swift */,
 				513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */,
+				513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */,
 			);
 			path = Libraries;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 				511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */,
 				513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */,
 				513C1F4A2A28E064003155B0 /* GPLibrary.swift in Sources */,
+				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
 				51978FFF2A2504E600F87A20 /* Core.swift in Sources */,
 				513C1F482A28DBBB003155B0 /* RenderPipelineStateLibrary.swift in Sources */,
@@ -370,7 +374,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -383,7 +387,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "KudeKube-Studios.Metal-Engine-13";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -402,7 +406,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -415,7 +419,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "KudeKube-Studios.Metal-Engine-13";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

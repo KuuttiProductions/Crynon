@@ -37,6 +37,7 @@ class Basic_RenderPipelineState: RenderPipelineState {
         descriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Basic]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Basic]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         create()
     }
 }

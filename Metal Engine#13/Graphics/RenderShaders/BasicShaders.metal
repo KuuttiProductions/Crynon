@@ -9,8 +9,8 @@
 using namespace metal;
 
 struct VertexIn {
-    float3 position;
-    float4 color;
+    float3 position [[ attribute(0) ]];
+    float4 color [[ attribute(1) ]];
 };
 
 struct VertexOut {
@@ -18,12 +18,12 @@ struct VertexOut {
     float4 color;
 };
 
-vertex VertexOut basic_vertex(constant VertexIn *VerIn [[ buffer(0) ]],
+vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
                            uint verID [[ vertex_id ]]) {
     
     VertexOut VerOut;
-    VerOut.position = float4(VerIn[verID].position, 1);
-    VerOut.color = VerIn[verID].color;
+    VerOut.position = float4(VerIn.position, 1);
+    VerOut.color = VerIn.color;
     
     return VerOut;
 }
