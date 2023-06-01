@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		511B6C032A27A75E0067AEBF /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C022A27A75E0067AEBF /* Main.swift */; };
+		511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C042A27A9C70067AEBF /* MetalTypes.swift */; };
+		511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C062A27AA530067AEBF /* BasicShaders.metal */; };
+		513C1F3E2A28A71E003155B0 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F3D2A28A71E003155B0 /* test.swift */; };
 		5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8A12A23AD0F00F02654 /* ContentView.swift */; };
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
@@ -18,6 +21,9 @@
 
 /* Begin PBXFileReference section */
 		511B6C022A27A75E0067AEBF /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		511B6C042A27A9C70067AEBF /* MetalTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalTypes.swift; sourceTree = "<group>"; };
+		511B6C062A27AA530067AEBF /* BasicShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BasicShaders.metal; sourceTree = "<group>"; };
+		513C1F3D2A28A71E003155B0 /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
 		5148D89C2A23AD0F00F02654 /* Metal Engine#13.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Engine#13.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5148D8A12A23AD0F00F02654 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5148D8A32A23AD1000F02654 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -43,6 +49,7 @@
 			isa = PBXGroup;
 			children = (
 				51978FFE2A2504E600F87A20 /* Core.swift */,
+				511B6C042A27A9C70067AEBF /* MetalTypes.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -71,9 +78,11 @@
 				519790002A25065900F87A20 /* GameView.swift */,
 				511B6C022A27A75E0067AEBF /* Main.swift */,
 				5148D8AE2A23B7C100F02654 /* Renderer.swift */,
+				511B6C062A27AA530067AEBF /* BasicShaders.metal */,
 				5148D8A32A23AD1000F02654 /* Assets.xcassets */,
 				5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */,
 				5148D8A52A23AD1000F02654 /* Preview Content */,
+				513C1F3D2A28A71E003155B0 /* test.swift */,
 			);
 			path = "Metal Engine#13";
 			sourceTree = "<group>";
@@ -157,8 +166,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */,
+				511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
 				51978FFF2A2504E600F87A20 /* Core.swift in Sources */,
+				511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */,
+				513C1F3E2A28A71E003155B0 /* test.swift in Sources */,
 				519790012A25065900F87A20 /* GameView.swift in Sources */,
 				511B6C032A27A75E0067AEBF /* Main.swift in Sources */,
 			);
