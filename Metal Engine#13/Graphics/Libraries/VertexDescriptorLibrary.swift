@@ -38,6 +38,16 @@ class Basic_VertexDescriptor: VertexDescriptor {
         descriptor.attributes[1].offset = totalOffset
         totalOffset += simd_float4.stride
         
+        descriptor.attributes[2].format = .float2
+        descriptor.attributes[2].bufferIndex = 0
+        descriptor.attributes[2].offset = totalOffset
+        totalOffset += simd_float3.stride
+        
+        descriptor.attributes[3].format = .float3
+        descriptor.attributes[3].bufferIndex = 0
+        descriptor.attributes[3].offset = totalOffset
+        totalOffset += simd_float3.stride
+        
         descriptor.layouts[0].stride = Vertex.stride
     }
 }

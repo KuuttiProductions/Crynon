@@ -1,6 +1,7 @@
 
 import MetalKit
 
+//Actual core
 class Renderer: NSObject {
     
     var s: Mesh!
@@ -11,6 +12,7 @@ class Renderer: NSObject {
     }
 }
 
+//"Renderer"
 extension Renderer: MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         

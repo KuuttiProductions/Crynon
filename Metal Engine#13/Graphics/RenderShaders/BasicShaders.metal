@@ -6,17 +6,8 @@
 //
 
 #include <metal_stdlib>
+#include "Shared.metal"
 using namespace metal;
-
-struct VertexIn {
-    float3 position [[ attribute(0) ]];
-    float4 color [[ attribute(1) ]];
-};
-
-struct VertexOut {
-    float4 position [[ position ]];
-    float4 color;
-};
 
 vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
                            uint verID [[ vertex_id ]]) {

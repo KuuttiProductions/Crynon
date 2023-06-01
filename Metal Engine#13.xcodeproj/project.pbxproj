@@ -18,6 +18,8 @@
 		513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */; };
 		513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */; };
 		513C1F532A28F23C003155B0 /* AssetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F522A28F23C003155B0 /* AssetLibrary.swift */; };
+		513C1F562A28FA9E003155B0 /* Shared.metal in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F552A28FA9E003155B0 /* Shared.metal */; };
+		513C1F582A28FBD4003155B0 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F572A28FBD4003155B0 /* Preferences.swift */; };
 		5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8A12A23AD0F00F02654 /* ContentView.swift */; };
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
@@ -38,6 +40,8 @@
 		513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FragmentShaderLibrary.swift; sourceTree = "<group>"; };
 		513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexDescriptorLibrary.swift; sourceTree = "<group>"; };
 		513C1F522A28F23C003155B0 /* AssetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLibrary.swift; sourceTree = "<group>"; };
+		513C1F552A28FA9E003155B0 /* Shared.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shared.metal; sourceTree = "<group>"; };
+		513C1F572A28FBD4003155B0 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		5148D89C2A23AD0F00F02654 /* Metal Engine#13.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Engine#13.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5148D8A12A23AD0F00F02654 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5148D8A32A23AD1000F02654 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -63,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				51978FFE2A2504E600F87A20 /* Core.swift */,
+				513C1F572A28FBD4003155B0 /* Preferences.swift */,
 				513C1F462A28DB92003155B0 /* Types */,
 			);
 			path = Core;
@@ -111,6 +116,7 @@
 		513C1F432A28D768003155B0 /* RenderShaders */ = {
 			isa = PBXGroup;
 			children = (
+				513C1F552A28FA9E003155B0 /* Shared.metal */,
 				511B6C062A27AA530067AEBF /* BasicShaders.metal */,
 			);
 			path = RenderShaders;
@@ -254,6 +260,8 @@
 				511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */,
 				513C1F532A28F23C003155B0 /* AssetLibrary.swift in Sources */,
 				513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */,
+				513C1F582A28FBD4003155B0 /* Preferences.swift in Sources */,
+				513C1F562A28FA9E003155B0 /* Shared.metal in Sources */,
 				513C1F4A2A28E064003155B0 /* GPLibrary.swift in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
@@ -394,13 +402,13 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Metal Engine 13";
+				INFOPLIST_KEY_CFBundleDisplayName = "Metal-Engine-13";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -426,13 +434,13 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Metal Engine 13";
+				INFOPLIST_KEY_CFBundleDisplayName = "Metal-Engine-13";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (

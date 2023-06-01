@@ -29,8 +29,11 @@ extension simd_float2: sizeable {}
 extension simd_float3: sizeable {}
 extension simd_float4: sizeable {}
 
-//Types that are used with Metal
+//===== Types that are used with Metal =====
+
 struct Vertex: sizeable {
-    var position: simd_float3
-    var color: simd_float4
+    var position: simd_float3 = simd_float3(0,0,0)
+    var color: simd_float4 = simd_float4(0,0,0,0)
+    var textureCoordinate: simd_float2 = simd_float2(0,0)
+    var normal: simd_float3 = simd_float3(0,0,0)
 }

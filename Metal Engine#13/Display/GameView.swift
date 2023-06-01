@@ -4,8 +4,12 @@ import SwiftUI
 
 struct GameView: NSViewRepresentable {
     
-    func updateNSView(_ nsView: MTKView, context: Context) {}
+    func updateNSView(_ nsView: MTKView, context: Context) {
+        context.coordinator.mtkView(nsView, drawableSizeWillChange: nsView.drawableSize)
+    }
     
+    //Make Renderer class
+    //Called ´coordinator´ for some reason
     func makeCoordinator() -> Renderer {
         return Renderer()
     }
@@ -19,8 +23,8 @@ struct GameView: NSViewRepresentable {
         
         mtkView.delegate = context.coordinator
         
-        mtkView.colorPixelFormat = .bgra8Unorm_srgb
-        mtkView.clearColor = MTLClearColor(red: 0.0, green: 0.1, blue: 0.7, alpha: 1.0)
+        mtkView.colorPixelFormat = Preferences.pixelFormat
+        mtkView.clearColor = Preferences.clearColor
 
         return mtkView
     }

@@ -1,4 +1,5 @@
 
+//Used for accessing Graphics libraries
 class GPLibrary {
     
     private static var _vertexShaderLibrary: VertexShaderLibrary!
