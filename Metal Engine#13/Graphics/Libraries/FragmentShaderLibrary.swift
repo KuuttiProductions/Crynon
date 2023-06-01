@@ -10,7 +10,7 @@ class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
     var library: [FragmentShaderType : FragmentShader] = [:]
     
     override func fillLibrary() {
-        library.updateValue(FragmentShader("basic_fragment"), forKey: .Basic)
+        library.updateValue(FragmentShader("basic_fragment", "Basic Fragment Function"), forKey: .Basic)
     }
     
     override subscript(type: FragmentShaderType) -> MTLFunction! {
@@ -20,7 +20,8 @@ class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
 
 class FragmentShader {
     var function: MTLFunction!
-    init(_ name: String) {
+    init(_ name: String, _ label: String = "") {
         function = Core.defaultLibrary.makeFunction(name: name)
+        function.label = label
     }
 }

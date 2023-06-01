@@ -24,5 +24,6 @@ class test {
     
     func makeBuffer() {
         vertexBuffer = Core.device.makeBuffer(bytes: vertices, length: Vertex.stride * vertices.count)!
+        vertexBuffer.label = "MeshBuffer"
     }
 }

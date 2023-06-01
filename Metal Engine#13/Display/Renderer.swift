@@ -20,11 +20,13 @@ extension Renderer: MTKViewDelegate {
         guard let drawable = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
-        let renderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
-        renderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
-        renderCommandEncoder?.setVertexBuffer(s.vertexBuffer, offset: 0, index: 0)
-        renderCommandEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: s.vertices.count)
-        renderCommandEncoder?.endEncoding()
+        commandBuffer?.label = "Main CommandBuffer"
+        let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
+        baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
+        baseRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
+        baseRenderCommandEncoder?.setVertexBuffer(s.vertexBuffer, offset: 0, index: 0)
+        baseRenderCommandEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: s.vertices.count)
+        baseRenderCommandEncoder?.endEncoding()
         
         commandBuffer?.present(drawable)
         commandBuffer?.commit()

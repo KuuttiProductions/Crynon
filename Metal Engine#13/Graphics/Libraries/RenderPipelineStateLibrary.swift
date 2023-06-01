@@ -38,6 +38,7 @@ class Basic_RenderPipelineState: RenderPipelineState {
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Basic]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Basic]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "Basic RenderPipelineState"
         create()
     }
 }
