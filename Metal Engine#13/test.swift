@@ -23,7 +23,7 @@ class test {
     var pipeline: MTLRenderPipelineState!
     
     func makeBuffer() {
-        vertexBuffer = Core.device.makeBuffer(bytes: vertices, length: MemoryLayout<Vertex>.stride * vertices.count)!
+        vertexBuffer = Core.device.makeBuffer(bytes: vertices, length: Vertex.stride * vertices.count)!
     }
     
     func makePipeline() {
