@@ -3,11 +3,11 @@ import MetalKit
 
 class Renderer: NSObject {
     
-    var s: test!
+    var s: Mesh!
     
     override init() {
         Core.initialize(device: MTLCreateSystemDefaultDevice())
-        s = test()
+        s = Triangle_Mesh()
     }
 }
 
@@ -24,8 +24,7 @@ extension Renderer: MTKViewDelegate {
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
         baseRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
-        baseRenderCommandEncoder?.setVertexBuffer(s.vertexBuffer, offset: 0, index: 0)
-        baseRenderCommandEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: s.vertices.count)
+        s.draw(renderCommandEncoder: baseRenderCommandEncoder)
         baseRenderCommandEncoder?.endEncoding()
         
         commandBuffer?.present(drawable)

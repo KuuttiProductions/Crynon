@@ -10,13 +10,14 @@
 		511B6C032A27A75E0067AEBF /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C022A27A75E0067AEBF /* Main.swift */; };
 		511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C042A27A9C70067AEBF /* MetalTypes.swift */; };
 		511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C062A27AA530067AEBF /* BasicShaders.metal */; };
-		513C1F3E2A28A71E003155B0 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F3D2A28A71E003155B0 /* test.swift */; };
+		513C1F3E2A28A71E003155B0 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F3D2A28A71E003155B0 /* Mesh.swift */; };
 		513C1F452A28D972003155B0 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F442A28D972003155B0 /* Library.swift */; };
 		513C1F482A28DBBB003155B0 /* RenderPipelineStateLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F472A28DBBB003155B0 /* RenderPipelineStateLibrary.swift */; };
 		513C1F4A2A28E064003155B0 /* GPLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F492A28E064003155B0 /* GPLibrary.swift */; };
 		513C1F4C2A28E32D003155B0 /* VertexShaderLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4B2A28E32D003155B0 /* VertexShaderLibrary.swift */; };
 		513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */; };
 		513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */; };
+		513C1F532A28F23C003155B0 /* AssetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F522A28F23C003155B0 /* AssetLibrary.swift */; };
 		5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8A12A23AD0F00F02654 /* ContentView.swift */; };
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
@@ -29,13 +30,14 @@
 		511B6C022A27A75E0067AEBF /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		511B6C042A27A9C70067AEBF /* MetalTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalTypes.swift; sourceTree = "<group>"; };
 		511B6C062A27AA530067AEBF /* BasicShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BasicShaders.metal; sourceTree = "<group>"; };
-		513C1F3D2A28A71E003155B0 /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
+		513C1F3D2A28A71E003155B0 /* Mesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mesh.swift; sourceTree = "<group>"; };
 		513C1F442A28D972003155B0 /* Library.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
 		513C1F472A28DBBB003155B0 /* RenderPipelineStateLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderPipelineStateLibrary.swift; sourceTree = "<group>"; };
 		513C1F492A28E064003155B0 /* GPLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPLibrary.swift; sourceTree = "<group>"; };
 		513C1F4B2A28E32D003155B0 /* VertexShaderLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexShaderLibrary.swift; sourceTree = "<group>"; };
 		513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FragmentShaderLibrary.swift; sourceTree = "<group>"; };
 		513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexDescriptorLibrary.swift; sourceTree = "<group>"; };
+		513C1F522A28F23C003155B0 /* AssetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLibrary.swift; sourceTree = "<group>"; };
 		5148D89C2A23AD0F00F02654 /* Metal Engine#13.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Engine#13.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5148D8A12A23AD0F00F02654 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5148D8A32A23AD1000F02654 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -99,9 +101,9 @@
 			isa = PBXGroup;
 			children = (
 				513C1F472A28DBBB003155B0 /* RenderPipelineStateLibrary.swift */,
+				513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */,
 				513C1F4B2A28E32D003155B0 /* VertexShaderLibrary.swift */,
 				513C1F4D2A28E97A003155B0 /* FragmentShaderLibrary.swift */,
-				513C1F4F2A28EBCF003155B0 /* VertexDescriptorLibrary.swift */,
 			);
 			path = Libraries;
 			sourceTree = "<group>";
@@ -121,6 +123,23 @@
 				513C1F442A28D972003155B0 /* Library.swift */,
 			);
 			path = Types;
+			sourceTree = "<group>";
+		};
+		513C1F512A28F208003155B0 /* GameAssets */ = {
+			isa = PBXGroup;
+			children = (
+				513C1F542A28F50F003155B0 /* AssetLibrary */,
+				513C1F3D2A28A71E003155B0 /* Mesh.swift */,
+			);
+			path = GameAssets;
+			sourceTree = "<group>";
+		};
+		513C1F542A28F50F003155B0 /* AssetLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				513C1F522A28F23C003155B0 /* AssetLibrary.swift */,
+			);
+			path = AssetLibrary;
 			sourceTree = "<group>";
 		};
 		5148D8932A23AD0F00F02654 = {
@@ -143,9 +162,9 @@
 			isa = PBXGroup;
 			children = (
 				511B6C012A27A7270067AEBF /* Core */,
+				513C1F512A28F208003155B0 /* GameAssets */,
 				513C1F412A28D742003155B0 /* Graphics */,
 				513C1F3F2A28D623003155B0 /* Display */,
-				513C1F3D2A28A71E003155B0 /* test.swift */,
 				5148D8A32A23AD1000F02654 /* Assets.xcassets */,
 				513C1F402A28D651003155B0 /* OtherFiles */,
 				5148D8A52A23AD1000F02654 /* Preview Content */,
@@ -233,6 +252,7 @@
 			files = (
 				5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */,
 				511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */,
+				513C1F532A28F23C003155B0 /* AssetLibrary.swift in Sources */,
 				513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */,
 				513C1F4A2A28E064003155B0 /* GPLibrary.swift in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
@@ -241,7 +261,7 @@
 				513C1F482A28DBBB003155B0 /* RenderPipelineStateLibrary.swift in Sources */,
 				513C1F4C2A28E32D003155B0 /* VertexShaderLibrary.swift in Sources */,
 				511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */,
-				513C1F3E2A28A71E003155B0 /* test.swift in Sources */,
+				513C1F3E2A28A71E003155B0 /* Mesh.swift in Sources */,
 				519790012A25065900F87A20 /* GameView.swift in Sources */,
 				511B6C032A27A75E0067AEBF /* Main.swift in Sources */,
 				513C1F452A28D972003155B0 /* Library.swift in Sources */,
@@ -374,7 +394,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -406,7 +426,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
