@@ -54,6 +54,49 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
+		513C1F3F2A28D623003155B0 /* Display */ = {
+			isa = PBXGroup;
+			children = (
+				5148D8A12A23AD0F00F02654 /* ContentView.swift */,
+				519790002A25065900F87A20 /* GameView.swift */,
+				511B6C022A27A75E0067AEBF /* Main.swift */,
+				5148D8AE2A23B7C100F02654 /* Renderer.swift */,
+			);
+			path = Display;
+			sourceTree = "<group>";
+		};
+		513C1F402A28D651003155B0 /* OtherFiles */ = {
+			isa = PBXGroup;
+			children = (
+				5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */,
+			);
+			path = OtherFiles;
+			sourceTree = "<group>";
+		};
+		513C1F412A28D742003155B0 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				513C1F432A28D768003155B0 /* RenderShaders */,
+				513C1F422A28D75F003155B0 /* Libraries */,
+			);
+			path = Graphics;
+			sourceTree = "<group>";
+		};
+		513C1F422A28D75F003155B0 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+		513C1F432A28D768003155B0 /* RenderShaders */ = {
+			isa = PBXGroup;
+			children = (
+				511B6C062A27AA530067AEBF /* BasicShaders.metal */,
+			);
+			path = RenderShaders;
+			sourceTree = "<group>";
+		};
 		5148D8932A23AD0F00F02654 = {
 			isa = PBXGroup;
 			children = (
@@ -74,14 +117,11 @@
 			isa = PBXGroup;
 			children = (
 				511B6C012A27A7270067AEBF /* Core */,
-				5148D8A12A23AD0F00F02654 /* ContentView.swift */,
-				519790002A25065900F87A20 /* GameView.swift */,
-				511B6C022A27A75E0067AEBF /* Main.swift */,
-				5148D8AE2A23B7C100F02654 /* Renderer.swift */,
+				513C1F412A28D742003155B0 /* Graphics */,
+				513C1F3F2A28D623003155B0 /* Display */,
 				513C1F3D2A28A71E003155B0 /* test.swift */,
-				511B6C062A27AA530067AEBF /* BasicShaders.metal */,
 				5148D8A32A23AD1000F02654 /* Assets.xcassets */,
-				5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */,
+				513C1F402A28D651003155B0 /* OtherFiles */,
 				5148D8A52A23AD1000F02654 /* Preview Content */,
 			);
 			path = "Metal Engine#13";
