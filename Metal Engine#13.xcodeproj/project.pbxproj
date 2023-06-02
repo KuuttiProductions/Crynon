@@ -20,6 +20,7 @@
 		513C1F532A28F23C003155B0 /* AssetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F522A28F23C003155B0 /* AssetLibrary.swift */; };
 		513C1F562A28FA9E003155B0 /* Shared.metal in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F552A28FA9E003155B0 /* Shared.metal */; };
 		513C1F582A28FBD4003155B0 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513C1F572A28FBD4003155B0 /* Preferences.swift */; };
+		51477C6C2A2A3B1200293CCC /* MetalResourceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51477C6B2A2A3B1200293CCC /* MetalResourceManager.swift */; };
 		5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8A12A23AD0F00F02654 /* ContentView.swift */; };
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		513C1F522A28F23C003155B0 /* AssetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLibrary.swift; sourceTree = "<group>"; };
 		513C1F552A28FA9E003155B0 /* Shared.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shared.metal; sourceTree = "<group>"; };
 		513C1F572A28FBD4003155B0 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		51477C6B2A2A3B1200293CCC /* MetalResourceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalResourceManager.swift; sourceTree = "<group>"; };
 		5148D89C2A23AD0F00F02654 /* Metal Engine#13.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Engine#13.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5148D8A12A23AD0F00F02654 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5148D8A32A23AD1000F02654 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -148,6 +150,14 @@
 			path = AssetLibrary;
 			sourceTree = "<group>";
 		};
+		51477C6A2A2A3AFC00293CCC /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				51477C6B2A2A3B1200293CCC /* MetalResourceManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		5148D8932A23AD0F00F02654 = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				511B6C012A27A7270067AEBF /* Core */,
+				51477C6A2A2A3AFC00293CCC /* Managers */,
 				513C1F512A28F208003155B0 /* GameAssets */,
 				513C1F412A28D742003155B0 /* Graphics */,
 				513C1F3F2A28D623003155B0 /* Display */,
@@ -267,6 +278,7 @@
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
 				51978FFF2A2504E600F87A20 /* Core.swift in Sources */,
 				513C1F482A28DBBB003155B0 /* RenderPipelineStateLibrary.swift in Sources */,
+				51477C6C2A2A3B1200293CCC /* MetalResourceManager.swift in Sources */,
 				513C1F4C2A28E32D003155B0 /* VertexShaderLibrary.swift in Sources */,
 				511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */,
 				513C1F3E2A28A71E003155B0 /* Mesh.swift in Sources */,
@@ -402,7 +414,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -434,7 +446,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;

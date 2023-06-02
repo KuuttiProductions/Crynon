@@ -19,9 +19,9 @@ class Mesh {
         vertexBuffer.label = "MeshBuffer"
     }
     
-    func draw(renderCommandEncoder: MTLRenderCommandEncoder!) {
-        renderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-        renderCommandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertices.count)
+    func draw() {
+        MRM.setVertexBuffer(vertexBuffer, 0)
+        Renderer._currentRenderCommandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertices.count)
     }
 }
 

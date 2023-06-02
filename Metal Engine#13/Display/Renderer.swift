@@ -1,7 +1,6 @@
 
 import MetalKit
 
-//Actual core
 class Renderer: NSObject {
     
     var s: Mesh!
@@ -12,8 +11,10 @@ class Renderer: NSObject {
     }
 }
 
-//"Renderer"
 extension Renderer: MTKViewDelegate {
+    
+    public static var _currentRenderCommandEncoder: MTLRenderCommandEncoder!
+    
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         
     }
@@ -25,9 +26,12 @@ extension Renderer: MTKViewDelegate {
         commandBuffer?.label = "Main CommandBuffer"
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
-        baseRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
-        s.draw(renderCommandEncoder: baseRenderCommandEncoder)
+        Renderer._currentRenderCommandEncoder = baseRenderCommandEncoder
+        MRM.setRenderCommandEncoder(baseRenderCommandEncoder)
+        MRM.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
+        s.draw()
         baseRenderCommandEncoder?.endEncoding()
+        MRM.clearAll()
         
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
