@@ -25,3 +25,7 @@ struct VertexOut {
 struct ModelConstant {
     float4x4 modelMatrix;
 };
+
+struct SceneConstant {
+    float4x4 viewMatrix;
+};

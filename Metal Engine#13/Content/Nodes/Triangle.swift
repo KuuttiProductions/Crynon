@@ -13,7 +13,7 @@ class Triangle: Node {
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        setScale(simd_float3(sin(time)))
+        setPosX(sin(time))
         time += deltaTime
     }
     

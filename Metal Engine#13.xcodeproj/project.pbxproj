@@ -25,6 +25,8 @@
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
 		5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8AE2A23B7C100F02654 /* Renderer.swift */; };
+		5188BC712A2B90ED00AD5CB2 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188BC702A2B90ED00AD5CB2 /* Camera.swift */; };
+		5188BC732A2B920300AD5CB2 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188BC722A2B920300AD5CB2 /* CameraManager.swift */; };
 		518E4E752A2B0266007A7C83 /* SceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E742A2B0266007A7C83 /* SceneManager.swift */; };
 		518E4E782A2B096E007A7C83 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E772A2B096E007A7C83 /* Node.swift */; };
 		518E4E7A2A2B0BA4007A7C83 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E792A2B0BA4007A7C83 /* Scene.swift */; };
@@ -57,6 +59,8 @@
 		5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Metal_Engine_13.entitlements; sourceTree = "<group>"; };
 		5148D8AE2A23B7C100F02654 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		5188BC702A2B90ED00AD5CB2 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
+		5188BC722A2B920300AD5CB2 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		518E4E742A2B0266007A7C83 /* SceneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneManager.swift; sourceTree = "<group>"; };
 		518E4E772A2B096E007A7C83 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		518E4E792A2B0BA4007A7C83 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
@@ -170,6 +174,7 @@
 			children = (
 				51477C6B2A2A3B1200293CCC /* MetalResourceManager.swift */,
 				518E4E742A2B0266007A7C83 /* SceneManager.swift */,
+				5188BC722A2B920300AD5CB2 /* CameraManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -220,6 +225,7 @@
 			children = (
 				518E4E772A2B096E007A7C83 /* Node.swift */,
 				518E4E792A2B0BA4007A7C83 /* Scene.swift */,
+				5188BC702A2B90ED00AD5CB2 /* Camera.swift */,
 				518E4E7B2A2B53A7007A7C83 /* Protocols */,
 			);
 			path = Node;
@@ -335,9 +341,11 @@
 				518E4E862A2B6801007A7C83 /* Math.swift in Sources */,
 				513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */,
 				513C1F582A28FBD4003155B0 /* Preferences.swift in Sources */,
+				5188BC732A2B920300AD5CB2 /* CameraManager.swift in Sources */,
 				518E4E7D2A2B53B5007A7C83 /* Renderable.swift in Sources */,
 				513C1F562A28FA9E003155B0 /* Shared.metal in Sources */,
 				513C1F4A2A28E064003155B0 /* GPLibrary.swift in Sources */,
+				5188BC712A2B90ED00AD5CB2 /* Camera.swift in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
 				51978FFF2A2504E600F87A20 /* Core.swift in Sources */,
@@ -482,7 +490,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 78;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -514,7 +522,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 78;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
