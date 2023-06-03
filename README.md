@@ -12,4 +12,4 @@ Upgrades from Metal-Test-12 are as such:
 - Possibly simple physics. Atleast hit testing.
 - Audio playback.
 
-- More features will be added as needed. These are just initial changes.
+- More features will be added as needed. These are just initial ideas.
