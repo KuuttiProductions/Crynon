@@ -31,8 +31,8 @@ extension Renderer: MTKViewDelegate {
         MRM.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
         s.draw()
         baseRenderCommandEncoder?.endEncoding()
-        MRM.clearAll()
-        
+    
+        MRM.resetAll()
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
     }

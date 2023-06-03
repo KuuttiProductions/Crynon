@@ -14,5 +14,7 @@ class Core {
         self.defaultLibrary = device.makeDefaultLibrary()
         
         GPLibrary.initialize()
+        
+        SceneManager.initialize()
     }
 }

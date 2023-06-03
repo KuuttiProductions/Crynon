@@ -14,8 +14,8 @@ class MetalResourceManager {
     private static var _currentRenderPipelineState: MTLRenderPipelineState!
     
     static func setRenderCommandEncoder(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        resetAll()
         _currentRenderCommandEncoder = renderCommandEncoder
-        clearAll()
     }
     
     static func setRenderPipelineState(_ renderPipelineState: MTLRenderPipelineState!) {
@@ -38,7 +38,8 @@ class MetalResourceManager {
         }
     }
     
-    static func clearAll() {
+    static func resetAll() {
+        _currentRenderCommandEncoder = nil
         _currentRenderPipelineState = nil
     }
     
