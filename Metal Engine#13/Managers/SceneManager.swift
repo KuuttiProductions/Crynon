@@ -3,6 +3,8 @@ enum SceneType {
     case Basic
 }
 
+//Takes care of updating the current Scene
+//and switching of scenes.
 class SceneManager {
     
     private static var _currentScene: Scene!

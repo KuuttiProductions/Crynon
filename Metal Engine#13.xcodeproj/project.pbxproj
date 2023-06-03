@@ -30,6 +30,7 @@
 		518E4E7A2A2B0BA4007A7C83 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E792A2B0BA4007A7C83 /* Scene.swift */; };
 		518E4E7D2A2B53B5007A7C83 /* Renderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E7C2A2B53B5007A7C83 /* Renderable.swift */; };
 		518E4E7F2A2B54B2007A7C83 /* BasicScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E7E2A2B54B2007A7C83 /* BasicScene.swift */; };
+		518E4E812A2B56E1007A7C83 /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E802A2B56E1007A7C83 /* Triangle.swift */; };
 		51978FFF2A2504E600F87A20 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51978FFE2A2504E600F87A20 /* Core.swift */; };
 		519790012A25065900F87A20 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519790002A25065900F87A20 /* GameView.swift */; };
 /* End PBXBuildFile section */
@@ -60,6 +61,7 @@
 		518E4E792A2B0BA4007A7C83 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		518E4E7C2A2B53B5007A7C83 /* Renderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderable.swift; sourceTree = "<group>"; };
 		518E4E7E2A2B54B2007A7C83 /* BasicScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicScene.swift; sourceTree = "<group>"; };
+		518E4E802A2B56E1007A7C83 /* Triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Triangle.swift; sourceTree = "<group>"; };
 		51978FFE2A2504E600F87A20 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		519790002A25065900F87A20 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -194,6 +196,7 @@
 				513C1F412A28D742003155B0 /* Graphics */,
 				513C1F3F2A28D623003155B0 /* Display */,
 				518E4E762A2B0522007A7C83 /* Node */,
+				518E4E822A2B5816007A7C83 /* Content */,
 				5148D8A32A23AD1000F02654 /* Assets.xcassets */,
 				513C1F402A28D651003155B0 /* OtherFiles */,
 				5148D8A52A23AD1000F02654 /* Preview Content */,
@@ -212,10 +215,9 @@
 		518E4E762A2B0522007A7C83 /* Node */ = {
 			isa = PBXGroup;
 			children = (
-				518E4E7B2A2B53A7007A7C83 /* Protocols */,
 				518E4E772A2B096E007A7C83 /* Node.swift */,
 				518E4E792A2B0BA4007A7C83 /* Scene.swift */,
-				518E4E7E2A2B54B2007A7C83 /* BasicScene.swift */,
+				518E4E7B2A2B53A7007A7C83 /* Protocols */,
 			);
 			path = Node;
 			sourceTree = "<group>";
@@ -226,6 +228,31 @@
 				518E4E7C2A2B53B5007A7C83 /* Renderable.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		518E4E822A2B5816007A7C83 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				518E4E832A2B5834007A7C83 /* Scenes */,
+				518E4E842A2B5839007A7C83 /* Nodes */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
+		518E4E832A2B5834007A7C83 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				518E4E7E2A2B54B2007A7C83 /* BasicScene.swift */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		518E4E842A2B5839007A7C83 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				518E4E802A2B56E1007A7C83 /* Triangle.swift */,
+			);
+			path = Nodes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -313,6 +340,7 @@
 				513C1F482A28DBBB003155B0 /* RenderPipelineStateLibrary.swift in Sources */,
 				518E4E7A2A2B0BA4007A7C83 /* Scene.swift in Sources */,
 				518E4E782A2B096E007A7C83 /* Node.swift in Sources */,
+				518E4E812A2B56E1007A7C83 /* Triangle.swift in Sources */,
 				51477C6C2A2A3B1200293CCC /* MetalResourceManager.swift in Sources */,
 				513C1F4C2A28E32D003155B0 /* VertexShaderLibrary.swift in Sources */,
 				511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */,
@@ -450,7 +478,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -482,7 +510,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
