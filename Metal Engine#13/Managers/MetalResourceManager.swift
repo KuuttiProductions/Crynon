@@ -13,6 +13,7 @@ class MetalResourceManager {
     
     private static var _currentRenderPipelineState: MTLRenderPipelineState!
     
+    //===== Metal-object setters =====
     static func setRenderCommandEncoder(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         resetAll()
         _currentRenderCommandEncoder = renderCommandEncoder
@@ -30,6 +31,14 @@ class MetalResourceManager {
         }
     }
     
+    //===== Non-Metal-object setters =====
+    static func setVertexBuffer(_ vertexBuffer: MTLBuffer!, _ index: Int) {
+        if validityCheck() {
+            _currentRenderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: index)
+        }
+    }
+    
+    //===== Functions =====
     static func validityCheck() -> Bool {
         if _currentRenderCommandEncoder != nil {
             return true
@@ -41,19 +50,5 @@ class MetalResourceManager {
     static func resetAll() {
         _currentRenderCommandEncoder = nil
         _currentRenderPipelineState = nil
-    }
-    
-    //===== Non-Metal-object setters =====
-    static func setVertexBuffer(_ vertexBuffer: MTLBuffer!, _ index: Int) {
-        if validityCheck() {
-            _currentRenderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: index)
-        }
-    }
-    
-    static func setVertexBytes(_ vertexBytes: MTLBuffer!, _ index: Int) {
-        var bytes = vertexBytes
-        if validityCheck() {
-            _currentRenderCommandEncoder.setVertexBytes(&bytes, length: 0, index: index)
-        }
     }
 }

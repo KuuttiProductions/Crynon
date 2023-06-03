@@ -21,3 +21,7 @@ struct VertexOut {
     float2 textureCoordinate;
     float3 normal;
 };
+
+struct ModelConstant {
+    float4x4 modelMatrix;
+};

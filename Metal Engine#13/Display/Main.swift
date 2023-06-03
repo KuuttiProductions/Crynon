@@ -8,6 +8,6 @@ struct MetalEngine13App: App {
     var body: some SwiftScene {
         WindowGroup {
             ContentView()
-        }
+        }.windowStyle(.hiddenTitleBar)
     }
 }

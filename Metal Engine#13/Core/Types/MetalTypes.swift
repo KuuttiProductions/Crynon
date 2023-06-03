@@ -37,3 +37,7 @@ struct Vertex: sizeable {
     var textureCoordinate: simd_float2 = simd_float2(0,0)
     var normal: simd_float3 = simd_float3(0,0,0)
 }
+
+struct ModelConstant: sizeable {
+    var modelMatrix = matrix_identity_float4x4
+}

@@ -10,10 +10,10 @@
 using namespace metal;
 
 vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
-                           uint verID [[ vertex_id ]]) {
+                              constant ModelConstant &modelConstant [[ buffer(1) ]]) {
     
     VertexOut VerOut;
-    VerOut.position = float4(VerIn.position, 1);
+    VerOut.position = modelConstant.modelMatrix * float4(VerIn.position, 1);
     VerOut.color = VerIn.color;
     
     return VerOut;

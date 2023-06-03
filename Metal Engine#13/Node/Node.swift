@@ -10,6 +10,8 @@ class Node {
     var name: String!
     var uuid: String!
     
+    internal var modelConstant = ModelConstant()
+    
     private var _children: [Node] = []
     
     private var _position: simd_float3 = simd_float3(0, 0, 0)
@@ -19,6 +21,16 @@ class Node {
     public var position: simd_float3 { return _position }
     public var rotation: simd_float3 { return _rotation }
     public var scale: simd_float3 { return _scale }
+    
+    var modelMatrix: matrix_float4x4 {
+        var modelMatrix = matrix_identity_float4x4
+        modelMatrix.translate(position: position)
+        modelMatrix.rotate(direction: rotation.x, axis: .AxisX)
+        modelMatrix.rotate(direction: rotation.y, axis: .AxisY)
+        modelMatrix.rotate(direction: rotation.z, axis: .AxisZ)
+        modelMatrix.scale(scale)
+        return modelMatrix
+    }
     
     init(_ name: String) {
         self.name = name
@@ -46,9 +58,10 @@ class Node {
     }
     
     //Called every frame. For logic that doesn't need physical accuracy
-    func tick() {
+    func tick(_ deltaTime: Float) {
+        self.modelConstant.modelMatrix = self.modelMatrix
         for node in _children {
-            node.tick()
+            node.tick(deltaTime)
         }
     }
     
@@ -60,9 +73,63 @@ class Node {
     }
     
     //Called every frame.
-    func render() {
+    func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         for node in _children {
-            node.render()
+            node.render(renderCommandEncoder)
         }
+    }
+}
+
+//Pos, Rot, Scale functions
+extension Node {
+    func setPosX(_ value: Float) {
+        self._position.x = value
+    }
+    func setPosY(_ value: Float) {
+        self._position.y = value
+    }
+    func setPosZ(_ value: Float) {
+        self._position.z = value
+    }
+    
+    func setPos(_ value: simd_float3) {
+        self._position = value
+    }
+    func setPos(_ x: Float, _ y: Float, _ z: Float) {
+        self._position = simd_float3(x, y, z)
+    }
+    
+    func setRotX(_ value: Float) {
+        self._rotation.x = value
+    }
+    func setRotY(_ value: Float) {
+        self._rotation.y = value
+    }
+    func setRotZ(_ value: Float) {
+        self._rotation.z = value
+    }
+    
+    func setRot(_ value: simd_float3) {
+        self._rotation = value
+    }
+    func setRot(_ x: Float, _ y: Float, _ z: Float) {
+        self._rotation = simd_float3(x, y, z)
+    }
+    
+    func setScaleX(_ value: Float) {
+        self._scale.x = value
+    }
+    func setScaleY(_ value: Float) {
+        self._scale.y = value
+    }
+    func setScaleZ(_ value: Float) {
+        self._scale.z = value
+    }
+    
+    func setScale(_ value: simd_float3) {
+        self._scale = value
+    }
+    func setScale(_ x: Float, _ y: Float, _ z: Float) {
+        self._scale = simd_float3(x, y, z)
     }
 }

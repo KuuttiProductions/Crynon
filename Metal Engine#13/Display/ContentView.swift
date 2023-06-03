@@ -5,7 +5,7 @@ import MetalKit
 struct ContentView: View {
     var body: some View {
         VStack {
-            Text("This is a SwiftUI driven text")
+            Text("This is SwiftUI driven text")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .fontDesign(.rounded)

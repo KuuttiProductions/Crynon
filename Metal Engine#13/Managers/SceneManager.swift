@@ -1,4 +1,6 @@
 
+import MetalKit
+
 enum SceneType {
     case Basic
 }
@@ -17,20 +19,18 @@ class SceneManager {
         switch newScene {
         case .Basic:
             _currentScene = BasicScene()
-        default:
-            _currentScene = BasicScene()
         }
     }
     
-    static func tick() {
-        _currentScene.tick()
+    static func tick(_ deltaTime: Float) {
+        _currentScene.tick(deltaTime)
     }
     
     static func physicsTick() {
         _currentScene.physicsTick()
     }
     
-    static func render() {
-        _currentScene.render()
+    static func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        _currentScene.render(renderCommandEncoder)
     }
 }

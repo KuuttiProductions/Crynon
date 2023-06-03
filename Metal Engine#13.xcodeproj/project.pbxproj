@@ -31,6 +31,7 @@
 		518E4E7D2A2B53B5007A7C83 /* Renderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E7C2A2B53B5007A7C83 /* Renderable.swift */; };
 		518E4E7F2A2B54B2007A7C83 /* BasicScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E7E2A2B54B2007A7C83 /* BasicScene.swift */; };
 		518E4E812A2B56E1007A7C83 /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E802A2B56E1007A7C83 /* Triangle.swift */; };
+		518E4E862A2B6801007A7C83 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E852A2B6801007A7C83 /* Math.swift */; };
 		51978FFF2A2504E600F87A20 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51978FFE2A2504E600F87A20 /* Core.swift */; };
 		519790012A25065900F87A20 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519790002A25065900F87A20 /* GameView.swift */; };
 /* End PBXBuildFile section */
@@ -62,6 +63,7 @@
 		518E4E7C2A2B53B5007A7C83 /* Renderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderable.swift; sourceTree = "<group>"; };
 		518E4E7E2A2B54B2007A7C83 /* BasicScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicScene.swift; sourceTree = "<group>"; };
 		518E4E802A2B56E1007A7C83 /* Triangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Triangle.swift; sourceTree = "<group>"; };
+		518E4E852A2B6801007A7C83 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		51978FFE2A2504E600F87A20 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		519790002A25065900F87A20 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -82,6 +84,7 @@
 			children = (
 				51978FFE2A2504E600F87A20 /* Core.swift */,
 				513C1F572A28FBD4003155B0 /* Preferences.swift */,
+				518E4E852A2B6801007A7C83 /* Math.swift */,
 				513C1F462A28DB92003155B0 /* Types */,
 			);
 			path = Core;
@@ -329,6 +332,7 @@
 				518E4E7F2A2B54B2007A7C83 /* BasicScene.swift in Sources */,
 				511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */,
 				513C1F532A28F23C003155B0 /* AssetLibrary.swift in Sources */,
+				518E4E862A2B6801007A7C83 /* Math.swift in Sources */,
 				513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */,
 				513C1F582A28FBD4003155B0 /* Preferences.swift in Sources */,
 				518E4E7D2A2B53B5007A7C83 /* Renderable.swift in Sources */,
@@ -478,7 +482,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 70;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -510,7 +514,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 70;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
