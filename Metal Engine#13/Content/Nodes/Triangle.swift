@@ -18,8 +18,10 @@ class Triangle: Node {
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         MRM.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
+        MRM.setDepthStencilState(GPLibrary.depthStencilStates[.Less]) //MRM version doesn't work right now!!!
+        renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
-        AssetLibrary.meshes[.Triangle].draw(renderCommandEncoder)
+        AssetLibrary.meshes[.Cube].draw(renderCommandEncoder)
         super.render(renderCommandEncoder)
     }
 }

@@ -7,7 +7,7 @@ enum RenderPipelineStateType {
 
 class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipelineState> {
     
-    var library: [RenderPipelineStateType : RenderPipelineState] = [:]
+    private var library: [RenderPipelineStateType : RenderPipelineState] = [:]
     
     override func fillLibrary() {
         library.updateValue(Basic_RenderPipelineState(), forKey: .Basic)
@@ -34,7 +34,8 @@ class Basic_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
-        descriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
+        descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Basic]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Basic]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]

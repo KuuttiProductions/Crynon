@@ -14,9 +14,13 @@ class GPLibrary {
     private static var _renderPipelineStateLibrary: RenderPipelineStateLibrary!
     public static var renderPipelineStates: RenderPipelineStateLibrary { return _renderPipelineStateLibrary }
     
+    private static var _depthStencilStateLibrary: DepthStencilStateLibrary!
+    public static var depthStencilStates: DepthStencilStateLibrary { return _depthStencilStateLibrary }
+    
     static func initialize() {
         _vertexShaderLibrary = VertexShaderLibrary()
         _fragmentShaderLibrary = FragmentShaderLibrary()
+        _depthStencilStateLibrary = DepthStencilStateLibrary()
         _VertexDescriptorLibrary = VertexDescriptorLibrary()
         _renderPipelineStateLibrary = RenderPipelineStateLibrary()
     }
