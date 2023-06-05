@@ -4,7 +4,6 @@ import MetalKit
 //This is a test class
 class Triangle: Node {
     
-    let mesh = Triangle_Mesh()
     var time: Float = 0.0;
     
     init() {
@@ -20,7 +19,7 @@ class Triangle: Node {
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         MRM.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
         renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
-        mesh.draw(renderCommandEncoder)
+        AssetLibrary.meshes[.Triangle].draw(renderCommandEncoder)
         super.render(renderCommandEncoder)
     }
 }

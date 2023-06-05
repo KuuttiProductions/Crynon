@@ -1,5 +1,5 @@
 
-import MetalKit
+import simd
 
 class BasicScene: Scene {
     
@@ -17,7 +17,6 @@ class BasicScene: Scene {
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         camera.setPosY(sin(time))
-        print(camera.position.y)
         time += deltaTime
     }
 }
