@@ -13,7 +13,7 @@ class Scene: Node {
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         cameraManager.tick(deltaTime: deltaTime)
-        sceneConstant.viewMatrix = cameraManager._currentCamera.viewMatrix
+        sceneConstant.viewMatrix = cameraManager._currentCamera.projectionMatrix * cameraManager._currentCamera.viewMatrix
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {

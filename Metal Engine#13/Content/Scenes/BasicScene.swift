@@ -12,11 +12,12 @@ class BasicScene: Scene {
         super.init("BasicScene")
         addChild(triangle)
         addCamera(camera, true)
+        camera.setPosZ(3)
     }
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        camera.setPosY(sin(time))
+        triangle.setRotY(sin(time))
         time += deltaTime
     }
 }

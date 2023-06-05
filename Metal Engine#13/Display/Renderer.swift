@@ -2,15 +2,25 @@
 import MetalKit
 
 class Renderer: NSObject {
+    
+    static var screenWidth: Float!
+    static var screenHeight: Float!
+    static var aspectRatio: Float { return screenWidth/screenHeight }
+    
     override init() {
         Core.initialize(device: MTLCreateSystemDefaultDevice())
+    }
+    
+    func updateScreenSize(view: MTKView) {
+        Renderer.screenWidth = Float((view.bounds.width))
+        Renderer.screenHeight = Float((view.bounds.height))
     }
 }
 
 extension Renderer: MTKViewDelegate {
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        
+        updateScreenSize(view: view)
     }
     
     func draw(in view: MTKView) {

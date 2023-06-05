@@ -13,7 +13,6 @@ class CameraManager {
         _cameras.append(camera)
         if setAsCurrent {
             _currentCamera = camera
-            print("yes")
         }
     }
     
