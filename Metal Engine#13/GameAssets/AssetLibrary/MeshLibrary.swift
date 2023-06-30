@@ -4,6 +4,7 @@ import MetalKit
 enum MeshType {
     case Triangle
     case Cube
+    case Object
 }
 
 class MeshLibrary: Library<MeshType, Mesh> {
@@ -12,7 +13,8 @@ class MeshLibrary: Library<MeshType, Mesh> {
     
     override func fillLibrary() {
         library.updateValue(Triangle_Mesh(), forKey: .Triangle)
-        library.updateValue(MeshLoader.loadMesh("Cube"), forKey: .Cube)
+        library.updateValue(MeshLoader.loadNormalMesh("Cube"), forKey: .Cube)
+        library.updateValue(MeshLoader.loadNormalMesh("Object"), forKey: .Object)
     }
     
     override subscript(type: MeshType) -> Mesh! {
@@ -25,7 +27,7 @@ class MeshLibrary: Library<MeshType, Mesh> {
 class Mesh {
     var vertices: [Vertex] = []
     var vertexBuffer: MTLBuffer!
-    var submesh: Submesh!
+    var submeshes: [Submesh] = []
     var instanceCount: Int = 1
     
     init() {
@@ -33,9 +35,9 @@ class Mesh {
         createVertexBuffer()
     }
     
-    init(_ vertexBuffer: MTLBuffer, _ submesh: Submesh) {
+    init(_ vertexBuffer: MTLBuffer, _ submeshes: [Submesh]) {
         self.vertexBuffer = vertexBuffer
-        self.submesh = submesh
+        self.submeshes = submeshes
     }
 
     func createVertices() {}
@@ -47,15 +49,17 @@ class Mesh {
     
     func draw(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         MRM.setVertexBuffer(vertexBuffer, 0)
-        if submesh == nil {
-            renderCommandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertices.count)
+        if submeshes.count > 0 {
+            for submesh in submeshes {
+                renderCommandEncoder.drawIndexedPrimitives(type: submesh.primitiveType,
+                                                           indexCount: submesh.indexCount,
+                                                           indexType: submesh.indexType,
+                                                           indexBuffer: submesh.indexBuffer.buffer,
+                                                           indexBufferOffset: 0,
+                                                           instanceCount: instanceCount)
+            }
         } else {
-            renderCommandEncoder.drawIndexedPrimitives(type: submesh.primitiveType,
-                                                       indexCount: submesh.indexCount,
-                                                       indexType: submesh.indexType,
-                                                       indexBuffer: submesh.indexBuffer,
-                                                       indexBufferOffset: 0,
-                                                       instanceCount: instanceCount)
+            renderCommandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertices.count)
         }
     }
 }
@@ -71,14 +75,14 @@ class Submesh {
     private var _indexType: MTLIndexType
     public var indexType: MTLIndexType { return _indexType }
     
-    private var _indexBuffer: MTLBuffer
-    public var indexBuffer: MTLBuffer { return _indexBuffer }
+    private var _indexBuffer: MTKMeshBuffer
+    public var indexBuffer: MTKMeshBuffer { return _indexBuffer }
     
-    init(_ primitiveType: MTLPrimitiveType, _ indexCount: Int, _ indexType: MTLIndexType, _ indexBuffer: MTLBuffer) {
-        self._primitiveType = primitiveType
-        self._indexCount = indexCount
-        self._indexType = indexType
-        self._indexBuffer = indexBuffer
+    init(_ sub: MTKSubmesh) {
+        self._primitiveType = sub.primitiveType
+        self._indexCount = sub.indexCount
+        self._indexType = sub.indexType
+        self._indexBuffer = sub.indexBuffer
     }
 }
 

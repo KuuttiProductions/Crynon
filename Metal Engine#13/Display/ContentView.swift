@@ -4,7 +4,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Text("This is SwiftUI driven text")
+            Text("!")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .fontDesign(.rounded)

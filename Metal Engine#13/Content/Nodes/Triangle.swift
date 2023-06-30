@@ -21,7 +21,7 @@ class Triangle: Node {
         MRM.setDepthStencilState(GPLibrary.depthStencilStates[.Less]) //MRM version doesn't work right now!!!
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
-        AssetLibrary.meshes[.Cube].draw(renderCommandEncoder)
+        AssetLibrary.meshes[.Object].draw(renderCommandEncoder)
         super.render(renderCommandEncoder)
     }
 }

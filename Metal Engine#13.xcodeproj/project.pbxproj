@@ -24,6 +24,8 @@
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
 		5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8AE2A23B7C100F02654 /* Renderer.swift */; };
+		515FDB172A47503D008E2361 /* Object.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 515FDB152A47503D008E2361 /* Object.mtl */; };
+		515FDB182A47503D008E2361 /* Object.obj in Resources */ = {isa = PBXBuildFile; fileRef = 515FDB162A47503D008E2361 /* Object.obj */; };
 		51641C712A2DF9AA00F5A16E /* MeshLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51641C702A2DF9AA00F5A16E /* MeshLoader.swift */; };
 		51641C762A2DFA2600F5A16E /* Cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51641C742A2DFA2600F5A16E /* Cube.obj */; };
 		51641C772A2DFA2600F5A16E /* Cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51641C752A2DFA2600F5A16E /* Cube.mtl */; };
@@ -62,6 +64,8 @@
 		5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Metal_Engine_13.entitlements; sourceTree = "<group>"; };
 		5148D8AE2A23B7C100F02654 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		515FDB152A47503D008E2361 /* Object.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Object.mtl; sourceTree = "<group>"; };
+		515FDB162A47503D008E2361 /* Object.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Object.obj; sourceTree = "<group>"; };
 		51641C702A2DF9AA00F5A16E /* MeshLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshLoader.swift; sourceTree = "<group>"; };
 		51641C742A2DFA2600F5A16E /* Cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.obj; sourceTree = "<group>"; };
 		51641C752A2DFA2600F5A16E /* Cube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.mtl; sourceTree = "<group>"; };
@@ -242,6 +246,8 @@
 		51641C732A2DFA0500F5A16E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				515FDB152A47503D008E2361 /* Object.mtl */,
+				515FDB162A47503D008E2361 /* Object.obj */,
 				51641C752A2DFA2600F5A16E /* Cube.mtl */,
 				51641C742A2DFA2600F5A16E /* Cube.obj */,
 			);
@@ -320,7 +326,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					5148D89B2A23AD0F00F02654 = {
 						CreatedOnToolsVersion = 14.3;
@@ -350,9 +356,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				515FDB182A47503D008E2361 /* Object.obj in Resources */,
 				5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */,
 				51641C762A2DFA2600F5A16E /* Cube.obj in Resources */,
 				51641C772A2DFA2600F5A16E /* Cube.mtl in Resources */,
+				515FDB172A47503D008E2361 /* Object.mtl in Resources */,
 				5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -432,9 +440,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -492,9 +502,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -522,7 +534,8 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 161;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -535,6 +548,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "KudeKube-Studios.Metal-Engine-13";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -554,7 +568,8 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 114;
+				CURRENT_PROJECT_VERSION = 161;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -567,6 +582,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "KudeKube-Studios.Metal-Engine-13";
 				PRODUCT_NAME = "$(TARGET_NAME)";
