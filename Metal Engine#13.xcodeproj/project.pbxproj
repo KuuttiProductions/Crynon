@@ -42,6 +42,7 @@
 		518E4E862A2B6801007A7C83 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E852A2B6801007A7C83 /* Math.swift */; };
 		51978FFF2A2504E600F87A20 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51978FFE2A2504E600F87A20 /* Core.swift */; };
 		519790012A25065900F87A20 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519790002A25065900F87A20 /* GameView.swift */; };
+		51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B299132A505E7E0043F3E1 /* InputManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,8 @@
 		518E4E852A2B6801007A7C83 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		51978FFE2A2504E600F87A20 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		519790002A25065900F87A20 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		51B299132A505E7E0043F3E1 /* InputManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputManager.swift; sourceTree = "<group>"; };
+		51B299182A5079C30043F3E1 /* Metal-Engine-13-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Metal-Engine-13-Info.plist"; path = "Metal Engine#13/OtherFiles/Metal-Engine-13-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +123,7 @@
 		513C1F402A28D651003155B0 /* OtherFiles */ = {
 			isa = PBXGroup;
 			children = (
+				51B299182A5079C30043F3E1 /* Metal-Engine-13-Info.plist */,
 				5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */,
 			);
 			path = OtherFiles;
@@ -186,6 +190,7 @@
 		51477C6A2A2A3AFC00293CCC /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				51B299132A505E7E0043F3E1 /* InputManager.swift */,
 				51477C6B2A2A3B1200293CCC /* MetalResourceManager.swift */,
 				518E4E742A2B0266007A7C83 /* SceneManager.swift */,
 				5188BC722A2B920300AD5CB2 /* CameraManager.swift */,
@@ -372,6 +377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */,
 				5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */,
 				518E4E7F2A2B54B2007A7C83 /* BasicScene.swift in Sources */,
 				511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */,
@@ -534,13 +540,14 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 166;
+				CURRENT_PROJECT_VERSION = 192;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Metal-Engine-13-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Metal-Engine-13";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -568,13 +575,14 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 166;
+				CURRENT_PROJECT_VERSION = 192;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Metal-Engine-13-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Metal-Engine-13";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

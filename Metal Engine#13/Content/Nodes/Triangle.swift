@@ -1,5 +1,6 @@
 
 import MetalKit
+import GameController
 
 //This is a test class
 class Triangle: Node {
@@ -12,8 +13,30 @@ class Triangle: Node {
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        setPosX(sin(time))
-        time += deltaTime
+        InputManager.controller.extendedGamepad?.valueChangedHandler = { (gamepad, element) in
+            if element == gamepad.buttonA {
+                if gamepad.buttonA.isPressed {
+                    self.rotate(positive: true, deltaTime: deltaTime)
+                } else {
+                    self.rotate(positive: false, deltaTime: deltaTime)
+                }
+            }
+        }
+        
+//        if InputManager.controller {
+//            self.rotate(positive: true, deltaTime: deltaTime)
+//        } else {
+//            self.rotate(positive: false, deltaTime: deltaTime)
+//        }
+    }
+    
+    func rotate(positive: Bool, deltaTime: Float) {
+        self.time += deltaTime
+        if positive {
+            self.setRotY(self.rotation.y + deltaTime)
+        } else {
+            self.setRotY(self.rotation.y - deltaTime)
+        }
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {

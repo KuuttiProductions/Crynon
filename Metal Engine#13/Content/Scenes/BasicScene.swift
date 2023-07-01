@@ -17,7 +17,5 @@ class BasicScene: Scene {
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        triangle.setRotY(time)
-        time += deltaTime
     }
 }
