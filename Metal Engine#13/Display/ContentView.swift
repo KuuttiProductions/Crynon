@@ -4,11 +4,11 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Text("!")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .fontDesign(.rounded)
-                .padding(10)
+//            Text("!")
+//                .font(.largeTitle)
+//                .fontWeight(.bold)
+//                .fontDesign(.rounded)
+//                .padding(10)
             GameView()
         }
     }
