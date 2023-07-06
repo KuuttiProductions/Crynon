@@ -23,11 +23,15 @@ class Triangle: Node {
             }
         }
         
-//        if InputManager.controller {
-//            self.rotate(positive: true, deltaTime: deltaTime)
-//        } else {
-//            self.rotate(positive: false, deltaTime: deltaTime)
-//        }
+        InputManager.keyboard?.keyboardInput?.keyChangedHandler = { (keyboard, element, code, pressed) in
+            if element == keyboard.button(forKeyCode: .keyA) {
+                if pressed {
+                    self.rotate(positive: true, deltaTime: deltaTime)
+                } else {
+                    self.rotate(positive: false, deltaTime: deltaTime)
+                }
+            }
+        }
     }
     
     func rotate(positive: Bool, deltaTime: Float) {
