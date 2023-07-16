@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
         VStack {
 //            Text("!")
@@ -10,6 +11,7 @@ struct ContentView: View {
 //                .fontDesign(.rounded)
 //                .padding(10)
             GameView()
+                .focused($isFocused)
         }
     }
 }

@@ -37,9 +37,9 @@ class Triangle: Node {
     func rotate(positive: Bool, deltaTime: Float) {
         self.time += deltaTime
         if positive {
-            self.setRotY(self.rotation.y + deltaTime)
+            self.setRotY(self.rotation.y + deltaTime * 3)
         } else {
-            self.setRotY(self.rotation.y - deltaTime)
+            self.setRotY(self.rotation.y - deltaTime * 3)
         }
     }
     

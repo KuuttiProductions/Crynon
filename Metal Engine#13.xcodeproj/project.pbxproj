@@ -43,6 +43,7 @@
 		51978FFF2A2504E600F87A20 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51978FFE2A2504E600F87A20 /* Core.swift */; };
 		519790012A25065900F87A20 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519790002A25065900F87A20 /* GameView.swift */; };
 		51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B299132A505E7E0043F3E1 /* InputManager.swift */; };
+		51BA0D282A6440FB00A88604 /* FPSCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D272A6440FB00A88604 /* FPSCamera.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +86,7 @@
 		519790002A25065900F87A20 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		51B299132A505E7E0043F3E1 /* InputManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputManager.swift; sourceTree = "<group>"; };
 		51B299182A5079C30043F3E1 /* Metal-Engine-13-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Metal-Engine-13-Info.plist"; path = "Metal Engine#13/OtherFiles/Metal-Engine-13-Info.plist"; sourceTree = SOURCE_ROOT; };
+		51BA0D272A6440FB00A88604 /* FPSCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSCamera.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -281,6 +283,7 @@
 		518E4E822A2B5816007A7C83 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				51BA0D262A6440F000A88604 /* Cameras */,
 				518E4E832A2B5834007A7C83 /* Scenes */,
 				518E4E842A2B5839007A7C83 /* Nodes */,
 			);
@@ -301,6 +304,14 @@
 				518E4E802A2B56E1007A7C83 /* Triangle.swift */,
 			);
 			path = Nodes;
+			sourceTree = "<group>";
+		};
+		51BA0D262A6440F000A88604 /* Cameras */ = {
+			isa = PBXGroup;
+			children = (
+				51BA0D272A6440FB00A88604 /* FPSCamera.swift */,
+			);
+			path = Cameras;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,6 +408,7 @@
 				518E4E7A2A2B0BA4007A7C83 /* Scene.swift in Sources */,
 				518E4E782A2B096E007A7C83 /* Node.swift in Sources */,
 				51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */,
+				51BA0D282A6440FB00A88604 /* FPSCamera.swift in Sources */,
 				51641C712A2DF9AA00F5A16E /* MeshLoader.swift in Sources */,
 				518E4E812A2B56E1007A7C83 /* Triangle.swift in Sources */,
 				51477C6C2A2A3B1200293CCC /* MetalResourceManager.swift in Sources */,
@@ -540,7 +552,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 200;
+				CURRENT_PROJECT_VERSION = 244;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -575,7 +587,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 200;
+				CURRENT_PROJECT_VERSION = 244;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
