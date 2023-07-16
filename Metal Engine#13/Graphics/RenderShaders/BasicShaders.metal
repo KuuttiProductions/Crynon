@@ -11,7 +11,7 @@ using namespace metal;
 
 vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
                               constant ModelConstant &modelConstant [[ buffer(1) ]],
-                              constant SceneConstant &sceneConstant [[ buffer(2) ]]) {
+                              constant VertexSceneConstant &sceneConstant [[ buffer(2) ]]) {
     
     VertexOut VerOut;
     float4 worldPosition = modelConstant.modelMatrix * float4(VerIn.position, 1);
@@ -25,13 +25,20 @@ vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
 }
 
 fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
-                              constant LightData *ld [[ buffer(1) ]],
-                              constant int &lightCount [[ buffer(2) ]]) {
+                              constant Material &material [[ buffer(1) ]],
+                              constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
+                              constant LightData *lightData [[ buffer(3) ]],
+                              constant int &lightCount [[ buffer(4) ]]) {
     
     float4 color = float4(1,1,1,1);
     float3 unitNormal = normalize(VerOut.normal);
     
-    color *= PhongShading::getPhongColor(VerOut.worldPosition, unitNormal, ld, lightCount);
+    color *= PhongShading::getPhongLight(VerOut.worldPosition,
+                                         unitNormal,
+                                         lightData,
+                                         lightCount,
+                                         material,
+                                         fragmentSceneConstant.cameraPosition);
     
     return half4(color.r, color.g, color.b, color.a);
 }
