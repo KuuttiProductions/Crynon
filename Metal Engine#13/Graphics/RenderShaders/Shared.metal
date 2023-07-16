@@ -20,6 +20,7 @@ struct VertexOut {
     float4 color;
     float2 textureCoordinate;
     float3 normal;
+    float3 worldPosition;
 };
 
 struct ModelConstant {
@@ -28,4 +29,11 @@ struct ModelConstant {
 
 struct SceneConstant {
     float4x4 viewMatrix;
+};
+
+struct LightData {
+    float brightness;
+    float4 color;
+    float radius;
+    float3 position;
 };

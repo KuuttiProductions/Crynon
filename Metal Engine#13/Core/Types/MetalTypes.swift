@@ -45,3 +45,10 @@ struct ModelConstant: sizeable {
 struct SceneConstant: sizeable {
     var viewMatrix = matrix_identity_float4x4
 }
+
+struct LightData: sizeable {
+    var brightness: Float = 1.0
+    var color: simd_float4 = simd_float4(0,0,0,0)
+    var radius: Float = 1.0
+    var position: simd_float3 = simd_float3()
+}
