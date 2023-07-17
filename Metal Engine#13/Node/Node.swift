@@ -80,6 +80,11 @@ class Node {
     }
 }
 
+extension Node {
+    var forwardVector: simd_float3 { return simd_float3(sin(rotation.y), 0, cos(rotation.y)) }
+    var rightVector: simd_float3 { return simd_float3(sin(rotation.y) + Float.pi*0.5, 0, cos(rotation.y) + Float.pi*0.5) }
+}
+
 //Pos, Rot, Scale functions
 extension Node {
     //Position
@@ -108,6 +113,9 @@ extension Node {
     }
     func addPosZ(_ value: Float) {
         self._position.z += value
+    }
+    func addPos(_ value: simd_float3) {
+        self._position += value
     }
     
     //Rotation

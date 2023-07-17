@@ -13,33 +13,15 @@ class Triangle: Node {
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        InputManager.controller.extendedGamepad?.valueChangedHandler = { (gamepad, element) in
-            if element == gamepad.buttonA {
-                if gamepad.buttonA.isPressed {
-                    self.rotate(positive: true, deltaTime: deltaTime)
-                } else {
-                    self.rotate(positive: false, deltaTime: deltaTime)
-                }
-            }
-        }
-        
-        InputManager.keyboard?.keyboardInput?.keyChangedHandler = { (keyboard, element, code, pressed) in
-            if element == keyboard.button(forKeyCode: .keyA) {
-                if pressed {
-                    self.rotate(positive: true, deltaTime: deltaTime)
-                } else {
-                    self.rotate(positive: false, deltaTime: deltaTime)
-                }
-            }
-        }
+        self.time += deltaTime
     }
     
     func rotate(positive: Bool, deltaTime: Float) {
         self.time += deltaTime
         if positive {
-            self.setRotY(self.rotation.y + deltaTime * 3)
+            self.setRotY(self.rotation.y + deltaTime)
         } else {
-            self.setRotY(self.rotation.y - deltaTime * 3)
+            self.setRotY(self.rotation.y - deltaTime)
         }
     }
     

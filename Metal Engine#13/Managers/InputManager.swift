@@ -4,36 +4,37 @@ import GameController
 class InputManager {
     
     //Physical controllers
-    public static var controller = GCController()
-    public static var keyboard = GCKeyboard.coalesced
-    public static var mouse = GCMouse()
+    private static var controller = GCController()
+    private static var keyboard = GCKeyboard.coalesced
+    private static var mouse = GCMouse()
     
-    //Input profiles
-    public static var controllerInput = { return controller.physicalInputProfile }
-    public static var keyboardInput = { return keyboard?.keyboardInput! }
-    public static var mouseInput = { return mouse.mouseInput }
+    //Key states and such
+    public static var pressedKeys: Set<GCKeyCode> = []
+    public static var mouseLeftButton: Bool = false
+    public static var mouseRightButton: Bool = false
+    public static var mouseMiddleButton: Bool = false
+    private static var mouseDeltaX: Float = 0.0
+    private static var mouseDeltaY: Float = 0.0
     
-    public static var pressed: Bool = false
-    
-    static func test() {
-        controller.extendedGamepad?.valueChangedHandler = { (gamepad, element) in
-            if element == gamepad.buttonA {
-                if gamepad.buttonA.isPressed {
-                    pressed = true
-                } else {
-                    pressed = false
-                }
-            }
-        }
+    public static func getMouseDeltaX()-> Float {
+        let deltaX = mouseDeltaX
+        mouseDeltaX = 0.0
+        return deltaX
     }
     
+    public static func getMouseDeltaY()-> Float {
+        let deltaY = mouseDeltaY
+        mouseDeltaY = 0.0
+        return deltaY
+    }
+
     //Controller initializers
     static func initialize() {
         createController()
         createKeyboard()
         createMouse()
     }
-
+    
     private static func createController() {
         NotificationCenter.default.addObserver(forName: NSNotification.Name.GCControllerDidConnect,
                                                object: nil,
@@ -47,14 +48,40 @@ class InputManager {
                                                object: nil,
                                                queue: .main) { info in
             keyboard = info.object as? GCKeyboard
+            keyboard?.keyboardInput?.keyChangedHandler = { _, _, keycode, pressed in
+                if pressed {
+                    pressedKeys.insert(keycode)
+                } else {
+                    pressedKeys.remove(keycode)
+                }
+            }
         }
     }
     
     private static func createMouse() {
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.GCMouseDidBecomeCurrent,
+        let observer = NotificationCenter.default.addObserver(forName: NSNotification.Name.GCMouseDidBecomeCurrent,
                                                object: nil,
                                                queue: .main) { info in
             mouse = GCMouse.current.unsafelyUnwrapped
+            mouse.mouseInput?.mouseMovedHandler = { _, deltaX, deltaY in
+                mouseDeltaX = deltaX
+                mouseDeltaY = deltaY
+            }
+            mouse.mouseInput?.leftButton.pressedChangedHandler = { _, _, pressed in
+                mouseLeftButton = pressed
+            }
+            mouse.mouseInput?.rightButton?.pressedChangedHandler = { _, _, pressed in
+                mouseRightButton = pressed
+            }
+            mouse.mouseInput?.middleButton?.pressedChangedHandler = { _, _, pressed in
+                mouseMiddleButton = pressed
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.GCMouseDidStopBeingCurrent,
+                                               object: nil,
+                                               queue: .main) { info in
+            NotificationCenter.default.removeObserver(observer)
         }
     }
 }

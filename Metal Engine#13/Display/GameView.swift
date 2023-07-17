@@ -7,9 +7,7 @@ struct GameView: NSViewRepresentable {
     func updateNSView(_ nsView: MTKView, context: Context) {
         context.coordinator.mtkView(nsView, drawableSizeWillChange: nsView.drawableSize)
     }
-    
-    //Make Renderer class
-    //Called ´coordinator´ for some reason
+
     func makeCoordinator() -> Renderer {
         return Renderer()
     }
@@ -26,6 +24,8 @@ struct GameView: NSViewRepresentable {
         mtkView.colorPixelFormat = Preferences.pixelFormat
         mtkView.depthStencilPixelFormat = Preferences.depthFormat
         mtkView.clearColor = Preferences.clearColor
+        
+        mtkView.preferredFramesPerSecond = Preferences.preferredFPS
 
         return mtkView
     }

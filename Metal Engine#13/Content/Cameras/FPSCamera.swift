@@ -4,6 +4,8 @@ import GameController
 
 class FPSCamera: Camera {
     
+    var moveSpeed: Float = 0.2
+    
     init() {
         super.init("FPSCamera")
         self.fieldOfView = 80
@@ -12,9 +14,24 @@ class FPSCamera: Camera {
     }
     
     override func tick(_ deltaTime: Float) {
-        super.tick(deltaTime)
-        GCMouse.current?.mouseInput?.mouseMovedHandler = { input, dx, dy in
-            self.addRotZ(dx*500)
+        //Rotation with mouse Input
+        self.addRotY(InputManager.getMouseDeltaX() * deltaTime * 0.1)
+        self.addRotX(-InputManager.getMouseDeltaY() * deltaTime * 0.1)
+        
+        //Moving with keyboard input
+        if InputManager.pressedKeys.contains(.keyW) {
+            self.addPos(forwardVector * moveSpeed)
         }
+        if InputManager.pressedKeys.contains(.keyS) {
+            self.addPos(-forwardVector * moveSpeed)
+        }
+        if InputManager.pressedKeys.contains(.keyA) {
+            self.addPos(rightVector * moveSpeed)
+        }
+        if InputManager.pressedKeys.contains(.keyD) {
+            self.addPos(-rightVector * moveSpeed)
+        }
+        
+        super.tick(deltaTime)
     }
 }
