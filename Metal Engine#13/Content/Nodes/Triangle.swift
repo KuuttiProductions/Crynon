@@ -10,8 +10,9 @@ class Triangle: Node {
     
     init() {
         super.init("Triangle")
-        self.material.color = simd_float4(0.2, 1.0, 0.1, 1.0)
-        self.material.roughness = 0;
+        self.material.color = simd_float4(1.0, 0.3, 0.0, 1.0)
+        self.material.metallic = 0.9
+        self.material.roughness = 0.1;
     }
     
     override func tick(_ deltaTime: Float) {

@@ -15,7 +15,7 @@ class BasicScene: Scene {
         addCamera(camera, true)
         addLight(light)
         camera.setPosZ(5)
-        light.setPos(0, 5, 3)
+        light.setPos(3, 5, 0)
         light.lightData.color = simd_float4(1,1,1,1)
     }
     

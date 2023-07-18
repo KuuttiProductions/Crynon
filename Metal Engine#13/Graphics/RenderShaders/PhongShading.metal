@@ -26,18 +26,20 @@ public:
             LightData data = ld[i];
             float3 toLightVector = normalize(data.position - worldPosition);
             float3 toCameraVector = normalize(cameraPos - worldPosition);
+            float3 halfwayVector = normalize(toLightVector + toCameraVector);
+            
             float diffuseness = (mt.metallic * -1 + 1);
-            float specularness = ((mt.roughness * -1 + 1) * 1000);
+            float specularness = max(((mt.roughness * -1 + 1) * 100), 1.0);
             
-            float4 ambientColor = (float4(1,1,1,1) * data.color) * 0.1 * data.brightness;
-            totalAmbientColor += ambientColor;
+            float4 ambientColor = (float4(1,1,1,1) * data.color) * 0.03 * data.brightness * data.color;
+            totalAmbientColor += clamp(ambientColor, 0.0, 1.0);
             
-            float4 diffuseColor = dot(unitNormal, toLightVector) * diffuseness * data.brightness;
-            totalDiffuseColor += diffuseColor;
+            float4 diffuseColor = dot(unitNormal, toLightVector) * diffuseness * data.brightness * data.color;
+            totalDiffuseColor += clamp(diffuseColor, 0.0, 1.0);
             
-            float specularDot = dot(toLightVector, toCameraVector);
-            float4 specularColor = pow(specularDot, specularness) * data.brightness;
-            totalSpecularColor += specularColor;
+            float specularDot = dot(halfwayVector, unitNormal);
+            float4 specularColor = pow(specularDot, specularness) * data.brightness * data.color;
+            totalSpecularColor += clamp(specularColor, 0.0, 1.0);
         }
         
         return totalAmbientColor + totalDiffuseColor + totalSpecularColor;

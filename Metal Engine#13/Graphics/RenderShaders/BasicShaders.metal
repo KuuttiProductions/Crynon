@@ -30,7 +30,7 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
                               constant LightData *lightData [[ buffer(3) ]],
                               constant int &lightCount [[ buffer(4) ]]) {
     
-    float4 color = float4(1,1,1,1);
+    float4 color = material.color;
     float3 unitNormal = normalize(VerOut.normal);
     
     color *= PhongShading::getPhongLight(VerOut.worldPosition,
