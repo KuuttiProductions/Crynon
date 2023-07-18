@@ -1,5 +1,6 @@
 
 import MetalKit
+import GameController
 
 //This is a test class
 class Triangle: Node {
@@ -15,8 +16,16 @@ class Triangle: Node {
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        setRotY(sin(time))
-        time += deltaTime
+        self.time += deltaTime
+    }
+    
+    func rotate(positive: Bool, deltaTime: Float) {
+        self.time += deltaTime
+        if positive {
+            self.setRotY(self.rotation.y + deltaTime)
+        } else {
+            self.setRotY(self.rotation.y - deltaTime)
+        }
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {

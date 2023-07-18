@@ -4,7 +4,7 @@ import simd
 class BasicScene: Scene {
     
     let triangle = Triangle()
-    let camera = Camera("FPSCamera")
+    let camera = FPSCamera()
     let light = Light("PointLight")
     
     var time: Float = 0.0

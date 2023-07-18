@@ -26,7 +26,7 @@ extension Renderer: MTKViewDelegate {
     func draw(in view: MTKView) {
         guard let drawable = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         
-        SceneManager.tick(1/60)
+        SceneManager.tick(1/Float(Preferences.preferredFPS))
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)

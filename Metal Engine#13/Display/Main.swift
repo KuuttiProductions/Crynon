@@ -5,9 +5,12 @@ typealias SwiftScene = SwiftUI.Scene
 
 @main
 struct MetalEngine13App: App {
+    
     var body: some SwiftScene {
         WindowGroup {
             ContentView()
-        }.windowStyle(.hiddenTitleBar)
+                .presentedWindowStyle(.hiddenTitleBar)
+                .navigationTitle("")
+        }
     }
 }

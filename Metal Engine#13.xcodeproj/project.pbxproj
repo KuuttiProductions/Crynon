@@ -42,6 +42,8 @@
 		518E4E862A2B6801007A7C83 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E852A2B6801007A7C83 /* Math.swift */; };
 		51978FFF2A2504E600F87A20 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51978FFE2A2504E600F87A20 /* Core.swift */; };
 		519790012A25065900F87A20 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519790002A25065900F87A20 /* GameView.swift */; };
+		51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B299132A505E7E0043F3E1 /* InputManager.swift */; };
+		51BA0D282A6440FB00A88604 /* FPSCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D272A6440FB00A88604 /* FPSCamera.swift */; };
 		51BA0D212A6415A900A88604 /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D202A6415A900A88604 /* Light.swift */; };
 		51BA0D232A64171900A88604 /* LightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D222A64171900A88604 /* LightManager.swift */; };
 		51BA0D252A641F1700A88604 /* PhongShading.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D242A641F1700A88604 /* PhongShading.metal */; };
@@ -85,6 +87,9 @@
 		518E4E852A2B6801007A7C83 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		51978FFE2A2504E600F87A20 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		519790002A25065900F87A20 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		51B299132A505E7E0043F3E1 /* InputManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputManager.swift; sourceTree = "<group>"; };
+		51B299182A5079C30043F3E1 /* Metal-Engine-13-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Metal-Engine-13-Info.plist"; path = "Metal Engine#13/OtherFiles/Metal-Engine-13-Info.plist"; sourceTree = SOURCE_ROOT; };
+		51BA0D272A6440FB00A88604 /* FPSCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSCamera.swift; sourceTree = "<group>"; };
 		51BA0D202A6415A900A88604 /* Light.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
 		51BA0D222A64171900A88604 /* LightManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightManager.swift; sourceTree = "<group>"; };
 		51BA0D242A641F1700A88604 /* PhongShading.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PhongShading.metal; sourceTree = "<group>"; };
@@ -126,6 +131,7 @@
 		513C1F402A28D651003155B0 /* OtherFiles */ = {
 			isa = PBXGroup;
 			children = (
+				51B299182A5079C30043F3E1 /* Metal-Engine-13-Info.plist */,
 				5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */,
 			);
 			path = OtherFiles;
@@ -193,6 +199,7 @@
 		51477C6A2A2A3AFC00293CCC /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				51B299132A505E7E0043F3E1 /* InputManager.swift */,
 				51477C6B2A2A3B1200293CCC /* MetalResourceManager.swift */,
 				518E4E742A2B0266007A7C83 /* SceneManager.swift */,
 				5188BC722A2B920300AD5CB2 /* CameraManager.swift */,
@@ -285,6 +292,7 @@
 		518E4E822A2B5816007A7C83 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				51BA0D262A6440F000A88604 /* Cameras */,
 				518E4E832A2B5834007A7C83 /* Scenes */,
 				518E4E842A2B5839007A7C83 /* Nodes */,
 			);
@@ -305,6 +313,14 @@
 				518E4E802A2B56E1007A7C83 /* Triangle.swift */,
 			);
 			path = Nodes;
+			sourceTree = "<group>";
+		};
+		51BA0D262A6440F000A88604 /* Cameras */ = {
+			isa = PBXGroup;
+			children = (
+				51BA0D272A6440FB00A88604 /* FPSCamera.swift */,
+			);
+			path = Cameras;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -381,6 +397,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */,
 				5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */,
 				518E4E7F2A2B54B2007A7C83 /* BasicScene.swift in Sources */,
 				511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */,
@@ -403,6 +420,7 @@
 				51BA0D232A64171900A88604 /* LightManager.swift in Sources */,
 				518E4E782A2B096E007A7C83 /* Node.swift in Sources */,
 				51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */,
+				51BA0D282A6440FB00A88604 /* FPSCamera.swift in Sources */,
 				51641C712A2DF9AA00F5A16E /* MeshLoader.swift in Sources */,
 				518E4E812A2B56E1007A7C83 /* Triangle.swift in Sources */,
 				51477C6C2A2A3B1200293CCC /* MetalResourceManager.swift in Sources */,
@@ -546,6 +564,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 406;
 				CURRENT_PROJECT_VERSION = 193;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
@@ -553,6 +572,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Metal-Engine-13-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Metal-Engine-13";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -580,6 +600,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 406;
 				CURRENT_PROJECT_VERSION = 193;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
@@ -587,6 +608,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Metal-Engine-13-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Metal-Engine-13";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

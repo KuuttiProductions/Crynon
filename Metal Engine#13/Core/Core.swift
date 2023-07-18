@@ -16,6 +16,8 @@ class Core {
         GPLibrary.initialize()
         AssetLibrary.initialize()
         
+        InputManager.initialize()
+        
         SceneManager.initialize()
     }
 }
