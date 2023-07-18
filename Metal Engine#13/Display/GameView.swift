@@ -33,10 +33,6 @@ struct GameView: NSViewRepresentable {
         
         mtkView.preferredFramesPerSecond = Preferences.preferredFPS
         
-        NSCursor.hide()
-
         return mtkView
     }
-    
-    
 }
