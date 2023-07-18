@@ -1,14 +1,27 @@
 
 import GameController
+import CoreHaptics
 
 class InputManager {
     
     //Physical controllers
-    private static var controller = GCController()
-    private static var keyboard = GCKeyboard.coalesced
-    private static var mouse = GCMouse()
+    public static var controller = GCController()
+    public static var keyboard = GCKeyboard.coalesced
+    public static var mouse = GCMouse()
     
     //Key states and such
+    public static var controllerLX: Float = 0.0
+    public static var controllerLY: Float = 0.0
+    public static var controllerRX: Float = 0.0
+    public static var controllerRY: Float = 0.0
+    public static var controllerTriggerL: Float = 0.0
+    public static var controllerTriggerR: Float = 0.0
+    public static var controllerA: Bool = false
+    public static var controllerB: Bool = false
+    public static var controllerX: Bool = false
+    public static var controllerY: Bool = false
+    public static var controllerThumbstickL: Bool = false
+    public static var controllerThumbstickR: Bool = false
     public static var pressedKeys: Set<GCKeyCode> = []
     public static var mouseLeftButton: Bool = false
     public static var mouseRightButton: Bool = false
@@ -17,6 +30,42 @@ class InputManager {
     private static var mouseDeltaY: Float = 0.0
     private static var scrollDeltaX: Float = 0.0
     private static var scrollDeltaY: Float = 0.0
+    public static var hapticEngineHandles: CHHapticEngine!
+    public static var hapticEngineLeftTrigger: CHHapticEngine!
+    public static var hapticEngineRightTrigger: CHHapticEngine!
+    
+    public static  func playTransientHaptic(_ intensity: Float, _ locality: GCHapticsLocality = .handles) {
+        if getHapticEngine(locality) != nil {
+            do {
+                let hapticPlayer = try patternPlayerForHaptics(intensity, getHapticEngine(locality)!)
+                try hapticPlayer?.start(atTime: CHHapticTimeImmediate)
+            } catch let error {
+                print ("Haptic playback error: \(error)")
+            }
+        }
+    }
+    
+    static func getHapticEngine(_ locality: GCHapticsLocality)-> CHHapticEngine? {
+        switch locality {
+        case .handles:
+            return hapticEngineHandles
+        case .leftTrigger:
+            return hapticEngineLeftTrigger
+        case .rightTrigger:
+            return hapticEngineRightTrigger
+        default:
+            return hapticEngineHandles
+        }
+    }
+    
+    public static func patternPlayerForHaptics(_ intensity: Float, _ engine: CHHapticEngine) throws -> CHHapticPatternPlayer? {
+        let transientEvent = CHHapticEvent(eventType: .hapticTransient, parameters: [
+            CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.0),
+            CHHapticEventParameter(parameterID: .hapticIntensity, value: intensity)
+        ], relativeTime: 0)
+        let pattern = try CHHapticPattern(events: [transientEvent], parameters: [])
+        return try engine.makePlayer(with: pattern)
+    }
     
     public static func getMouseDeltaX()-> Float {
         let deltaX = mouseDeltaX
@@ -54,6 +103,48 @@ class InputManager {
                                                object: nil,
                                                queue: nil) { info in
             controller = GCController.controllers()[0]
+            controller.extendedGamepad?.valueChangedHandler = { profile, element in
+                if element == profile.leftThumbstick {
+                    controllerLX = profile.leftThumbstick.xAxis.value
+                }
+                if element == profile.leftThumbstick {
+                    controllerLY = profile.leftThumbstick.yAxis.value
+                }
+                if element == profile.rightThumbstick {
+                    controllerRX = profile.rightThumbstick.xAxis.value
+                }
+                if element == profile.rightThumbstick {
+                    controllerRY = profile.rightThumbstick.yAxis.value
+                }
+                if element == profile.leftTrigger {
+                    controllerTriggerL = profile.leftTrigger.value
+                }
+                if element == profile.rightTrigger {
+                    controllerTriggerR = profile.rightTrigger.value
+                }
+                if element == profile.buttonA {
+                    controllerA = profile.buttonA.isPressed
+                }
+                if element == profile.buttonB {
+                    controllerB = profile.buttonB.isPressed
+                }
+                if element == profile.buttonX {
+                    controllerX = profile.buttonX.isPressed
+                }
+                if element == profile.buttonY {
+                    controllerY = profile.buttonY.isPressed
+                }
+            }
+            hapticEngineHandles = controller.haptics?.createEngine(withLocality: .handles)
+            hapticEngineLeftTrigger = controller.haptics?.createEngine(withLocality: .leftTrigger)
+            hapticEngineRightTrigger = controller.haptics?.createEngine(withLocality: .rightTrigger)
+            do {
+                try hapticEngineHandles?.start()
+                try hapticEngineLeftTrigger?.start()
+                try hapticEngineRightTrigger?.start()
+            } catch let error {
+                print("Error: \(error)")
+            }
         }
     }
     
