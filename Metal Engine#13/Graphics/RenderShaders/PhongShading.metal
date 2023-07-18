@@ -1,9 +1,3 @@
-//
-//  PhongShading.metal
-//  Metal Engine#13
-//
-//  Created by Kuutti Taavitsainen on 16.7.2023.
-//
 
 #include <metal_stdlib>
 #include "Shared.metal"

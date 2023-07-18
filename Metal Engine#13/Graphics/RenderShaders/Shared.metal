@@ -1,9 +1,3 @@
-//
-//  Shared.metal
-//  Metal Engine#13
-//
-//  Created by Kuutti Taavitsainen on 1.6.2023.
-//
 
 #include <metal_stdlib>
 using namespace metal;

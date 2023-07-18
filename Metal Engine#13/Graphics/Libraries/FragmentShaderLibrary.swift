@@ -3,18 +3,20 @@ import MetalKit
 
 enum FragmentShaderType {
     case Basic
+    case Final
 }
 
 class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
     
-    var library: [FragmentShaderType : FragmentShader] = [:]
+    private var _library: [FragmentShaderType : FragmentShader] = [:]
     
     override func fillLibrary() {
-        library.updateValue(FragmentShader("basic_fragment", "Basic Fragment Function"), forKey: .Basic)
+        _library.updateValue(FragmentShader("basic_fragment", "Basic Fragment Function"), forKey: .Basic)
+        _library.updateValue(FragmentShader("final_fragment", "Final Fragment Function"), forKey: .Final)
     }
     
     override subscript(type: FragmentShaderType) -> MTLFunction! {
-        return library[type]?.function
+        return _library[type]?.function
     }
 }
 

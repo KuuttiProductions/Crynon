@@ -3,18 +3,20 @@ import MetalKit
 
 enum RenderPipelineStateType {
     case Basic
+    case Final
 }
 
 class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipelineState> {
     
-    private var library: [RenderPipelineStateType : RenderPipelineState] = [:]
+    private var _library: [RenderPipelineStateType : RenderPipelineState] = [:]
     
     override func fillLibrary() {
-        library.updateValue(Basic_RenderPipelineState(), forKey: .Basic)
+        _library.updateValue(Basic_RenderPipelineState(), forKey: .Basic)
+        _library.updateValue(Final_RenderPipelineState(), forKey: .Final)
     }
     
     override subscript(type: RenderPipelineStateType) -> MTLRenderPipelineState! {
-        return library[type]?.renderPipelineState
+        return _library[type]?.renderPipelineState
     }
 }
 
@@ -40,6 +42,19 @@ class Basic_RenderPipelineState: RenderPipelineState {
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Basic]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Basic RenderPipelineState"
+        create()
+    }
+}
+
+class Final_RenderPipelineState: RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Final]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Final]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "Final RenderPipelineState"
         create()
     }
 }

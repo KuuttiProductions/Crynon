@@ -1,9 +1,3 @@
-//
-//  BasicShaders.metal
-//  Metal Engine#13
-//
-//  Created by Kuutti Taavitsainen on 31.5.2023.
-//
 
 #include <metal_stdlib>
 #include "PhongShading.metal"

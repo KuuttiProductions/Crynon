@@ -3,7 +3,8 @@ import simd
 
 class BasicScene: Scene {
     
-    let triangle = Triangle()
+    let object = Object(mesh: .Object)
+    let cube = Object(mesh: .Cube)
     let camera = FPSCamera()
     let light = Light("PointLight")
     
@@ -11,9 +12,12 @@ class BasicScene: Scene {
     
     init() {
         super.init("BasicScene")
-        addChild(triangle)
+        addChild(object)
+        addChild(cube)
         addCamera(camera, true)
         addLight(light)
+        cube.setPos(0, -3, 0)
+        cube.setScale(5, 0.2, 5)
         camera.setPosZ(5)
         light.setPos(3, 5, 0)
         light.lightData.color = simd_float4(1,1,1,1)

@@ -2,23 +2,23 @@
 import MetalKit
 
 enum MeshType {
-    case Triangle
+    case Quad
     case Cube
     case Object
 }
 
 class MeshLibrary: Library<MeshType, Mesh> {
     
-    var library: [MeshType : Mesh] = [:]
+    private var _library: [MeshType : Mesh] = [:]
     
     override func fillLibrary() {
-        library.updateValue(Triangle_Mesh(), forKey: .Triangle)
-        library.updateValue(MeshLoader.loadNormalMesh("Cube"), forKey: .Cube)
-        library.updateValue(MeshLoader.loadNormalMesh("Object"), forKey: .Object)
+        _library.updateValue(Quad_Mesh(), forKey: .Quad)
+        _library.updateValue(MeshLoader.loadNormalMesh("Cube"), forKey: .Cube)
+        _library.updateValue(MeshLoader.loadNormalMesh("Object"), forKey: .Object)
     }
     
     override subscript(type: MeshType) -> Mesh! {
-        return library[type]
+        return _library[type]
     }
 }
 
@@ -86,12 +86,15 @@ class Submesh {
     }
 }
 
-class Triangle_Mesh: Mesh {
+class Quad_Mesh: Mesh {
     override func createVertices() {
         vertices = [
-            Vertex(position: simd_float3(-1, -1, 0), color: simd_float4(1, 0, 0, 1)),
-            Vertex(position: simd_float3( 0,  1, 0), color: simd_float4(0, 1, 0, 1)),
-            Vertex(position: simd_float3( 1, -1, 0), color: simd_float4(0, 0, 1, 1))
+            Vertex(position: simd_float3(-1, -1, 0), textureCoordinate: simd_float2(0,1)),
+            Vertex(position: simd_float3(-1,  1, 0), textureCoordinate: simd_float2(0,0)),
+            Vertex(position: simd_float3( 1, -1, 0), textureCoordinate: simd_float2(1,1)),
+            Vertex(position: simd_float3(-1,  1, 0), textureCoordinate: simd_float2(0,0)),
+            Vertex(position: simd_float3( 1,  1, 0), textureCoordinate: simd_float2(1,0)),
+            Vertex(position: simd_float3( 1, -1, 0), textureCoordinate: simd_float2(1,1))
         ]
     }
 }
