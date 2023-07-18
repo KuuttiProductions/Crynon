@@ -42,6 +42,23 @@ struct ModelConstant: sizeable {
     var modelMatrix = matrix_identity_float4x4
 }
 
-struct SceneConstant: sizeable {
+struct VertexSceneConstant: sizeable {
     var viewMatrix = matrix_identity_float4x4
+}
+
+struct FragmentSceneConstant: sizeable {
+    var cameraPosition: simd_float3 = simd_float3(0,0,0)
+}
+
+struct LightData: sizeable {
+    var brightness: Float = 1.0
+    var color: simd_float4 = simd_float4(0,0,0,0)
+    var radius: Float = 1.0
+    var position: simd_float3 = simd_float3()
+}
+
+struct Material: sizeable {
+    var color: simd_float4 = simd_float4(1,1,1,1)
+    var metallic: Float = 0.0
+    var roughness: Float = 0.5
 }

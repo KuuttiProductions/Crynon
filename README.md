@@ -1,15 +1,33 @@
 # Metal-Engine-13
 
-### About ###
-This is a game-engine made in Swift/Metal by KudeKube.
+## About ##
+Metal-Engine-13 or ME13 is a game-engine made in Swift/Metal by KudeKube.
 
-### Plans ###
-Initial plans are 3D rendering with semi-advanced shading and gameloop systems.
-Upgrades from Metal-Test-12 are as such:
-- Much more robust rendering system.
-- Enchancements in Input systems like event based input.
-- Possibility for making actual gameloops.
-- Possibly simple physics. Atleast hit testing.
-- Audio playback.
+Updates are posted on Youtube: [KudeKube](https://www.youtube.com/channel/UCXDI-MFA_Gp8vXyaJ80Zc5Q)
 
-- More features will be added as needed. These are just initial ideas.
+![Logo](MetalEngine.png)
+
+## Plans ##
+Here are the plans for ME13 during 2023. More will be added.
+
+### Rendering ###
+- Efficient 3D renderer
+- Dynamic Shadows
+- MetalFX support
+- HDR (Display)
+- SSAO
+- Post-process effects such as Bloom and DOF
+- More to be added
+
+### Gameloops ###
+- High-level object system
+- Cameras, Player Controllers, Lights, Objects
+- Simple Physics engine for character movement and hit tests
+
+### User Interface ###
+- SwiftUI for UI
+- Premade SwiftUI views for fast use in game
+
+### Other features ###
+- Input system with event based input
+- Audio playback
