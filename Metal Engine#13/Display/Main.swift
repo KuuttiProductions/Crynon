@@ -10,6 +10,7 @@ struct MetalEngine13App: App {
         WindowGroup {
             ContentView()
                 .presentedWindowStyle(.hiddenTitleBar)
+                .navigationTitle("")
         }
     }
 }

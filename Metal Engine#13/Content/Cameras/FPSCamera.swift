@@ -38,6 +38,9 @@ class FPSCamera: Camera {
             self.addPosY(-deltaTime * moveSpeed)
         }
         
+        //Changing FOV with scroll
+        self.fieldOfView += InputManager.getScrollDeltaY() * deltaTime * 3
+        
         super.tick(deltaTime)
     }
 }

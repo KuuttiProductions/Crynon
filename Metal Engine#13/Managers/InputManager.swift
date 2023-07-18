@@ -15,6 +15,8 @@ class InputManager {
     public static var mouseMiddleButton: Bool = false
     private static var mouseDeltaX: Float = 0.0
     private static var mouseDeltaY: Float = 0.0
+    private static var scrollDeltaX: Float = 0.0
+    private static var scrollDeltaY: Float = 0.0
     
     public static func getMouseDeltaX()-> Float {
         let deltaX = mouseDeltaX
@@ -25,6 +27,18 @@ class InputManager {
     public static func getMouseDeltaY()-> Float {
         let deltaY = mouseDeltaY
         mouseDeltaY = 0.0
+        return deltaY
+    }
+    
+    public static func getScrollDeltaX()-> Float {
+        let deltaX = scrollDeltaX
+        scrollDeltaX = 0.0
+        return deltaX
+    }
+    
+    public static func getScrollDeltaY()-> Float {
+        let deltaY = scrollDeltaY
+        scrollDeltaX = 0.0
         return deltaY
     }
 
@@ -64,17 +78,23 @@ class InputManager {
                                                queue: .main) { info in
             mouse = GCMouse.current.unsafelyUnwrapped
             mouse.mouseInput?.mouseMovedHandler = { _, deltaX, deltaY in
-                mouseDeltaX = deltaX
-                mouseDeltaY = deltaY
+                self.mouseDeltaX = deltaX
+                self.mouseDeltaY = deltaY
             }
             mouse.mouseInput?.leftButton.pressedChangedHandler = { _, _, pressed in
-                mouseLeftButton = pressed
+                self.mouseLeftButton = pressed
             }
             mouse.mouseInput?.rightButton?.pressedChangedHandler = { _, _, pressed in
-                mouseRightButton = pressed
+                self.mouseRightButton = pressed
             }
             mouse.mouseInput?.middleButton?.pressedChangedHandler = { _, _, pressed in
-                mouseMiddleButton = pressed
+                self.mouseMiddleButton = pressed
+            }
+            mouse.mouseInput?.scroll.xAxis.valueChangedHandler = { _, value in
+                self.scrollDeltaX = value
+            }
+            mouse.mouseInput?.scroll.yAxis.valueChangedHandler = { _, value in
+                self.scrollDeltaY = value
             }
         }
         
