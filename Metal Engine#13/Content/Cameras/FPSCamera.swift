@@ -4,7 +4,7 @@ import GameController
 
 class FPSCamera: Camera {
     
-    var moveSpeed: Float = 0.2
+    var moveSpeed: Float = 3
     
     init() {
         super.init("FPSCamera")
@@ -15,21 +15,27 @@ class FPSCamera: Camera {
     
     override func tick(_ deltaTime: Float) {
         //Rotation with mouse Input
-        self.addRotY(InputManager.getMouseDeltaX() * deltaTime * 0.1)
-        self.addRotX(-InputManager.getMouseDeltaY() * deltaTime * 0.1)
+        self.addRotY(InputManager.getMouseDeltaX() * deltaTime * 0.2)
+        self.addRotX(-InputManager.getMouseDeltaY() * deltaTime * 0.2)
         
         //Moving with keyboard input
         if InputManager.pressedKeys.contains(.keyW) {
-            self.addPos(forwardVector * moveSpeed)
+            self.addPos(forwardVector * deltaTime * moveSpeed)
         }
         if InputManager.pressedKeys.contains(.keyS) {
-            self.addPos(-forwardVector * moveSpeed)
+            self.addPos(-forwardVector * deltaTime * moveSpeed)
         }
         if InputManager.pressedKeys.contains(.keyA) {
-            self.addPos(rightVector * moveSpeed)
+            self.addPos(-rightVector * deltaTime * moveSpeed)
         }
         if InputManager.pressedKeys.contains(.keyD) {
-            self.addPos(-rightVector * moveSpeed)
+            self.addPos(rightVector * deltaTime * moveSpeed)
+        }
+        if InputManager.pressedKeys.contains(.spacebar) {
+            self.addPosY(deltaTime * moveSpeed)
+        }
+        if InputManager.pressedKeys.contains(.leftShift) {
+            self.addPosY(-deltaTime * moveSpeed)
         }
         
         super.tick(deltaTime)

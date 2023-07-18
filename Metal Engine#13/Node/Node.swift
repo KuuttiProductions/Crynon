@@ -81,8 +81,8 @@ class Node {
 }
 
 extension Node {
-    var forwardVector: simd_float3 { return simd_float3(sin(rotation.y), 0, cos(rotation.y)) }
-    var rightVector: simd_float3 { return simd_float3(sin(rotation.y) + Float.pi*0.5, 0, cos(rotation.y) + Float.pi*0.5) }
+    var forwardVector: simd_float3 { return simd_float3(sin(rotation.y), 0, -cos(rotation.y)) }
+    var rightVector: simd_float3 { return simd_float3(sin(rotation.y + Float.pi*0.5), 0, -cos(rotation.y + Float.pi*0.5)) }
 }
 
 //Pos, Rot, Scale functions

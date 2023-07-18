@@ -1,10 +1,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    
-    @FocusState private var isFocused: Bool
-    
+struct ContentView: View {    
     var body: some View {
         VStack {
             GameView()
