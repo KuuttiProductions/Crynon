@@ -13,11 +13,10 @@ class Camera: Node {
     }
     
     var projectionMatrix: matrix_float4x4 {
-//        return matrix_float4x4.perspective(degreesFov: fieldOfView,
-//                                           aspectRatio: Renderer.aspectRatio,
-//                                           near: nearPlane,
-//                                           far: farPlane)
-        return matrix_float4x4.orthographic(left: -10, right: 10, bottom: -10, top: 10, near: -10, far: 10)
+        return matrix_float4x4.perspective(degreesFov: fieldOfView,
+                                           aspectRatio: Renderer.aspectRatio,
+                                           near: nearPlane,
+                                           far: farPlane)
     }
     
     var viewMatrix: matrix_float4x4 {
