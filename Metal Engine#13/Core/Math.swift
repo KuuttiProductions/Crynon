@@ -112,11 +112,32 @@ extension matrix_float4x4 {
         
         var result = matrix_identity_float4x4
         result.columns = (
-            vector_float4(x, 0, 0,  0),
-            vector_float4(0, y, 0,  0),
-            vector_float4(0, 0, z, -1),
-            vector_float4(0, 0, w,  0)
+            simd_float4(x, 0, 0,  0),
+            simd_float4(0, y, 0,  0),
+            simd_float4(0, 0, z, -1),
+            simd_float4(0, 0, w,  0)
         )
+        return result
+    }
+    
+    static func orthographic(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)-> matrix_float4x4 {
+        let x = 2 / (right-left)
+        let y = 2 / (top-bottom)
+        let z = -2 / (far-near)
+        let u = -((left+right) / (right-left))
+        let w = -((top+bottom) / (top-bottom))
+        let q = -((far+near) / (far-near))
+        
+        var result = matrix_identity_float4x4
+        result.columns = (
+            simd_float4(x, 0, 0, 0),
+            simd_float4(0, y, 0, 0),
+            simd_float4(0, 0, z, 0),
+            simd_float4(u, w, q, 1)
+        )
+        
+        
+        
         return result
     }
 }
