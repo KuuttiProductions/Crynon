@@ -44,6 +44,10 @@ class Object: Node {
     
     override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         renderCommandEncoder.pushDebugGroup("Casting shadow with \(name!)")
+        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Shadow])
+        renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
+        renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
+        AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
         super.castShadow(renderCommandEncoder)
     }
 }

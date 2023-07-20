@@ -1,11 +1,13 @@
 
 #include <metal_stdlib>
 #include "PhongShading.metal"
+#include "Shadows.metal"
 using namespace metal;
 
 vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
                               constant ModelConstant &modelConstant [[ buffer(1) ]],
-                              constant VertexSceneConstant &sceneConstant [[ buffer(2) ]]) {
+                              constant VertexSceneConstant &sceneConstant [[ buffer(2) ]],
+                              constant float4x4 &depthViewMatrix [[ buffer(3) ]]) {
     
     VertexOut VerOut;
     float4 worldPosition = modelConstant.modelMatrix * float4(VerIn.position, 1);
@@ -14,6 +16,8 @@ vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
     VerOut.color = VerIn.color;
     VerOut.normal = (modelConstant.modelMatrix * float4(VerIn.normal, 0)).xyz;
     VerOut.worldPosition = worldPosition.xyz;
+    VerOut.textureCoordinate = VerIn.textureCoordinate;
+    VerOut.lightSpacePosition = depthViewMatrix * worldPosition;
     
     return VerOut;
 }
@@ -22,17 +26,34 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
                               constant Material &material [[ buffer(1) ]],
                               constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                               constant LightData *lightData [[ buffer(3) ]],
-                              constant int &lightCount [[ buffer(4) ]]) {
+                              constant int &lightCount [[ buffer(4) ]],
+                              depth2d<float> shadowMap1 [[ texture(0) ]]) {
     
     float4 color = material.color;
     float3 unitNormal = normalize(VerOut.normal);
     
+    float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
+    float2 uv = surfacePosition.xy * float2(0.5, -0.5) + 0.5;
+    float closest = shadowMap1.sample(sampler2d, uv);
+    float surface = surfacePosition.z;
+    float lightness;
+    
+//    color = Shadows::getBrightness(shadowMap1, VerOut.lightSpacePosition.xyz/VerOut.lightSpacePosition.w);
+    
+    if (surface - 0.0001 > closest) {
+        lightness = 0;
+    } else {
+        lightness = 1;
+    }
+
     color *= PhongShading::getPhongLight(VerOut.worldPosition,
                                          unitNormal,
                                          lightData,
                                          lightCount,
                                          material,
                                          fragmentSceneConstant.cameraPosition);
+    
+    color *= lightness;
     
     return half4(color.r, color.g, color.b, color.a);
 }

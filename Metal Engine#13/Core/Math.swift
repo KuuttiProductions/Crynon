@@ -23,6 +23,16 @@ extension Float {
     }
 }
 
+extension Double {
+    var deg2rad: Double {
+        return self * Double.pi / 180
+    }
+    
+    var rad2deg: Double {
+        return self / Double.pi * 180
+    }
+}
+
 extension matrix_float4x4 {
     
     mutating func translate(position: simd_float3) {

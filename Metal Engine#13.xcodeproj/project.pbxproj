@@ -35,6 +35,8 @@
 		51641C772A2DFA2600F5A16E /* Cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51641C752A2DFA2600F5A16E /* Cube.mtl */; };
 		51641C792A2E0AF700F5A16E /* DepthStencilStateLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51641C782A2E0AF700F5A16E /* DepthStencilStateLibrary.swift */; };
 		51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */; };
+		518323EC2A690F8B00D171FA /* ShadowShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323EB2A690F8B00D171FA /* ShadowShaders.metal */; };
+		518323EE2A691E5C00D171FA /* Shadows.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323ED2A691E5C00D171FA /* Shadows.metal */; };
 		5188BC712A2B90ED00AD5CB2 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188BC702A2B90ED00AD5CB2 /* Camera.swift */; };
 		5188BC732A2B920300AD5CB2 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5188BC722A2B920300AD5CB2 /* CameraManager.swift */; };
 		518E4E752A2B0266007A7C83 /* SceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E742A2B0266007A7C83 /* SceneManager.swift */; };
@@ -83,6 +85,8 @@
 		51641C752A2DFA2600F5A16E /* Cube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.mtl; sourceTree = "<group>"; };
 		51641C782A2E0AF700F5A16E /* DepthStencilStateLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthStencilStateLibrary.swift; sourceTree = "<group>"; };
 		51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshLibrary.swift; sourceTree = "<group>"; };
+		518323EB2A690F8B00D171FA /* ShadowShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ShadowShaders.metal; sourceTree = "<group>"; };
+		518323ED2A691E5C00D171FA /* Shadows.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shadows.metal; sourceTree = "<group>"; };
 		5188BC702A2B90ED00AD5CB2 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		5188BC722A2B920300AD5CB2 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		518E4E742A2B0266007A7C83 /* SceneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneManager.swift; sourceTree = "<group>"; };
@@ -182,6 +186,8 @@
 				511B6C062A27AA530067AEBF /* BasicShaders.metal */,
 				512FFD602A66EF0A001987A0 /* FinalShaders.metal */,
 				51BA0D242A641F1700A88604 /* PhongShading.metal */,
+				518323EB2A690F8B00D171FA /* ShadowShaders.metal */,
+				518323ED2A691E5C00D171FA /* Shadows.metal */,
 			);
 			path = RenderShaders;
 			sourceTree = "<group>";
@@ -422,6 +428,7 @@
 				512FFD612A66EF0A001987A0 /* FinalShaders.metal in Sources */,
 				513C1F4A2A28E064003155B0 /* GPLibrary.swift in Sources */,
 				5188BC712A2B90ED00AD5CB2 /* Camera.swift in Sources */,
+				518323EE2A691E5C00D171FA /* Shadows.metal in Sources */,
 				51BA0D252A641F1700A88604 /* PhongShading.metal in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
@@ -430,6 +437,7 @@
 				518E4E7A2A2B0BA4007A7C83 /* Scene.swift in Sources */,
 				512FFD5C2A66C7AB001987A0 /* TextureLibrary.swift in Sources */,
 				51BA0D232A64171900A88604 /* LightManager.swift in Sources */,
+				518323EC2A690F8B00D171FA /* ShadowShaders.metal in Sources */,
 				518E4E782A2B096E007A7C83 /* Node.swift in Sources */,
 				51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */,
 				51BA0D282A6440FB00A88604 /* FPSCamera.swift in Sources */,
@@ -576,7 +584,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 291;
+				CURRENT_PROJECT_VERSION = 335;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -611,7 +619,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 291;
+				CURRENT_PROJECT_VERSION = 335;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

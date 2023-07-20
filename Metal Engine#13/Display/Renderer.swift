@@ -23,10 +23,11 @@ class Renderer: NSObject {
                                                                               mipmapped: false)
         depthTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
         let depthTexture = Core.device.makeTexture(descriptor: depthTextureDescriptor)
-        AssetLibrary.textures.addTexture(depthTexture, key: "RenderTargetShadowDepth")
+        AssetLibrary.textures.addTexture(depthTexture, key: "ShadowMap1")
         
-        shadowRenderPassDescriptor.depthAttachment.texture = AssetLibrary.textures["RenderTargetShadowDepth"]
+        shadowRenderPassDescriptor.depthAttachment.texture = AssetLibrary.textures["ShadowMap1"]
         shadowRenderPassDescriptor.depthAttachment.loadAction = .clear
+        shadowRenderPassDescriptor.depthAttachment.storeAction = .store
     }
     
     func createForwardRenderPassDescriptor() {

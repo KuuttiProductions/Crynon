@@ -19,6 +19,17 @@ class LightManager {
         renderCommandEncoder.setFragmentBytes(&lightCount, length: Int.stride, index: 4)
     }
     
+    func passShadowLight(renderCommandEncoder: MTLRenderCommandEncoder!) {
+        var viewMatrix: matrix_float4x4!
+        for light in _lights {
+            if light.shadows == true {
+                viewMatrix = light.projectionMatrix * light.viewMatrix
+                break
+            }
+        }
+        renderCommandEncoder.setVertexBytes(&viewMatrix, length: matrix_float4x4.stride, index: 3)
+    }
+    
     func tick(deltaTime: Float) {
         for light in _lights {
             light.tick(deltaTime)

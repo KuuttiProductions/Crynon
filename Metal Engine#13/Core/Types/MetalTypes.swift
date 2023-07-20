@@ -28,6 +28,7 @@ extension UInt: sizeable {}
 extension simd_float2: sizeable {}
 extension simd_float3: sizeable {}
 extension simd_float4: sizeable {}
+extension matrix_float4x4: sizeable {}
 
 //===== Types that are used with Metal =====
 

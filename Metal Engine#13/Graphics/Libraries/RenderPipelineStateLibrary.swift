@@ -4,6 +4,7 @@ import MetalKit
 enum RenderPipelineStateType {
     case Basic
     case Final
+    case Shadow
 }
 
 class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipelineState> {
@@ -13,6 +14,7 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
     override func fillLibrary() {
         _library.updateValue(Basic_RenderPipelineState(), forKey: .Basic)
         _library.updateValue(Final_RenderPipelineState(), forKey: .Final)
+        _library.updateValue(Shadow_RenderPipelineState(), forKey: .Shadow)
     }
     
     override subscript(type: RenderPipelineStateType) -> MTLRenderPipelineState! {
@@ -55,6 +57,19 @@ class Final_RenderPipelineState: RenderPipelineState {
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Final]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Final RenderPipelineState"
+        create()
+    }
+}
+
+class Shadow_RenderPipelineState: RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Shadow]
+        descriptor.fragmentFunction = nil
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "Shadow RenderPipelineState"
         create()
     }
 }

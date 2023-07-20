@@ -3,6 +3,7 @@ import MetalKit
 
 enum SamplerStateType {
     case Linear
+    case Nearest
 }
 
 class SamplerStateLibrary: Library<SamplerStateType, MTLSamplerState> {
@@ -11,6 +12,7 @@ class SamplerStateLibrary: Library<SamplerStateType, MTLSamplerState> {
     
     override func fillLibrary() {
         _library.updateValue(LinearSamplerState(), forKey: .Linear)
+        _library.updateValue(NearestSamplerState(), forKey: .Nearest)
     }
     
     override subscript(type: SamplerStateType) -> MTLSamplerState! {
@@ -32,6 +34,16 @@ class LinearSamplerState: SamplerState {
         descriptor = MTLSamplerDescriptor()
         descriptor.magFilter = .linear
         descriptor.minFilter = .linear
+        create()
+    }
+}
+
+class NearestSamplerState: SamplerState {
+    override init() {
+        super.init()
+        descriptor = MTLSamplerDescriptor()
+        descriptor.magFilter = .nearest
+        descriptor.minFilter = .nearest
         create()
     }
 }

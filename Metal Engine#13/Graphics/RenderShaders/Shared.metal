@@ -15,6 +15,7 @@ struct VertexOut {
     float2 textureCoordinate;
     float3 normal;
     float3 worldPosition;
+    float4 lightSpacePosition;
 };
 
 struct ModelConstant {
