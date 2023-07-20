@@ -33,4 +33,8 @@ class SceneManager {
     static func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         _currentScene.render(renderCommandEncoder)
     }
+    
+    static func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        _currentScene.castShadow(renderCommandEncoder)
+    }
 }

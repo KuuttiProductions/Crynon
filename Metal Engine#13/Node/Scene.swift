@@ -25,9 +25,17 @@ class Scene: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        renderCommandEncoder.pushDebugGroup("Renderwork on \(name!)")
         renderCommandEncoder.setVertexBytes(&vertexSceneConstant, length: VertexSceneConstant.stride, index: 2)
         renderCommandEncoder.setFragmentBytes(&fragmentSceneConstant, length: FragmentSceneConstant.stride, index: 2)
         lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
         super.render(renderCommandEncoder)
+    }
+    
+    override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        renderCommandEncoder.pushDebugGroup("Shadow work on \(name!)")
+        renderCommandEncoder.setVertexBytes(&vertexSceneConstant, length: VertexSceneConstant.stride, index: 2)
+        renderCommandEncoder.setFragmentBytes(&fragmentSceneConstant, length: FragmentSceneConstant.stride, index: 2)
+        super.castShadow(renderCommandEncoder)
     }
 }

@@ -32,6 +32,7 @@ class Object: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
         MRM.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
         MRM.setDepthStencilState(GPLibrary.depthStencilStates[.Less]) //MRM version doesn't work right now!!!
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
@@ -39,5 +40,10 @@ class Object: Node {
         renderCommandEncoder.setFragmentBytes(&material, length: Material.stride, index: 1)
         AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
         super.render(renderCommandEncoder)
+    }
+    
+    override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        renderCommandEncoder.pushDebugGroup("Casting shadow with \(name!)")
+        super.castShadow(renderCommandEncoder)
     }
 }

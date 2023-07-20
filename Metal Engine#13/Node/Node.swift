@@ -77,6 +77,14 @@ class Node {
         for node in _children {
             node.render(renderCommandEncoder)
         }
+        renderCommandEncoder.popDebugGroup()
+    }
+    
+    func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        for node in _children {
+            node.castShadow(renderCommandEncoder)
+        }
+        renderCommandEncoder.popDebugGroup()
     }
 }
 

@@ -8,10 +8,25 @@ class Renderer: NSObject {
     static var aspectRatio: Float { return screenWidth/screenHeight }
 
     var forwardRenderPassDescriptor = MTLRenderPassDescriptor()
+    var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
     
     override init() {
         super.init()
         Core.initialize(device: MTLCreateSystemDefaultDevice())
+        createShadowRenderPassDescriptor()
+    }
+    
+    func createShadowRenderPassDescriptor() {
+        let depthTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.depthFormat,
+                                                                              width: 1024,
+                                                                              height: 1024,
+                                                                              mipmapped: false)
+        depthTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
+        let depthTexture = Core.device.makeTexture(descriptor: depthTextureDescriptor)
+        AssetLibrary.textures.addTexture(depthTexture, key: "RenderTargetShadowDepth")
+        
+        shadowRenderPassDescriptor.depthAttachment.texture = AssetLibrary.textures["RenderTargetShadowDepth"]
+        shadowRenderPassDescriptor.depthAttachment.loadAction = .clear
     }
     
     func createForwardRenderPassDescriptor() {
@@ -54,20 +69,43 @@ extension Renderer: MTKViewDelegate {
     }
     
     func draw(in view: MTKView) {
-        guard let drawable = view.currentDrawable, let currentRenderPassDescriptor = view.currentRenderPassDescriptor else { return }
+        guard let drawable = view.currentDrawable else { return }
         
         //Update scene
         SceneManager.tick(1/Float(Preferences.preferredFPS))
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
+        
+        shadowRenderPass(commandBuffer: commandBuffer)
+        
+        forwardRenderPass(commandBuffer: commandBuffer)
+        
+        finalRenderPass(commandBuffer: commandBuffer, view: view)
+    
+        MRM.resetAll()
+        commandBuffer?.present(drawable)
+        commandBuffer?.commit()
+    }
+
+    func shadowRenderPass(commandBuffer: MTLCommandBuffer!) {
+        let shadowRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: shadowRenderPassDescriptor)
+        shadowRenderCommandEncoder?.label = "Shadow RenderCommandEncoder"
+        MRM.setRenderCommandEncoder(shadowRenderCommandEncoder)
+        SceneManager.castShadow(shadowRenderCommandEncoder)
+        shadowRenderCommandEncoder?.endEncoding()
+    }
+    
+    func forwardRenderPass(commandBuffer: MTLCommandBuffer!) {
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
         baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
         MRM.setRenderCommandEncoder(baseRenderCommandEncoder)
         SceneManager.render(baseRenderCommandEncoder)
         baseRenderCommandEncoder?.endEncoding()
-        
-        let finalCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: currentRenderPassDescriptor)
+    }
+    
+    func finalRenderPass(commandBuffer: MTLCommandBuffer!, view: MTKView) {
+        let finalCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: view.currentRenderPassDescriptor!)
         finalCommandEncoder?.label = "Final RenderCommandEncoder"
         MRM.setRenderCommandEncoder(finalCommandEncoder)
         finalCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Final])
@@ -75,9 +113,5 @@ extension Renderer: MTKViewDelegate {
         finalCommandEncoder?.setFragmentSamplerState(GPLibrary.samplerStates[.Linear], index: 0)
         AssetLibrary.meshes[.Quad].draw(finalCommandEncoder)
         finalCommandEncoder?.endEncoding()
-    
-        MRM.resetAll()
-        commandBuffer?.present(drawable)
-        commandBuffer?.commit()
     }
 }
