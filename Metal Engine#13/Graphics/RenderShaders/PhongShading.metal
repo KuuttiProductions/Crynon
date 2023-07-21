@@ -10,11 +10,12 @@ public:
                                 constant LightData *ld,
                                 int ldc,
                                 constant Material &mt,
-                                float3 cameraPos) {
+                                float3 cameraPos,
+                                float lightness) {
         
-        float4 totalAmbientColor = float4(0,0,0,0);
-        float4 totalDiffuseColor = float4(0,0,0,0);
-        float4 totalSpecularColor = float4(0,0,0,0);
+        float4 totalAmbientColor = float4(0,0,0,1);
+        float4 totalDiffuseColor = float4(0,0,0,1);
+        float4 totalSpecularColor = float4(0,0,0,1);
         
         for (int i = 0; i < ldc; i++) {
             LightData data = ld[i];
@@ -32,10 +33,10 @@ public:
             totalDiffuseColor += clamp(diffuseColor, 0.0, 1.0);
             
             float specularDot = dot(halfwayVector, unitNormal);
-            float4 specularColor = pow(specularDot, specularness) * data.brightness * data.color;
+            float4 specularColor = pow(specularDot, specularness) * data.brightness * data.color * specularness;
             totalSpecularColor += clamp(specularColor, 0.0, 1.0);
         }
         
-        return totalAmbientColor + totalDiffuseColor + totalSpecularColor;
+        return totalAmbientColor + (lightness * (totalDiffuseColor + totalSpecularColor));
     }
 };

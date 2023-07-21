@@ -31,29 +31,20 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
     
     float4 color = material.color;
     float3 unitNormal = normalize(VerOut.normal);
+    float lightness = 0;
     
     float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
-    float2 uv = surfacePosition.xy * float2(0.5, -0.5) + 0.5;
-    float closest = shadowMap1.sample(sampler2d, uv);
-    float surface = surfacePosition.z;
-    float lightness;
-    
-//    color = Shadows::getBrightness(shadowMap1, VerOut.lightSpacePosition.xyz/VerOut.lightSpacePosition.w);
-    
-    if (surface - 0.0001 > closest) {
-        lightness = 0;
-    } else {
-        lightness = 1;
+    if (!is_null_texture(shadowMap1)) {
+        lightness = Shadows::getBrightness(shadowMap1, surfacePosition);
     }
-
+    
     color *= PhongShading::getPhongLight(VerOut.worldPosition,
                                          unitNormal,
                                          lightData,
                                          lightCount,
                                          material,
-                                         fragmentSceneConstant.cameraPosition);
-    
-    color *= lightness;
+                                         fragmentSceneConstant.cameraPosition,
+                                         lightness);
     
     return half4(color.r, color.g, color.b, color.a);
 }

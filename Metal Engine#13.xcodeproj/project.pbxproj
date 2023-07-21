@@ -52,6 +52,8 @@
 		51BA0D232A64171900A88604 /* LightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D222A64171900A88604 /* LightManager.swift */; };
 		51BA0D252A641F1700A88604 /* PhongShading.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D242A641F1700A88604 /* PhongShading.metal */; };
 		51BA0D282A6440FB00A88604 /* FPSCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D272A6440FB00A88604 /* FPSCamera.swift */; };
+		51CC128F2A6AC70C00B7C960 /* rng_header.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC128D2A6AC70C00B7C960 /* rng_header.metal */; };
+		51CC12902A6AC70C00B7C960 /* rng.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC128E2A6AC70C00B7C960 /* rng.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -103,6 +105,8 @@
 		51BA0D222A64171900A88604 /* LightManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightManager.swift; sourceTree = "<group>"; };
 		51BA0D242A641F1700A88604 /* PhongShading.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PhongShading.metal; sourceTree = "<group>"; };
 		51BA0D272A6440FB00A88604 /* FPSCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSCamera.swift; sourceTree = "<group>"; };
+		51CC128D2A6AC70C00B7C960 /* rng_header.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = rng_header.metal; sourceTree = "<group>"; };
+		51CC128E2A6AC70C00B7C960 /* rng.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = rng.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +186,7 @@
 		513C1F432A28D768003155B0 /* RenderShaders */ = {
 			isa = PBXGroup;
 			children = (
+				51CC128C2A6AC70000B7C960 /* Random */,
 				513C1F552A28FA9E003155B0 /* Shared.metal */,
 				511B6C062A27AA530067AEBF /* BasicShaders.metal */,
 				512FFD602A66EF0A001987A0 /* FinalShaders.metal */,
@@ -338,6 +343,15 @@
 			path = Cameras;
 			sourceTree = "<group>";
 		};
+		51CC128C2A6AC70000B7C960 /* Random */ = {
+			isa = PBXGroup;
+			children = (
+				51CC128D2A6AC70C00B7C960 /* rng_header.metal */,
+				51CC128E2A6AC70C00B7C960 /* rng.metal */,
+			);
+			path = Random;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -413,6 +427,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */,
+				51CC12902A6AC70C00B7C960 /* rng.metal in Sources */,
+				51CC128F2A6AC70C00B7C960 /* rng_header.metal in Sources */,
 				5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */,
 				512FFD632A66F1A1001987A0 /* SamplerStateLibrary.swift in Sources */,
 				518E4E7F2A2B54B2007A7C83 /* BasicScene.swift in Sources */,
@@ -584,7 +600,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 335;
+				CURRENT_PROJECT_VERSION = 456;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -619,7 +635,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 335;
+				CURRENT_PROJECT_VERSION = 456;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

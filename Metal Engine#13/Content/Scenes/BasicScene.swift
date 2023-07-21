@@ -27,6 +27,6 @@ class BasicScene: Scene {
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         time += deltaTime
-        light.setRotX(Float((sin(time)*3 + 30).deg2rad))
+        light.setRotX(Float((sin(time/5)*5 + 30).deg2rad))
     }
 }

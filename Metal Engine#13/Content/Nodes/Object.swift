@@ -47,6 +47,7 @@ class Object: Node {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Shadow])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
+        renderCommandEncoder.setCullMode(.back)
         AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
         super.castShadow(renderCommandEncoder)
     }
