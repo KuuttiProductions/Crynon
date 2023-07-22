@@ -14,6 +14,19 @@ class Renderer: NSObject {
         super.init()
         Core.initialize(device: MTLCreateSystemDefaultDevice())
         createShadowRenderPassDescriptor()
+        createJitterTexture()
+    }
+    
+    func createJitterTexture() {
+        let jitterTextureDescriptor = MTLTextureDescriptor()
+        jitterTextureDescriptor.pixelFormat = .rg8Unorm
+        jitterTextureDescriptor.width = 64
+        jitterTextureDescriptor.height = 512
+        jitterTextureDescriptor.usage = [ .shaderWrite ]
+    
+        let jitterTexture = Core.device.makeTexture(descriptor: jitterTextureDescriptor)
+        jitterTexture?.label = "JitterTexture"
+        AssetLibrary.textures.addTexture(jitterTexture, key: "JitterTexture")
     }
     
     func createShadowRenderPassDescriptor() {
@@ -23,6 +36,7 @@ class Renderer: NSObject {
                                                                               mipmapped: false)
         depthTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
         let depthTexture = Core.device.makeTexture(descriptor: depthTextureDescriptor)
+        depthTexture?.label = "ShadowMap1"
         AssetLibrary.textures.addTexture(depthTexture, key: "ShadowMap1")
         
         shadowRenderPassDescriptor.depthAttachment.texture = AssetLibrary.textures["ShadowMap1"]
@@ -41,10 +55,12 @@ class Renderer: NSObject {
                                                                               mipmapped: false)
         colorTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
         let colorTexture = Core.device.makeTexture(descriptor: colorTextureDescriptor)
+        colorTexture?.label = "RenderTargetColor"
         AssetLibrary.textures.addTexture(colorTexture, key: "RenderTargetColor")
         
         depthTextureDescriptor.usage = [ .renderTarget ]
         let depthTexture = Core.device.makeTexture(descriptor: depthTextureDescriptor)
+        depthTexture?.label = "RenderTargetDepth"
         AssetLibrary.textures.addTexture(depthTexture, key: "RenderTargetDepth")
         
         forwardRenderPassDescriptor.colorAttachments[0].texture = AssetLibrary.textures["RenderTargetColor"]
@@ -78,6 +94,26 @@ extension Renderer: MTKViewDelegate {
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
         
+
+        
+        let computeCommandEncoder = commandBuffer?.makeComputeCommandEncoder()
+        computeCommandEncoder?.label = "Main ComputeCommandEncoder"
+        computeCommandEncoder?.setTexture(AssetLibrary.textures["JitterTexture"], index: 0)
+        let function = Core.defaultLibrary.makeFunction(name: "jitter")!
+        var computePipelineState: MTLComputePipelineState!
+        do {
+            computePipelineState = try Core.device.makeComputePipelineState(function: function)
+        } catch let error {
+            print(error)
+        }
+        
+        let texture = AssetLibrary.textures["JitterTexture"]!
+        computeCommandEncoder?.setComputePipelineState(computePipelineState)
+        let groupsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: 1)
+        let threadsPerThreadGroup = MTLSize(width: computePipelineState.threadExecutionWidth, height: 1, depth: 1)
+        computeCommandEncoder?.dispatchThreadgroups(groupsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup)
+        computeCommandEncoder?.endEncoding()
+        
         shadowRenderPass(commandBuffer: commandBuffer)
         
         forwardRenderPass(commandBuffer: commandBuffer)
@@ -101,6 +137,7 @@ extension Renderer: MTKViewDelegate {
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
         baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
         MRM.setRenderCommandEncoder(baseRenderCommandEncoder)
+        baseRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 3)
         SceneManager.render(baseRenderCommandEncoder)
         baseRenderCommandEncoder?.endEncoding()
     }
