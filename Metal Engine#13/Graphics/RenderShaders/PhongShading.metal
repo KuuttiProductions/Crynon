@@ -33,10 +33,10 @@ public:
             totalDiffuseColor += clamp(diffuseColor, 0.0, 1.0);
             
             float specularDot = dot(halfwayVector, unitNormal);
-            float4 specularColor = pow(specularDot, specularness) * data.brightness * data.color * specularness;
+            float4 specularColor = pow(specularDot, specularness) * data.brightness * data.color;
             totalSpecularColor += clamp(specularColor, 0.0, 1.0);
         }
         
-        return totalAmbientColor + (lightness * (totalDiffuseColor + totalSpecularColor));
+        return totalAmbientColor + lightness * (totalDiffuseColor + totalSpecularColor);
     }
 };

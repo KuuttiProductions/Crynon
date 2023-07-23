@@ -28,7 +28,7 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
                               constant LightData *lightData [[ buffer(3) ]],
                               constant int &lightCount [[ buffer(4) ]],
                               depth2d<float> shadowMap1 [[ texture(0) ]],
-                              texture3d<short> jitterTexture [[ texture(3) ]]) {
+                              texture3d<half> jitterTexture [[ texture(3) ]]) {
     
     float4 color = material.color;
     float3 unitNormal = normalize(VerOut.normal);
@@ -36,7 +36,7 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
     
     float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
-        lightness = Shadows::getBrightness(shadowMap1, surfacePosition, jitterTexture);
+        lightness = clamp(Shadows::getBrightness(shadowMap1, surfacePosition), 0.0, 1.0);
     }
     
     color *= PhongShading::getPhongLight(VerOut.worldPosition,

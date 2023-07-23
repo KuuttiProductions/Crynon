@@ -6,6 +6,7 @@ class Renderer: NSObject {
     static var screenWidth: Float!
     static var screenHeight: Float!
     static var aspectRatio: Float { return screenWidth/screenHeight }
+    static var time: Float = 0
 
     var forwardRenderPassDescriptor = MTLRenderPassDescriptor()
     var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
@@ -19,10 +20,12 @@ class Renderer: NSObject {
     
     func createJitterTexture() {
         let jitterTextureDescriptor = MTLTextureDescriptor()
+        jitterTextureDescriptor.textureType = .type3D
         jitterTextureDescriptor.pixelFormat = .rg8Unorm
         jitterTextureDescriptor.width = 64
         jitterTextureDescriptor.height = 512
-        jitterTextureDescriptor.usage = [ .shaderWrite ]
+        jitterTextureDescriptor.depth = 1
+        jitterTextureDescriptor.usage = [ .shaderWrite, .shaderRead ]
     
         let jitterTexture = Core.device.makeTexture(descriptor: jitterTextureDescriptor)
         jitterTexture?.label = "JitterTexture"
@@ -90,6 +93,7 @@ extension Renderer: MTKViewDelegate {
         
         //Update scene
         SceneManager.tick(1/Float(Preferences.preferredFPS))
+        Renderer.time += 1/60
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
@@ -99,6 +103,8 @@ extension Renderer: MTKViewDelegate {
         let computeCommandEncoder = commandBuffer?.makeComputeCommandEncoder()
         computeCommandEncoder?.label = "Main ComputeCommandEncoder"
         computeCommandEncoder?.setTexture(AssetLibrary.textures["JitterTexture"], index: 0)
+        
+        computeCommandEncoder?.setBytes(&Renderer.time, length: Float.stride, index: 0)
         let function = Core.defaultLibrary.makeFunction(name: "jitter")!
         var computePipelineState: MTLComputePipelineState!
         do {
@@ -109,7 +115,7 @@ extension Renderer: MTKViewDelegate {
         
         let texture = AssetLibrary.textures["JitterTexture"]!
         computeCommandEncoder?.setComputePipelineState(computePipelineState)
-        let groupsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: 1)
+        let groupsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: texture.depth)
         let threadsPerThreadGroup = MTLSize(width: computePipelineState.threadExecutionWidth, height: 1, depth: 1)
         computeCommandEncoder?.dispatchThreadgroups(groupsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup)
         computeCommandEncoder?.endEncoding()
