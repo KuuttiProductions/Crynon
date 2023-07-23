@@ -14,6 +14,9 @@ class GPLibrary {
     private static var _renderPipelineStateLibrary: RenderPipelineStateLibrary!
     public static var renderPipelineStates: RenderPipelineStateLibrary { return _renderPipelineStateLibrary }
     
+    private static var _computePipelineStateLibrary: ComputePipelineStateLibrary!
+    public static var computePipelineStates: ComputePipelineStateLibrary { return _computePipelineStateLibrary }
+    
     private static var _depthStencilStateLibrary: DepthStencilStateLibrary!
     public static var depthStencilStates: DepthStencilStateLibrary { return _depthStencilStateLibrary }
     
@@ -26,6 +29,7 @@ class GPLibrary {
         _depthStencilStateLibrary = DepthStencilStateLibrary()
         _VertexDescriptorLibrary = VertexDescriptorLibrary()
         _renderPipelineStateLibrary = RenderPipelineStateLibrary()
+        _computePipelineStateLibrary = ComputePipelineStateLibrary()
         _samplerStateLibrary = SamplerStateLibrary()
     }
 }

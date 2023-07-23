@@ -6,10 +6,6 @@ using namespace metal;
 constexpr sampler sampler2d (mag_filter::nearest,
                              min_filter::nearest);
 
-constexpr sampler pixelSampler (mag_filter::nearest,
-                                min_filter::nearest,
-                                coord::pixel);
-
 class Shadows {
 public:
     

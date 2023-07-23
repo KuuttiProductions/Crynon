@@ -4,7 +4,6 @@
 using namespace metal;
 
 kernel void jitter(texture3d<half, access::write> jitterTexture [[ texture(0) ]],
-                   constant uint &time [[ buffer(0) ]],
                    const uint3 posInGrid [[ thread_position_in_grid ]]) {
     
     Rng rng = Rng(posInGrid.x, posInGrid.y, posInGrid.z);

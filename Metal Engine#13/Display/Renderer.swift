@@ -6,7 +6,6 @@ class Renderer: NSObject {
     static var screenWidth: Float!
     static var screenHeight: Float!
     static var aspectRatio: Float { return screenWidth/screenHeight }
-    static var time: Float = 0
 
     var forwardRenderPassDescriptor = MTLRenderPassDescriptor()
     var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
@@ -93,32 +92,11 @@ extension Renderer: MTKViewDelegate {
         
         //Update scene
         SceneManager.tick(1/Float(Preferences.preferredFPS))
-        Renderer.time += 1/60
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
         
-
-        
-        let computeCommandEncoder = commandBuffer?.makeComputeCommandEncoder()
-        computeCommandEncoder?.label = "Main ComputeCommandEncoder"
-        computeCommandEncoder?.setTexture(AssetLibrary.textures["JitterTexture"], index: 0)
-        
-        computeCommandEncoder?.setBytes(&Renderer.time, length: Float.stride, index: 0)
-        let function = Core.defaultLibrary.makeFunction(name: "jitter")!
-        var computePipelineState: MTLComputePipelineState!
-        do {
-            computePipelineState = try Core.device.makeComputePipelineState(function: function)
-        } catch let error {
-            print(error)
-        }
-        
-        let texture = AssetLibrary.textures["JitterTexture"]!
-        computeCommandEncoder?.setComputePipelineState(computePipelineState)
-        let groupsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: texture.depth)
-        let threadsPerThreadGroup = MTLSize(width: computePipelineState.threadExecutionWidth, height: 1, depth: 1)
-        computeCommandEncoder?.dispatchThreadgroups(groupsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup)
-        computeCommandEncoder?.endEncoding()
+        computePass(commandBuffer: commandBuffer)
         
         shadowRenderPass(commandBuffer: commandBuffer)
         
@@ -157,5 +135,18 @@ extension Renderer: MTKViewDelegate {
         finalCommandEncoder?.setFragmentSamplerState(GPLibrary.samplerStates[.Linear], index: 0)
         AssetLibrary.meshes[.Quad].draw(finalCommandEncoder)
         finalCommandEncoder?.endEncoding()
+    }
+    
+    func computePass(commandBuffer: MTLCommandBuffer!) {
+        let computeCommandEncoder = commandBuffer?.makeComputeCommandEncoder()
+        computeCommandEncoder?.label = "Main ComputeCommandEncoder"
+        
+        computeCommandEncoder?.setTexture(AssetLibrary.textures["JitterTexture"], index: 0)
+        let texture = AssetLibrary.textures["JitterTexture"]!
+        computeCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.Jitter])
+        let groupsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: texture.depth)
+        let threadsPerThreadGroup = MTLSize(width: GPLibrary.computePipelineStates[.Jitter].threadExecutionWidth, height: 1, depth: 1)
+        computeCommandEncoder?.dispatchThreadgroups(groupsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup)
+        computeCommandEncoder?.endEncoding()
     }
 }
