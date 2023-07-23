@@ -11,8 +11,8 @@
 		511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C042A27A9C70067AEBF /* MetalTypes.swift */; };
 		511B6C072A27AA530067AEBF /* BasicShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 511B6C062A27AA530067AEBF /* BasicShaders.metal */; };
 		512439672A6D1FEB0021D320 /* ComputePipelineStateLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512439662A6D1FEB0021D320 /* ComputePipelineStateLibrary.swift */; };
-		512FFD592A66B965001987A0 /* Object.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 512FFD572A66B965001987A0 /* Object.mtl */; };
-		512FFD5A2A66B965001987A0 /* Object.obj in Resources */ = {isa = PBXBuildFile; fileRef = 512FFD582A66B965001987A0 /* Object.obj */; };
+		512FFD592A66B965001987A0 /* Metamesh.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 512FFD572A66B965001987A0 /* Metamesh.mtl */; };
+		512FFD5A2A66B965001987A0 /* Metamesh.obj in Resources */ = {isa = PBXBuildFile; fileRef = 512FFD582A66B965001987A0 /* Metamesh.obj */; };
 		512FFD5C2A66C7AB001987A0 /* TextureLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512FFD5B2A66C7AB001987A0 /* TextureLibrary.swift */; };
 		512FFD5F2A66D935001987A0 /* DirectionalLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512FFD5E2A66D934001987A0 /* DirectionalLight.swift */; };
 		512FFD612A66EF0A001987A0 /* FinalShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 512FFD602A66EF0A001987A0 /* FinalShaders.metal */; };
@@ -36,6 +36,8 @@
 		51641C792A2E0AF700F5A16E /* DepthStencilStateLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51641C782A2E0AF700F5A16E /* DepthStencilStateLibrary.swift */; };
 		516E06ED2A6D97420011D18E /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E06EC2A6D97420011D18E /* GameObject.swift */; };
 		516E06EF2A6D990A0011D18E /* CubeObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E06EE2A6D990A0011D18E /* CubeObject.swift */; };
+		516E06F22A6D9E610011D18E /* Sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 516E06F02A6D9E610011D18E /* Sphere.mtl */; };
+		516E06F32A6D9E610011D18E /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 516E06F12A6D9E610011D18E /* Sphere.obj */; };
 		51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */; };
 		518323EC2A690F8B00D171FA /* ShadowShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323EB2A690F8B00D171FA /* ShadowShader.metal */; };
 		518323EE2A691E5C00D171FA /* Shadows.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323ED2A691E5C00D171FA /* Shadows.metal */; };
@@ -64,8 +66,8 @@
 		511B6C042A27A9C70067AEBF /* MetalTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalTypes.swift; sourceTree = "<group>"; };
 		511B6C062A27AA530067AEBF /* BasicShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BasicShaders.metal; sourceTree = "<group>"; };
 		512439662A6D1FEB0021D320 /* ComputePipelineStateLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputePipelineStateLibrary.swift; sourceTree = "<group>"; };
-		512FFD572A66B965001987A0 /* Object.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Object.mtl; sourceTree = "<group>"; };
-		512FFD582A66B965001987A0 /* Object.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Object.obj; sourceTree = "<group>"; };
+		512FFD572A66B965001987A0 /* Metamesh.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Metamesh.mtl; sourceTree = "<group>"; };
+		512FFD582A66B965001987A0 /* Metamesh.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Metamesh.obj; sourceTree = "<group>"; };
 		512FFD5B2A66C7AB001987A0 /* TextureLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureLibrary.swift; sourceTree = "<group>"; };
 		512FFD5E2A66D934001987A0 /* DirectionalLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalLight.swift; sourceTree = "<group>"; };
 		512FFD602A66EF0A001987A0 /* FinalShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = FinalShaders.metal; sourceTree = "<group>"; };
@@ -91,6 +93,8 @@
 		51641C782A2E0AF700F5A16E /* DepthStencilStateLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthStencilStateLibrary.swift; sourceTree = "<group>"; };
 		516E06EC2A6D97420011D18E /* GameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObject.swift; sourceTree = "<group>"; };
 		516E06EE2A6D990A0011D18E /* CubeObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeObject.swift; sourceTree = "<group>"; };
+		516E06F02A6D9E610011D18E /* Sphere.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.mtl; sourceTree = "<group>"; };
+		516E06F12A6D9E610011D18E /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.obj; sourceTree = "<group>"; };
 		51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshLibrary.swift; sourceTree = "<group>"; };
 		518323EB2A690F8B00D171FA /* ShadowShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ShadowShader.metal; sourceTree = "<group>"; };
 		518323ED2A691E5C00D171FA /* Shadows.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shadows.metal; sourceTree = "<group>"; };
@@ -297,8 +301,10 @@
 		51641C732A2DFA0500F5A16E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				512FFD572A66B965001987A0 /* Object.mtl */,
-				512FFD582A66B965001987A0 /* Object.obj */,
+				516E06F02A6D9E610011D18E /* Sphere.mtl */,
+				516E06F12A6D9E610011D18E /* Sphere.obj */,
+				512FFD572A66B965001987A0 /* Metamesh.mtl */,
+				512FFD582A66B965001987A0 /* Metamesh.obj */,
 				51641C752A2DFA2600F5A16E /* Cube.mtl */,
 				51641C742A2DFA2600F5A16E /* Cube.obj */,
 			);
@@ -419,11 +425,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				512FFD5A2A66B965001987A0 /* Object.obj in Resources */,
+				512FFD5A2A66B965001987A0 /* Metamesh.obj in Resources */,
 				5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */,
+				516E06F32A6D9E610011D18E /* Sphere.obj in Resources */,
 				51641C762A2DFA2600F5A16E /* Cube.obj in Resources */,
 				51641C772A2DFA2600F5A16E /* Cube.mtl in Resources */,
-				512FFD592A66B965001987A0 /* Object.mtl in Resources */,
+				516E06F22A6D9E610011D18E /* Sphere.mtl in Resources */,
+				512FFD592A66B965001987A0 /* Metamesh.mtl in Resources */,
 				5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,11 +1,11 @@
 
 import MetalKit
 
-class TestObject: GameObject {
+class MetameshObject: GameObject {
     
     init() {
-        super.init("TestObject")
+        super.init("Metamesh Object")
         self.material.color = simd_float4(1.0, 0.3, 0.0, 1.0)
-        self.mesh = .Object
+        self.mesh = .Metamesh
     }
 }

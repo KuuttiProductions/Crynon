@@ -3,7 +3,7 @@ import simd
 
 class BasicScene: Scene {
     
-    let object = TestObject()
+    let object = MetameshObject()
     let cube = CubeObject()
     let camera = FPSCamera()
     let light = DirectionalLight()
