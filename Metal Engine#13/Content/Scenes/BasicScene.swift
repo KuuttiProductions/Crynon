@@ -3,8 +3,8 @@ import simd
 
 class BasicScene: Scene {
     
-    let object = Object(mesh: .Object)
-    let cube = Object(mesh: .Cube)
+    let object = TestObject()
+    let cube = CubeObject()
     let camera = FPSCamera()
     let light = DirectionalLight()
     

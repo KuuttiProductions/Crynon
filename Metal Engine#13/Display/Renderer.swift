@@ -104,7 +104,6 @@ extension Renderer: MTKViewDelegate {
         
         finalRenderPass(commandBuffer: commandBuffer, view: view)
     
-        MRM.resetAll()
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
     }
@@ -112,7 +111,6 @@ extension Renderer: MTKViewDelegate {
     func shadowRenderPass(commandBuffer: MTLCommandBuffer!) {
         let shadowRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: shadowRenderPassDescriptor)
         shadowRenderCommandEncoder?.label = "Shadow RenderCommandEncoder"
-        MRM.setRenderCommandEncoder(shadowRenderCommandEncoder)
         SceneManager.castShadow(shadowRenderCommandEncoder)
         shadowRenderCommandEncoder?.endEncoding()
     }
@@ -120,7 +118,6 @@ extension Renderer: MTKViewDelegate {
     func forwardRenderPass(commandBuffer: MTLCommandBuffer!) {
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
         baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
-        MRM.setRenderCommandEncoder(baseRenderCommandEncoder)
         baseRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 3)
         SceneManager.render(baseRenderCommandEncoder)
         baseRenderCommandEncoder?.endEncoding()
@@ -129,7 +126,6 @@ extension Renderer: MTKViewDelegate {
     func finalRenderPass(commandBuffer: MTLCommandBuffer!, view: MTKView) {
         let finalCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: view.currentRenderPassDescriptor!)
         finalCommandEncoder?.label = "Final RenderCommandEncoder"
-        MRM.setRenderCommandEncoder(finalCommandEncoder)
         finalCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Final])
         finalCommandEncoder?.setFragmentTexture(AssetLibrary.textures["RenderTargetColor"], index: 0)
         finalCommandEncoder?.setFragmentSamplerState(GPLibrary.samplerStates[.Linear], index: 0)

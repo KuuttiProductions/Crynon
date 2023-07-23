@@ -1,6 +1,5 @@
 
 import MetalKit
-import GameController
 
 class FPSCamera: Camera {
     

@@ -48,7 +48,7 @@ class Mesh {
     }
     
     func draw(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        MRM.setVertexBuffer(vertexBuffer, 0)
+        renderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         if submeshes.count > 0 {
             for submesh in submeshes {
                 renderCommandEncoder.drawIndexedPrimitives(type: submesh.primitiveType,
