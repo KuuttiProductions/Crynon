@@ -10,13 +10,14 @@ enum MeshType {
 
 class MeshLibrary: Library<MeshType, Mesh> {
     
+    private var meshLoader = MeshLoader()
     private var _library: [MeshType : Mesh] = [:]
     
     override func fillLibrary() {
         _library.updateValue(Quad_Mesh(), forKey: .Quad)
-        _library.updateValue(MeshLoader.loadNormalMesh("Cube"), forKey: .Cube)
-        _library.updateValue(MeshLoader.loadNormalMesh("Sphere"), forKey: .Sphere)
-        _library.updateValue(MeshLoader.loadNormalMesh("Metamesh"), forKey: .Metamesh)
+        _library.updateValue(meshLoader.loadNormalMesh("Cube"), forKey: .Cube)
+        _library.updateValue(meshLoader.loadNormalMesh("Sphere"), forKey: .Sphere)
+        _library.updateValue(meshLoader.loadNormalMesh("Metamesh"), forKey: .Metamesh)
     }
     
     override subscript(type: MeshType) -> Mesh! {

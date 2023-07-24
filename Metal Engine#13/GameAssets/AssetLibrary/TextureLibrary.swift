@@ -3,10 +3,11 @@ import MetalKit
 
 class TextureLibrary: Library<String, MTLTexture> {
     
+    private var textureLoader = TextureLoader()
     private var _library: [String : MTLTexture] = [:]
     
     override func fillLibrary() {
-//        _library.updateValue(, forKey: )
+        _library.updateValue(textureLoader.loadTexture("Wallpaper", "jpeg", true), forKey: "Wallpaper")
     }
     
     override subscript(type: String) -> MTLTexture! {

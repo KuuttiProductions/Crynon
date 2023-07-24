@@ -117,7 +117,6 @@ extension Renderer: MTKViewDelegate {
     func forwardRenderPass(commandBuffer: MTLCommandBuffer!) {
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
         baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
-        baseRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 3)
         SceneManager.render(baseRenderCommandEncoder)
         baseRenderCommandEncoder?.endEncoding()
     }

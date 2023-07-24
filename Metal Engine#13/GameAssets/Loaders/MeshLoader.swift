@@ -4,7 +4,7 @@ import ModelIO
 
 class MeshLoader {
 
-    static func loadNormalMesh(_ name: String, _ extension: String = "obj")-> Mesh {
+    func loadNormalMesh(_ name: String, _ extension: String = "obj")-> Mesh {
         let descriptor = MTKModelIOVertexDescriptorFromMetal(GPLibrary.vertexDescriptors[.Basic])
         (descriptor.attributes[0] as! MDLVertexAttribute).name = MDLVertexAttributePosition
         (descriptor.attributes[1] as! MDLVertexAttribute).name = MDLVertexAttributeColor

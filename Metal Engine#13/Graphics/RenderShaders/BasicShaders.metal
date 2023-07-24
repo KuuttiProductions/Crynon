@@ -28,16 +28,15 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
                               constant LightData *lightData [[ buffer(3) ]],
                               constant int &lightCount [[ buffer(4) ]],
                               depth2d<float> shadowMap1 [[ texture(0) ]],
-                              texture3d<half> jitterTexture [[ texture(3) ]]) {
+                              texture2d<float> textureAlbedo [[ texture(3) ]]) {
     
     float4 color = material.color;
     float3 unitNormal = normalize(VerOut.normal);
     float lightness = 0;
     
-//    if (!is_null_texture(jitterTexture)) {
-//        half4 sample = jitterTexture.sample(sampler2d, float3(VerOut.position.xy, 1));
-//        color = float4(sample.r, sample.g, sample.b, 1);
-//    }
+    if (!is_null_texture(textureAlbedo)) {
+        color = textureAlbedo.sample(sampler2d, VerOut.textureCoordinate);
+    }
     
     float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {

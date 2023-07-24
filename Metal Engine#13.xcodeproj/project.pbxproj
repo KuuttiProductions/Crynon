@@ -39,6 +39,7 @@
 		516E06F22A6D9E610011D18E /* Sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 516E06F02A6D9E610011D18E /* Sphere.mtl */; };
 		516E06F32A6D9E610011D18E /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 516E06F12A6D9E610011D18E /* Sphere.obj */; };
 		516E06F72A6D9FC10011D18E /* Wallpaper.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 516E06F62A6D9FC10011D18E /* Wallpaper.jpeg */; };
+		516E06F92A6E90B40011D18E /* TextureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E06F82A6E90B40011D18E /* TextureLoader.swift */; };
 		51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */; };
 		518323EC2A690F8B00D171FA /* ShadowShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323EB2A690F8B00D171FA /* ShadowShader.metal */; };
 		518323EE2A691E5C00D171FA /* Shadows.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323ED2A691E5C00D171FA /* Shadows.metal */; };
@@ -97,6 +98,7 @@
 		516E06F02A6D9E610011D18E /* Sphere.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.mtl; sourceTree = "<group>"; };
 		516E06F12A6D9E610011D18E /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.obj; sourceTree = "<group>"; };
 		516E06F62A6D9FC10011D18E /* Wallpaper.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Wallpaper.jpeg; sourceTree = "<group>"; };
+		516E06F82A6E90B40011D18E /* TextureLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureLoader.swift; sourceTree = "<group>"; };
 		51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshLibrary.swift; sourceTree = "<group>"; };
 		518323EB2A690F8B00D171FA /* ShadowShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ShadowShader.metal; sourceTree = "<group>"; };
 		518323ED2A691E5C00D171FA /* Shadows.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shadows.metal; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 			isa = PBXGroup;
 			children = (
 				51641C702A2DF9AA00F5A16E /* MeshLoader.swift */,
+				516E06F82A6E90B40011D18E /* TextureLoader.swift */,
 			);
 			path = Loaders;
 			sourceTree = "<group>";
@@ -486,6 +489,7 @@
 				516E06EF2A6D990A0011D18E /* CubeObject.swift in Sources */,
 				518323EE2A691E5C00D171FA /* Shadows.metal in Sources */,
 				51BA0D252A641F1700A88604 /* PhongShading.metal in Sources */,
+				516E06F92A6E90B40011D18E /* TextureLoader.swift in Sources */,
 				51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
@@ -640,7 +644,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 589;
+				CURRENT_PROJECT_VERSION = 595;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -675,7 +679,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 589;
+				CURRENT_PROJECT_VERSION = 595;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
