@@ -34,6 +34,11 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
     float3 unitNormal = normalize(VerOut.normal);
     float lightness = 0;
     
+//    if (!is_null_texture(jitterTexture)) {
+//        half4 sample = jitterTexture.sample(sampler2d, float3(VerOut.position.xy, 1));
+//        color = float4(sample.r, sample.g, sample.b, 1);
+//    }
+    
     float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
         lightness = clamp(Shadows::getBrightness(shadowMap1, surfacePosition), 0.0, 1.0);

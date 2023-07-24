@@ -12,7 +12,6 @@ class Renderer: NSObject {
     
     override init() {
         super.init()
-        Core.initialize(device: MTLCreateSystemDefaultDevice())
         createShadowRenderPassDescriptor()
         createJitterTexture()
     }

@@ -2,16 +2,20 @@
 import Metal
 
 //Handles states of all core components
-class Core {
+class Core : ObservableObject {
     
-    public static var commandQueue: MTLCommandQueue!
-    public static var defaultLibrary: MTLLibrary!
-    public static var device: MTLDevice!
+    private static var _commandQueue: MTLCommandQueue!
+    private static var _defaultLibrary: MTLLibrary!
+    private static var _device: MTLDevice!
     
-    static func initialize(device: MTLDevice!) {
-        self.device = device
-        self.commandQueue = device.makeCommandQueue()
-        self.defaultLibrary = device.makeDefaultLibrary()
+    public static var commandQueue: MTLCommandQueue { _commandQueue }
+    public static var defaultLibrary: MTLLibrary { _defaultLibrary }
+    public static var device: MTLDevice { _device }
+    
+    init() {
+        Core._device = MTLCreateSystemDefaultDevice()
+        Core._commandQueue = Core.device.makeCommandQueue()
+        Core._defaultLibrary = Core.device.makeDefaultLibrary()
         
         GPLibrary.initialize()
         AssetLibrary.initialize()

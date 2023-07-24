@@ -1,7 +1,10 @@
 
 import SwiftUI
 
-struct ContentView: View {    
+struct ContentView: View {
+    
+    @EnvironmentObject private var core: Core
+    
     var body: some View {
         VStack {
             GameView()

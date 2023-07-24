@@ -6,9 +6,11 @@ typealias SwiftScene = SwiftUI.Scene
 @main
 struct MetalEngine13App: App {
     
+    @StateObject private var core = Core()
+    
     var body: some SwiftScene {
         WindowGroup {
-            ContentView()
+            ContentView().environmentObject(core)
         }
     }
 }

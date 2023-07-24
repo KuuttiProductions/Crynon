@@ -1,5 +1,6 @@
 
 import MetalKit
+import SwiftUI
 
 enum SceneType {
     case Basic
@@ -9,9 +10,9 @@ enum SceneType {
 //and switching of scenes.
 class SceneManager {
     
-    private static var _currentScene: Scene!
+    static private var _currentScene: Scene!
     
-    public static func initialize() {
+    static func initialize() {
         changeScene(.Basic)
     }
     
