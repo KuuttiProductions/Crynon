@@ -92,6 +92,8 @@ extension Renderer: MTKViewDelegate {
         //Update scene
         SceneManager.tick(1/Float(Preferences.preferredFPS))
         
+        SceneManager.physicsTick(1/Float(Preferences.preferredFPS))
+        
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
         

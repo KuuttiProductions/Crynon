@@ -7,6 +7,7 @@ class BasicScene: Scene {
     let cube = CubeObject()
     let camera = FPSCamera()
     let light = DirectionalLight()
+    let physics = RigidBody("Cube")
     
     var time: Float = 0.0
     
@@ -16,6 +17,7 @@ class BasicScene: Scene {
         addChild(cube)
         addCamera(camera, true)
         addLight(light)
+        addPhysicsObject(physics)
         cube.setPos(0, -3, 0)
         cube.setScale(5, 0.2, 5)
         camera.setPosZ(5)
