@@ -25,6 +25,7 @@ class Scene: Node {
         super.tick(deltaTime)
         cameraManager.tick(deltaTime: deltaTime)
         lightManager.tick(deltaTime: deltaTime)
+        physicsManager.tick(deltaTime: deltaTime)
         vertexSceneConstant.viewMatrix = cameraManager._currentCamera.projectionMatrix * cameraManager._currentCamera.viewMatrix
         fragmentSceneConstant.cameraPosition = cameraManager._currentCamera.position
     }

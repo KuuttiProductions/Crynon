@@ -37,6 +37,7 @@
 		516D5A332A79264100AA1CD4 /* RigidBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516D5A322A79264100AA1CD4 /* RigidBody.swift */; };
 		516D5A352A7A2EB100AA1CD4 /* Collider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516D5A342A7A2EB100AA1CD4 /* Collider.swift */; };
 		516D5A372A7A320300AA1CD4 /* PhysicsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516D5A362A7A320300AA1CD4 /* PhysicsManager.swift */; };
+		516D5A3B2A7A758000AA1CD4 /* PhysicsTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516D5A3A2A7A758000AA1CD4 /* PhysicsTypes.swift */; };
 		516E06ED2A6D97420011D18E /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E06EC2A6D97420011D18E /* GameObject.swift */; };
 		516E06EF2A6D990A0011D18E /* CubeObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E06EE2A6D990A0011D18E /* CubeObject.swift */; };
 		516E06F22A6D9E610011D18E /* Sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 516E06F02A6D9E610011D18E /* Sphere.mtl */; };
@@ -99,6 +100,7 @@
 		516D5A322A79264100AA1CD4 /* RigidBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigidBody.swift; sourceTree = "<group>"; };
 		516D5A342A7A2EB100AA1CD4 /* Collider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collider.swift; sourceTree = "<group>"; };
 		516D5A362A7A320300AA1CD4 /* PhysicsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsManager.swift; sourceTree = "<group>"; };
+		516D5A3A2A7A758000AA1CD4 /* PhysicsTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsTypes.swift; sourceTree = "<group>"; };
 		516E06EC2A6D97420011D18E /* GameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameObject.swift; sourceTree = "<group>"; };
 		516E06EE2A6D990A0011D18E /* CubeObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeObject.swift; sourceTree = "<group>"; };
 		516E06F02A6D9E610011D18E /* Sphere.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.mtl; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				511B6C042A27A9C70067AEBF /* MetalTypes.swift */,
+				516D5A3A2A7A758000AA1CD4 /* PhysicsTypes.swift */,
 				513C1F442A28D972003155B0 /* Library.swift */,
 			);
 			path = Types;
@@ -483,6 +486,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				516D5A3B2A7A758000AA1CD4 /* PhysicsTypes.swift in Sources */,
 				516E06ED2A6D97420011D18E /* GameObject.swift in Sources */,
 				51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */,
 				512439672A6D1FEB0021D320 /* ComputePipelineStateLibrary.swift in Sources */,
@@ -664,7 +668,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 614;
+				CURRENT_PROJECT_VERSION = 678;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -699,7 +703,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 614;
+				CURRENT_PROJECT_VERSION = 678;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

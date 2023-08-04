@@ -16,6 +16,7 @@ struct VertexOut {
     float3 normal;
     float3 worldPosition;
     float4 lightSpacePosition;
+    float pointSize [[ point_size ]];
 };
 
 struct ModelConstant {

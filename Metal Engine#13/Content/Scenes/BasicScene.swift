@@ -21,6 +21,7 @@ class BasicScene: Scene {
         cube.setPos(0, -3, 0)
         cube.setScale(5, 0.2, 5)
         camera.setPosZ(5)
+        physics.setPosY(5)
         light.setPos(0, 2, 3)
         light.lightData.color = simd_float4(1,1,1,1)
         light.setRotX(Float(30).deg2rad)

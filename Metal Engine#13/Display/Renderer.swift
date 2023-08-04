@@ -72,8 +72,8 @@ class Renderer: NSObject {
     }
     
     func updateScreenSize(view: MTKView) {
-        Renderer.screenWidth = Float((view.bounds.width))
-        Renderer.screenHeight = Float((view.bounds.height))
+        Renderer.screenWidth = Float((view.bounds.width))*2
+        Renderer.screenHeight = Float((view.bounds.height))*2
         if Renderer.screenWidth > 0 && Renderer.screenHeight > 0 {
             createForwardRenderPassDescriptor()
         }

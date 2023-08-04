@@ -18,6 +18,7 @@ vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
     VerOut.worldPosition = worldPosition.xyz;
     VerOut.textureCoordinate = VerIn.textureCoordinate;
     VerOut.lightSpacePosition = depthViewMatrix * worldPosition;
+    VerOut.pointSize = 100;
     
     return VerOut;
 }
