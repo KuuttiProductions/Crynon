@@ -18,6 +18,7 @@ vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
     VerOut.worldPosition = worldPosition.xyz;
     VerOut.textureCoordinate = VerIn.textureCoordinate;
     VerOut.lightSpacePosition = depthViewMatrix * worldPosition;
+    VerOut.pointSize = 10;
     
     return VerOut;
 }
@@ -40,7 +41,7 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
     
     float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
-        lightness = clamp(Shadows::getBrightness(shadowMap1, surfacePosition), 0.0, 1.0);
+        lightness = 1-clamp(Shadows::getShadowness(shadowMap1, surfacePosition), 0.0, 1.0);
     }
     
     color *= PhongShading::getPhongLight(VerOut.worldPosition,

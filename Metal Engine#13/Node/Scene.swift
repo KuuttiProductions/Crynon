@@ -5,6 +5,7 @@ class Scene: Node {
     
     var cameraManager = CameraManager()
     var lightManager = LightManager()
+    var physicsManager = PhysicsManager()
     var vertexSceneConstant = VertexSceneConstant()
     var fragmentSceneConstant = FragmentSceneConstant()
     
@@ -16,12 +17,22 @@ class Scene: Node {
         lightManager.addLight(light)
     }
     
+    func addPhysicsObject(_ object: RigidBody) {
+        physicsManager.addPhysicsObject(object: object)
+    }
+    
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         cameraManager.tick(deltaTime: deltaTime)
         lightManager.tick(deltaTime: deltaTime)
+        physicsManager.tick(deltaTime: deltaTime)
         vertexSceneConstant.viewMatrix = cameraManager._currentCamera.projectionMatrix * cameraManager._currentCamera.viewMatrix
         fragmentSceneConstant.cameraPosition = cameraManager._currentCamera.position
+    }
+    
+    override func physicsTick(_ deltaTime: Float) {
+        super.physicsTick(deltaTime)
+        physicsManager.step(deltaTime: deltaTime)
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
@@ -33,6 +44,7 @@ class Scene: Node {
         lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
         super.render(renderCommandEncoder)
+        physicsManager.render(renderCommandEncoder: renderCommandEncoder)
     }
     
     override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {

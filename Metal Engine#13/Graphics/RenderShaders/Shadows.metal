@@ -4,19 +4,26 @@
 using namespace metal;
 
 constexpr sampler sampler2d (mag_filter::nearest,
-                             min_filter::nearest);
+                             min_filter::nearest,
+                             border_color::opaque_white,
+                             address::clamp_to_border);
 
 class Shadows {
 public:
     
-    static float getBrightness(depth2d<float> shadowMap1,
+    static float getShadowness(depth2d<float> shadowMap1,
                                float3 lightSpacePosition) {
                 
         int sampleCount = 16;
         int halfSquareSample = sqrt(float(sampleCount))/2;
 
         float2 samplePositionDefault = float2(lightSpacePosition.xy) * float2(0.5, -0.5) + 0.5;
-        float lightness = 0;
+        
+        if (lightSpacePosition.z > 1.0) {
+            return 0;
+        }
+        
+        float shadowness = 0;
         
         float texelSizeWidth = 1.0/shadowMap1.get_width();
         float texelSizeHeight = 1.0/shadowMap1.get_height();
@@ -27,13 +34,13 @@ public:
             for (int y = -halfSquareSample; y <= halfSquareSample; y++) {
                 float2 samplePosition =  float2(x, y) * texelSize;
                 samplePosition += samplePositionDefault;
-                float closestDepth = shadowMap1.sample(sampler2d, samplePosition);
+                float closestDepth = clamp(shadowMap1.sample(sampler2d, samplePosition), 0.0, 1.0);
                 float surfaceDepth = lightSpacePosition.z - 0.0001;
-                lightness += surfaceDepth > closestDepth ? 0.0 : 1.0;
+                shadowness += surfaceDepth < closestDepth ? 0.0 : 1.0;
                 index++;
             }
         }
         
-        return lightness/sampleCount;
+        return shadowness/sampleCount;
     }
 };

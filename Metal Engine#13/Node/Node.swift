@@ -66,9 +66,9 @@ class Node {
     }
     
     //Called 60 times per second. For Physics based logic
-    func physicsTick() {
+    func physicsTick(_ deltaTime: Float) {
         for node in _children {
-            node.physicsTick()
+            node.physicsTick(deltaTime)
         }
     }
     

@@ -4,6 +4,7 @@ import MetalKit
 enum FragmentShaderType {
     case Basic
     case Final
+    case PointAndLine
 }
 
 class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
@@ -13,6 +14,7 @@ class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
     override func fillLibrary() {
         _library.updateValue(FragmentShader("basic_fragment", "Basic Fragment Function"), forKey: .Basic)
         _library.updateValue(FragmentShader("final_fragment", "Final Fragment Function"), forKey: .Final)
+        _library.updateValue(FragmentShader("pointAndLine_fragment", "Point and Line Fragment Function"), forKey: .PointAndLine)
     }
     
     override subscript(type: FragmentShaderType) -> MTLFunction! {

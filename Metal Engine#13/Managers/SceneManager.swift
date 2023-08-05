@@ -27,8 +27,8 @@ class SceneManager {
         _currentScene.tick(deltaTime)
     }
     
-    static func physicsTick() {
-        _currentScene.physicsTick()
+    static func physicsTick(_ deltaTime: Float) {
+        _currentScene.physicsTick(deltaTime)
     }
     
     static func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
