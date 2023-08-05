@@ -34,7 +34,6 @@ struct FragmentSceneConstant {
 struct LightData {
     float brightness;
     float4 color;
-    float radius;
     float3 position;
     float3 direction;
     bool useDirection;

@@ -58,8 +58,7 @@ struct FragmentSceneConstant: sizeable {
 
 struct LightData: sizeable {
     var brightness: Float = 1.0
-    var color: simd_float4 = simd_float4(0,0,0,0)
-    var radius: Float = 1.0
+    var color: simd_float4 = simd_float4(1,1,1,1)
     var position: simd_float3 = simd_float3()
     var direction: simd_float3 = simd_float3(0,0,0)
     var useDirection: Bool = false
