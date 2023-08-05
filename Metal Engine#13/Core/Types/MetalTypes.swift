@@ -62,6 +62,8 @@ struct LightData: sizeable {
     var position: simd_float3 = simd_float3()
     var direction: simd_float3 = simd_float3(0,0,0)
     var useDirection: Bool = false
+    var cutoff: Float = 0.0
+    var cutoffInner: Float = 0.0
 }
 
 struct Material: sizeable {

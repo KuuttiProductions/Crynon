@@ -148,7 +148,7 @@ extension matrix_float4x4 {
         return result
     }
     
-    static func lookAt(position: simd_float3, target: simd_float3, up: simd_float3)-> matrix_float4x4 {
+    static func lookAt(position: simd_float3, target: simd_float3, up: simd_float3 = simd_float3(0,1,0))-> matrix_float4x4 {
         let n: simd_float3 = normalize(position - target)
         let u: simd_float3 = normalize(cross(up, n))
         let v: simd_float3 = cross(n, u)

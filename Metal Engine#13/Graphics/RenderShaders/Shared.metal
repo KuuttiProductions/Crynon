@@ -37,6 +37,8 @@ struct LightData {
     float3 position;
     float3 direction;
     bool useDirection;
+    float cutoff;
+    float cutoffInner;
 };
 
 struct Material {
