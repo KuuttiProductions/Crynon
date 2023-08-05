@@ -55,11 +55,13 @@ class Renderer: NSObject {
                                                                               height: Int(Renderer.screenHeight),
                                                                               mipmapped: false)
         colorTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
+        colorTextureDescriptor.storageMode = .private
         let colorTexture = Core.device.makeTexture(descriptor: colorTextureDescriptor)
         colorTexture?.label = "RenderTargetColor"
         AssetLibrary.textures.addTexture(colorTexture, key: "RenderTargetColor")
         
-        depthTextureDescriptor.usage = [ .renderTarget ]
+        depthTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
+        depthTextureDescriptor.storageMode = .private
         let depthTexture = Core.device.makeTexture(descriptor: depthTextureDescriptor)
         depthTexture?.label = "RenderTargetDepth"
         AssetLibrary.textures.addTexture(depthTexture, key: "RenderTargetDepth")

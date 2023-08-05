@@ -110,7 +110,7 @@ extension matrix_float4x4 {
         self = matrix_multiply(self, result)
     }
     
-    static func perspective(degreesFov: Float, aspectRatio: Float, near: Float, far: Float)->matrix_float4x4{
+    static func perspective(degreesFov: Float, aspectRatio: Float, near: Float, far: Float)-> matrix_float4x4{
         let fov = degreesFov.deg2rad
         
         let t: Float = tan(fov / 2)
@@ -145,9 +145,24 @@ extension matrix_float4x4 {
             simd_float4(0, 0, z, 0),
             simd_float4(u, w, q, 1)
         )
+        return result
+    }
+    
+    static func lookAt(position: simd_float3, target: simd_float3, up: simd_float3)-> matrix_float4x4 {
+        let n: simd_float3 = normalize(position - target)
+        let u: simd_float3 = normalize(cross(up, n))
+        let v: simd_float3 = cross(n, u)
+        let x: Float = dot(-u, position)
+        let y: Float = dot(-v, position)
+        let z: Float = dot(-n, position)
         
-        
-        
+        var result = matrix_identity_float4x4
+        result.columns = (
+            simd_float4(u.x, v.x, n.x, 0.0),
+            simd_float4(u.y, v.y, n.y, 0.0),
+            simd_float4(u.z, v.z, n.z, 0.0),
+            simd_float4(  x,   y,   z, 1.0)
+        )
         return result
     }
 }

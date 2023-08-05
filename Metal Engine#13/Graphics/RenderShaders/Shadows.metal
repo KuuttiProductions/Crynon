@@ -29,13 +29,15 @@ public:
         float texelSizeHeight = 1.0/shadowMap1.get_height();
         float2 texelSize = float2(texelSizeWidth, texelSizeHeight);
         
+        float bias = 0.0001;
+        
         int index = 0;
         for (int x = -halfSquareSample; x <= halfSquareSample; x++) {
             for (int y = -halfSquareSample; y <= halfSquareSample; y++) {
                 float2 samplePosition =  float2(x, y) * texelSize;
                 samplePosition += samplePositionDefault;
                 float closestDepth = clamp(shadowMap1.sample(sampler2d, samplePosition), 0.0, 1.0);
-                float surfaceDepth = lightSpacePosition.z - 0.0001;
+                float surfaceDepth = lightSpacePosition.z - bias;
                 shadowness += surfaceDepth < closestDepth ? 0.0 : 1.0;
                 index++;
             }

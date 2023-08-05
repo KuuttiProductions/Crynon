@@ -7,11 +7,13 @@ class Light: Node {
     var fieldOfView: Float = 80
     var nearPlane: Float = 0.1
     var farPlane: Float = 1000
-    var shadows: Bool { true }
+    var shadows: Bool { false }
+    var direction: simd_float3 = simd_float3(0,0,0)
 
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         lightData.position = self.position
+        lightData.direction = direction
     }
     
     var projectionMatrix: matrix_float4x4 {

@@ -66,7 +66,7 @@ class PointAndLine {
     }
     
     static func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, position1: simd_float3, position2: simd_float3, color: simd_float4 = simd_float4(1,1,1,1)) {
-        var points: [PointVertex] = [PointVertex(position: position1), PointVertex(position: position2)]
+        let points: [PointVertex] = [PointVertex(position: position1), PointVertex(position: position2)]
         let buffer = Core.device.makeBuffer(bytes: points, length: PointVertex.stride(count: points.count))
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
