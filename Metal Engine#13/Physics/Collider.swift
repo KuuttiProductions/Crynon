@@ -10,8 +10,8 @@ class Collider: Node {
     
     override func tick(_ deltaTime: Float) {
         
-        var min: simd_float3 = simd_float3(repeating: 0)
-        var max: simd_float3 = simd_float3(repeating: 0)
+        var min: simd_float3 = simd_float3(repeating: .infinity)
+        var max: simd_float3 = simd_float3(repeating: -.infinity)
         
         for pos in aabbSimple {
             let comparePos = matrix_multiply(self.modelMatrix, simd_float4(pos, 1))
@@ -53,12 +53,12 @@ class Collider: Node {
             positions.append(item)
         }
         
-        var minX: Float = 0
-        var minY: Float = 0
-        var minZ: Float = 0
-        var maxX: Float = 0
-        var maxY: Float = 0
-        var maxZ: Float = 0
+        var minX: Float = .infinity
+        var minY: Float = .infinity
+        var minZ: Float = .infinity
+        var maxX: Float = -.infinity
+        var maxY: Float = -.infinity
+        var maxZ: Float = -.infinity
         
         for pos in positions {
             

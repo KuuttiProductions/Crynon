@@ -39,6 +39,11 @@ struct Vertex: sizeable {
     var normal: simd_float3 = simd_float3(0,0,0)
 }
 
+struct PointVertex: sizeable {
+    var position: simd_float3 = simd_float3(0,0,0)
+    var pointSize: Float = 1
+}
+
 struct ModelConstant: sizeable {
     var modelMatrix = matrix_identity_float4x4
 }

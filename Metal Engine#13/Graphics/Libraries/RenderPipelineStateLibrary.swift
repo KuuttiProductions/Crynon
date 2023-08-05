@@ -5,6 +5,7 @@ enum RenderPipelineStateType {
     case Basic
     case Final
     case Shadow
+    case PointAndLine
 }
 
 class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipelineState> {
@@ -15,6 +16,7 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
         _library.updateValue(Basic_RenderPipelineState(), forKey: .Basic)
         _library.updateValue(Final_RenderPipelineState(), forKey: .Final)
         _library.updateValue(Shadow_RenderPipelineState(), forKey: .Shadow)
+        _library.updateValue(PointAndLine_RenderPipelineState(), forKey: .PointAndLine)
     }
     
     override subscript(type: RenderPipelineStateType) -> MTLRenderPipelineState! {
@@ -70,6 +72,20 @@ class Shadow_RenderPipelineState: RenderPipelineState {
         descriptor.fragmentFunction = nil
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Shadow RenderPipelineState"
+        create()
+    }
+}
+
+class PointAndLine_RenderPipelineState: RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.PointAndLine]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.PointAndLine]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.PointAndLine]
+        descriptor.label = "Basic RenderPipelineState"
         create()
     }
 }
