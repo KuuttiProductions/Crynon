@@ -92,12 +92,12 @@ class Submesh {
 class Quad_Mesh: Mesh {
     override func createVertices() {
         vertices = [
-            Vertex(position: simd_float3(-1, -1, 0), textureCoordinate: simd_float2(0,1)),
-            Vertex(position: simd_float3(-1,  1, 0), textureCoordinate: simd_float2(0,0)),
-            Vertex(position: simd_float3( 1, -1, 0), textureCoordinate: simd_float2(1,1)),
-            Vertex(position: simd_float3(-1,  1, 0), textureCoordinate: simd_float2(0,0)),
-            Vertex(position: simd_float3( 1,  1, 0), textureCoordinate: simd_float2(1,0)),
-            Vertex(position: simd_float3( 1, -1, 0), textureCoordinate: simd_float2(1,1))
+            Vertex(position: simd_float3(-1, -1, 0), textureCoordinate: simd_float2(0,1), normal: simd_float3(0, 0, -1)),
+            Vertex(position: simd_float3(-1,  1, 0), textureCoordinate: simd_float2(0,0), normal: simd_float3(0, 0, -1)),
+            Vertex(position: simd_float3( 1, -1, 0), textureCoordinate: simd_float2(1,1), normal: simd_float3(0, 0, -1)),
+            Vertex(position: simd_float3(-1,  1, 0), textureCoordinate: simd_float2(0,0), normal: simd_float3(0, 0, -1)),
+            Vertex(position: simd_float3( 1,  1, 0), textureCoordinate: simd_float2(1,0), normal: simd_float3(0, 0, -1)),
+            Vertex(position: simd_float3( 1, -1, 0), textureCoordinate: simd_float2(1,1), normal: simd_float3(0, 0, -1))
         ]
     }
 }

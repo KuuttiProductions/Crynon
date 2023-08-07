@@ -45,4 +45,5 @@ struct Material {
     float4 color;
     float metallic;
     float roughness;
+    float emission;
 };

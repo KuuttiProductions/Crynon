@@ -5,7 +5,7 @@ using namespace metal;
 
 class PhongShading {
 public:
-    static float4 getPhongLight(float3 worldPosition,
+    static float3 getPhongLight(float3 worldPosition,
                                 float3 unitNormal,
                                 constant LightData *ld,
                                 int ldc,
@@ -13,9 +13,9 @@ public:
                                 float3 cameraPos,
                                 float lightness) {
         
-        float4 totalAmbientColor = float4(0,0,0,1);
-        float4 totalDiffuseColor = float4(0,0,0,1);
-        float4 totalSpecularColor = float4(0,0,0,1);
+        float3 totalAmbientColor = float3(0,0,0);
+        float3 totalDiffuseColor = float3(0,0,0);
+        float3 totalSpecularColor = float3(0,0,0);
         
         for (int i = 0; i < ldc; i++) {
             LightData data = ld[i];
@@ -47,17 +47,17 @@ public:
                 attenuation = brightness;
             }
             
-            float4 ambientColor = (float4(1,1,1,1) * data.color) * 0.03 * attenuation * brightness * data.color;
+            float3 ambientColor = (float3(1,1,1) * data.color.rgb) * 0.03 * attenuation * brightness * data.color.rgb;
             totalAmbientColor += clamp(ambientColor, 0.0, 1.0);
             
-            float4 diffuseColor = dot(unitNormal, data.useDirection ? lightDirection : toLightVector) * diffuseness * attenuation * brightness * data.color;
+            float3 diffuseColor = dot(unitNormal, data.useDirection ? lightDirection : toLightVector) * diffuseness * attenuation * brightness * data.color.rgb * (mt.emission + 1);
             totalDiffuseColor += clamp(diffuseColor, 0.0, 1.0);
             if (data.useDirection == true) {
                 totalDiffuseColor *= lightness;
             }
             
             float specularDot = clamp(dot(halfwayVector, unitNormal), 0.0, 1.0);
-            float4 specularColor = pow(specularDot, specularness) * attenuation * brightness * data.color;
+            float3 specularColor = pow(specularDot, specularness) * attenuation * brightness * data.color.rgb;
             totalSpecularColor += clamp(specularColor, 0.0, 1.0);
             if (data.useDirection == true) {
                 totalSpecularColor *= lightness;

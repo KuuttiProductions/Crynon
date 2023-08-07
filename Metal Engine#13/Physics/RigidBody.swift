@@ -65,6 +65,7 @@ class RigidBody: Collider {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setFragmentBytes(&material, length: Material.stride, index: 1)
+        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["Wallpaper"], index: 3)
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
         AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
         

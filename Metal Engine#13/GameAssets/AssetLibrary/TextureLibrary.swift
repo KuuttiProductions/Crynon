@@ -8,6 +8,8 @@ class TextureLibrary: Library<String, MTLTexture> {
     
     override func fillLibrary() {
         _library.updateValue(textureLoader.loadTexture("Wallpaper", "jpeg", true), forKey: "Wallpaper")
+        _library.updateValue(textureLoader.loadTexture("Grass", "png", true), forKey: "Grass")
+        _library.updateValue(textureLoader.loadTexture("Window"), forKey: "Window")
     }
     
     override subscript(type: String) -> MTLTexture! {

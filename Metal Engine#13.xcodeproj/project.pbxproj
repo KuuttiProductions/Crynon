@@ -61,6 +61,8 @@
 		518E4E862A2B6801007A7C83 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E852A2B6801007A7C83 /* Math.swift */; };
 		51978FFF2A2504E600F87A20 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51978FFE2A2504E600F87A20 /* Core.swift */; };
 		519790012A25065900F87A20 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519790002A25065900F87A20 /* GameView.swift */; };
+		51AFC9852A80E38C00AC3CFF /* Grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 51AFC9842A80E38C00AC3CFF /* Grass.png */; };
+		51AFC9872A81034A00AC3CFF /* Window.png in Resources */ = {isa = PBXBuildFile; fileRef = 51AFC9862A81034A00AC3CFF /* Window.png */; };
 		51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B299132A505E7E0043F3E1 /* InputManager.swift */; };
 		51BA0D212A6415A900A88604 /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D202A6415A900A88604 /* Light.swift */; };
 		51BA0D232A64171900A88604 /* LightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA0D222A64171900A88604 /* LightManager.swift */; };
@@ -128,6 +130,8 @@
 		518E4E852A2B6801007A7C83 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		51978FFE2A2504E600F87A20 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		519790002A25065900F87A20 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		51AFC9842A80E38C00AC3CFF /* Grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Grass.png; sourceTree = "<group>"; };
+		51AFC9862A81034A00AC3CFF /* Window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Window.png; sourceTree = "<group>"; };
 		51B299132A505E7E0043F3E1 /* InputManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputManager.swift; sourceTree = "<group>"; };
 		51B299182A5079C30043F3E1 /* Metal-Engine-13-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Metal-Engine-13-Info.plist"; path = "Metal Engine#13/OtherFiles/Metal-Engine-13-Info.plist"; sourceTree = SOURCE_ROOT; };
 		51BA0D202A6415A900A88604 /* Light.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
@@ -360,6 +364,8 @@
 		516E06F52A6D9F590011D18E /* Textures */ = {
 			isa = PBXGroup;
 			children = (
+				51AFC9862A81034A00AC3CFF /* Window.png */,
+				51AFC9842A80E38C00AC3CFF /* Grass.png */,
 				516E06F62A6D9FC10011D18E /* Wallpaper.jpeg */,
 			);
 			path = Textures;
@@ -491,9 +497,11 @@
 				5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */,
 				516E06F32A6D9E610011D18E /* Sphere.obj in Resources */,
 				516E06F72A6D9FC10011D18E /* Wallpaper.jpeg in Resources */,
+				51AFC9852A80E38C00AC3CFF /* Grass.png in Resources */,
 				516E9CB82A7D69C300813B8C /* Cube.obj in Resources */,
 				51641C772A2DFA2600F5A16E /* Cube.mtl in Resources */,
 				516E06F22A6D9E610011D18E /* Sphere.mtl in Resources */,
+				51AFC9872A81034A00AC3CFF /* Window.png in Resources */,
 				512FFD592A66B965001987A0 /* Metamesh.mtl in Resources */,
 				5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */,
 			);
@@ -692,7 +700,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 881;
+				CURRENT_PROJECT_VERSION = 923;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -727,7 +735,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 881;
+				CURRENT_PROJECT_VERSION = 923;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

@@ -41,6 +41,13 @@ class Basic_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.colorAttachments[0].isBlendingEnabled = true
+        descriptor.colorAttachments[0].rgbBlendOperation = .add
+        descriptor.colorAttachments[0].alphaBlendOperation = .add
+        descriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+        descriptor.colorAttachments[0].sourceAlphaBlendFactor = .sourceAlpha
+        descriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
+        descriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Basic]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Basic]
