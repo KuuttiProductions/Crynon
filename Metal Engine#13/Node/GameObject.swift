@@ -27,6 +27,7 @@ class GameObject: Node {
         renderCommandEncoder.pushDebugGroup("Casting shadow with \(name!)")
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Shadow])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
+        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[textureColor], index: 3)
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
         renderCommandEncoder.setCullMode(.back)
         AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)

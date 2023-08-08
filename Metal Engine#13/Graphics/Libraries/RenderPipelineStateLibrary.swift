@@ -83,7 +83,7 @@ class Shadow_RenderPipelineState: RenderPipelineState {
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Shadow]
-        descriptor.fragmentFunction = nil
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Shadow]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Shadow RenderPipelineState"
         create()
