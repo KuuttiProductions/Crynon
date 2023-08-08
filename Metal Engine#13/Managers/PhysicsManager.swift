@@ -31,7 +31,7 @@ class PhysicsManager {
         }
     }
     
-    func render(renderCommandEncoder: MTLRenderCommandEncoder) {
+    func render(_ renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.pushDebugGroup("Rendering Physics Objects")
         for object in _physicsObjects {
             object.modelConstant.modelMatrix = object.modelMatrix

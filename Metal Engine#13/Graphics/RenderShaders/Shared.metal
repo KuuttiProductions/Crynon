@@ -10,7 +10,7 @@ struct VertexIn {
 };
 
 struct VertexOut {
-    float4 position [[ position ]];
+    float4 position [[ position, invariant ]];
     float4 color;
     float2 textureCoordinate;
     float3 normal;

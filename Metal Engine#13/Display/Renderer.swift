@@ -6,6 +6,8 @@ class Renderer: NSObject {
     static var screenWidth: Float!
     static var screenHeight: Float!
     static var aspectRatio: Float { return screenWidth/screenHeight }
+    
+    private var optimalTileSize: MTLSize = MTLSizeMake(32, 16, 1)
 
     var forwardRenderPassDescriptor = MTLRenderPassDescriptor()
     var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
@@ -68,9 +70,16 @@ class Renderer: NSObject {
         
         forwardRenderPassDescriptor.colorAttachments[0].texture = AssetLibrary.textures["RenderTargetColor"]
         forwardRenderPassDescriptor.colorAttachments[0].loadAction = .clear
+        forwardRenderPassDescriptor.colorAttachments[0].storeAction = .store
         forwardRenderPassDescriptor.colorAttachments[0].clearColor = Preferences.clearColor
         forwardRenderPassDescriptor.depthAttachment.texture = AssetLibrary.textures["RenderTargetDepth"]
         forwardRenderPassDescriptor.depthAttachment.loadAction = .clear
+        forwardRenderPassDescriptor.depthAttachment.storeAction = .dontCare
+        forwardRenderPassDescriptor.depthAttachment.clearDepth = 1.0
+        
+        forwardRenderPassDescriptor.tileWidth = optimalTileSize.width
+        forwardRenderPassDescriptor.tileHeight = optimalTileSize.height
+        forwardRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.Transparent].imageblockSampleLength
     }
     
     func updateScreenSize(view: MTKView) {
@@ -121,7 +130,20 @@ extension Renderer: MTKViewDelegate {
     func forwardRenderPass(commandBuffer: MTLCommandBuffer!) {
         let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
         baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
+        
+        baseRenderCommandEncoder?.pushDebugGroup("InitTransparencyStore")
+        baseRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
+        baseRenderCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
+        baseRenderCommandEncoder?.popDebugGroup()
+
         SceneManager.render(baseRenderCommandEncoder)
+        
+        baseRenderCommandEncoder?.pushDebugGroup("Blending Transparency")
+        baseRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
+        baseRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.No])
+        AssetLibrary.meshes[.Quad].draw(baseRenderCommandEncoder)
+        baseRenderCommandEncoder?.popDebugGroup()
+        
         baseRenderCommandEncoder?.endEncoding()
     }
     

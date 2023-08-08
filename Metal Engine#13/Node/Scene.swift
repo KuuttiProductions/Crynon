@@ -44,7 +44,7 @@ class Scene: Node {
         lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
         super.render(renderCommandEncoder)
-        physicsManager.render(renderCommandEncoder: renderCommandEncoder)
+        physicsManager.render(renderCommandEncoder)
     }
     
     override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {

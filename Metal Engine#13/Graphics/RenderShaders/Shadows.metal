@@ -32,8 +32,8 @@ public:
         float bias = 0.0001;
         
         int index = 0;
-        for (int x = -halfSquareSample; x <= halfSquareSample; x++) {
-            for (int y = -halfSquareSample; y <= halfSquareSample; y++) {
+        for (short x = -halfSquareSample; x <= halfSquareSample; x++) {
+            for (short y = -halfSquareSample; y <= halfSquareSample; y++) {
                 float2 samplePosition =  float2(x, y) * texelSize;
                 samplePosition += samplePositionDefault;
                 float closestDepth = clamp(shadowMap1.sample(sampler2d, samplePosition), 0.0, 1.0);

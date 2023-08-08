@@ -20,7 +20,7 @@ Here are the current plans for ME13. More will be added.
     - [ ] Bloom
     - [ ] Depth Of Field
 - [ ] Tessellation
-- [ ] Transparency and translucency (WIP)
+- [x] Transparency and translucency
 
 ### Gameloops ###
 - [x] High-level object system

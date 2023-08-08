@@ -11,6 +11,7 @@ class BasicScene: Scene {
     let grass = GameObject("Grass")
     let glass = GameObject("Window")
     let glass2 = GameObject("Window2")
+    let glass3 = GameObject("Window3")
     let camera = FPSCamera()
     let sun = DirectionalLight()
     let light = PointLight()
@@ -29,6 +30,7 @@ class BasicScene: Scene {
         addChild(grass)
         addChild(glass)
         addChild(glass2)
+        addChild(glass3)
         addCamera(camera, true)
         addLight(sun)
         addLight(light)
@@ -45,10 +47,15 @@ class BasicScene: Scene {
         cube4.setScale(5, 0.3, 5)
         grass.setPos(6, -1.8, 2)
         grass.textureColor = "Grass"
-        glass.setPos(9, -1.8, 2)
+        glass.setPos(9, -1.8, 4)
         glass.textureColor = "Window"
-        glass2.setPos(9, -1.8, 4)
+        glass2.setPos(9, -1.8, 2)
         glass2.textureColor = "Window"
+        glass3.setPos(9, -1.8, 0)
+        glass3.textureColor = "Window"
+        glass.rpStateType = .Transparent
+        glass2.rpStateType = .Transparent
+        glass3.rpStateType = .Transparent
         camera.setPosZ(5)
         physics.setPosY(5)
         sun.lightData.color = simd_float4(1,1,1,1)

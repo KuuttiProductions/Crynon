@@ -10,7 +10,7 @@ class ComputePipelineStateLibrary: Library<ComputePipelineStateType, MTLComputeP
     private var _library: [ComputePipelineStateType : ComputePipelineState] = [:]
     
     override func fillLibrary() {
-        _library.updateValue(ComputePipelineState(functionName: "jitter", functionLabel: "Jitter function"), forKey: .Jitter)
+        _library.updateValue(ComputePipelineState(functionName: "jitter", "Jitter Function"), forKey: .Jitter)
     }
     
     override subscript(type: ComputePipelineStateType) -> MTLComputePipelineState! {
@@ -20,10 +20,10 @@ class ComputePipelineStateLibrary: Library<ComputePipelineStateType, MTLComputeP
 
 class ComputePipelineState {
     var pipelineState: MTLComputePipelineState!
-    init(functionName: String, functionLabel: String = "") {
+    init(functionName: String, _ label: String = "") {
         do {
             let function = Core.defaultLibrary.makeFunction(name: functionName)!
-            function.label = functionLabel
+            function.label = label
             pipelineState = try Core.device.makeComputePipelineState(function: function)
         } catch let error {
             print("Error creating computePipelineState: \(error)")

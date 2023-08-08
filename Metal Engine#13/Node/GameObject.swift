@@ -6,6 +6,7 @@ class GameObject: Node {
     var material: Material = Material()
     var mesh: MeshType = .Quad
     var textureColor: String = ""
+    var rpStateType: RenderPipelineStateType = .Basic
     
     override init(_ name: String) {
         super.init(name)
@@ -13,8 +14,8 @@ class GameObject: Node {
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
-        renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
+        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[rpStateType])
+        renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[rpStateType == .Transparent ? .NoWrite : .Less])
         renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
         renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[textureColor], index: 3)
         renderCommandEncoder.setFragmentBytes(&material, length: Material.stride, index: 1)
