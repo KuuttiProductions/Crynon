@@ -1,7 +1,5 @@
 
-import simd
-
 enum BlendMode {
-    case OpaqueBlend
-    case AlphaBlend
+    case Opaque
+    case Alpha
 }

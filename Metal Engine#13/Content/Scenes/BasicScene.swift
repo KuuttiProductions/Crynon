@@ -53,9 +53,9 @@ class BasicScene: Scene {
         glass2.textureColor = "Window"
         glass3.setPos(9, -1.8, 0)
         glass3.textureColor = "Window"
-        glass.rpStateType = .Transparent
-        glass2.rpStateType = .Transparent
-        glass3.rpStateType = .Transparent
+        glass.material.shader = .Transparent
+        glass2.material.shader = .Transparent
+        glass3.material.shader = .Transparent
         camera.setPosZ(5)
         physics.setPosY(5)
         sun.lightData.color = simd_float4(1,1,1,1)

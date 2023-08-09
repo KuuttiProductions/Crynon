@@ -33,7 +33,7 @@ constexpr sampler sampler2d = sampler(min_filter::linear,
                               mag_filter::linear);
 
 fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage_in ]],
-                                                       constant Material &material [[ buffer(1) ]],
+                                                       constant ShaderMaterial &material [[ buffer(1) ]],
                                                        constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                                                        constant LightData *lightData [[ buffer(3) ]],
                                                        constant int &lightCount [[ buffer(4) ]],

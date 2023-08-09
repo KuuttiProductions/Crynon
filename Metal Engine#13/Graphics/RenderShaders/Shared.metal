@@ -41,9 +41,10 @@ struct LightData {
     float cutoffInner;
 };
 
-struct Material {
+struct ShaderMaterial {
     float4 color;
     float metallic;
     float roughness;
     float emission;
+    float ior;
 };
