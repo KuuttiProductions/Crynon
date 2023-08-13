@@ -62,7 +62,7 @@ class RigidBody: Collider {
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Basic])
+        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Forward])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
         renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["Wallpaper"], index: 3)

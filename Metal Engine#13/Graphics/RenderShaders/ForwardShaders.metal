@@ -4,7 +4,7 @@
 #include "Shadows.metal"
 using namespace metal;
 
-vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
+vertex VertexOut forward_vertex(VertexIn VerIn [[ stage_in ]],
                               constant ModelConstant &modelConstant [[ buffer(1) ]],
                               constant VertexSceneConstant &sceneConstant [[ buffer(2) ]],
                               constant float4x4 &depthViewMatrix [[ buffer(3) ]]) {
@@ -23,7 +23,7 @@ vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
     return VerOut;
 }
 
-fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
+fragment half4 forward_fragment(VertexOut VerOut [[ stage_in ]],
                               constant ShaderMaterial &material [[ buffer(1) ]],
                               constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                               constant LightData *lightData [[ buffer(3) ]],

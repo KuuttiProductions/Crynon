@@ -3,7 +3,9 @@ import MetalKit
 import Metal
 
 enum RenderPipelineStateType {
-    case Basic
+    case Forward
+    case Geometry
+    case Lighting
     case Final
     case Shadow
     case PointAndLine
@@ -17,7 +19,9 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
     private var _library: [RenderPipelineStateType : RenderPipelineState] = [:]
     
     override func fillLibrary() {
-        _library.updateValue(Basic_RenderPipelineState(), forKey: .Basic)
+        _library.updateValue(Forward_RenderPipelineState(), forKey: .Forward)
+        _library.updateValue(Geometry_RenderPipelineState(), forKey: .Geometry)
+        _library.updateValue(Lighting_RenderPipelineState(), forKey: .Lighting)
         _library.updateValue(Final_RenderPipelineState(), forKey: .Final)
         _library.updateValue(Shadow_RenderPipelineState(), forKey: .Shadow)
         _library.updateValue(PointAndLine_RenderPipelineState(), forKey: .PointAndLine)
@@ -43,7 +47,7 @@ class RenderPipelineState {
     }
 }
 
-class Basic_RenderPipelineState: RenderPipelineState {
+class Forward_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
@@ -56,10 +60,38 @@ class Basic_RenderPipelineState: RenderPipelineState {
         descriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
         descriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
-        descriptor.vertexFunction = GPLibrary.vertexShaders[.Basic]
-        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Basic]
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Forward]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Forward]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Basic RenderPipelineState"
+        create()
+    }
+}
+
+class Geometry_RenderPipelineState: RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Deferred]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Deferred]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "Geometry RenderPipelineState"
+        create()
+    }
+}
+
+class Lighting_RenderPipelineState: RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Final]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Lighting]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "Lighting RenderPipelineState"
         create()
     }
 }
@@ -129,10 +161,9 @@ class Transparent_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].isBlendingEnabled = false
-        descriptor.colorAttachments[0].writeMask = []
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
-        descriptor.vertexFunction = GPLibrary.vertexShaders[.Basic]
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Forward]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Transparent]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Transparent RenderPipelineState"

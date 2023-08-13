@@ -8,6 +8,6 @@ struct Material {
     var textureEmission: String = ""
     var textureMetallic: String = ""
     var textureRoughness: String = ""
-    var shader: RenderPipelineStateType = .Basic
+    var shader: RenderPipelineStateType = .Forward
     var blendMode: BlendMode = .Opaque
 }

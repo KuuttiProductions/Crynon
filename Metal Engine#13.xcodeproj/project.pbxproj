@@ -31,6 +31,7 @@
 		5148D8A42A23AD1000F02654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A32A23AD1000F02654 /* Assets.xcassets */; };
 		5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */; };
 		5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5148D8AE2A23B7C100F02654 /* Renderer.swift */; };
+		5151F2282A88B76C002EBF4E /* DeferredShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5151F2272A88B76C002EBF4E /* DeferredShaders.metal */; };
 		51641C712A2DF9AA00F5A16E /* MeshLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51641C702A2DF9AA00F5A16E /* MeshLoader.swift */; };
 		51641C772A2DFA2600F5A16E /* Cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51641C752A2DFA2600F5A16E /* Cube.mtl */; };
 		51641C792A2E0AF700F5A16E /* DepthStencilStateLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51641C782A2E0AF700F5A16E /* DepthStencilStateLibrary.swift */; };
@@ -104,6 +105,7 @@
 		5148D8A62A23AD1000F02654 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5148D8A82A23AD1000F02654 /* Metal_Engine_13.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Metal_Engine_13.entitlements; sourceTree = "<group>"; };
 		5148D8AE2A23B7C100F02654 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		5151F2272A88B76C002EBF4E /* DeferredShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DeferredShaders.metal; sourceTree = "<group>"; };
 		51641C702A2DF9AA00F5A16E /* MeshLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshLoader.swift; sourceTree = "<group>"; };
 		51641C752A2DFA2600F5A16E /* Cube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.mtl; sourceTree = "<group>"; };
 		51641C782A2E0AF700F5A16E /* DepthStencilStateLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthStencilStateLibrary.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */,
 				513C1F552A28FA9E003155B0 /* Shared.metal */,
 				511B6C062A27AA530067AEBF /* ForwardShaders.metal */,
+				5151F2272A88B76C002EBF4E /* DeferredShaders.metal */,
 				51126EA82A8263B100B1630E /* TransparentShaders.metal */,
 				512FFD602A66EF0A001987A0 /* FinalShaders.metal */,
 				51BA0D242A641F1700A88604 /* PhongShading.metal */,
@@ -543,6 +546,7 @@
 				513C1F4E2A28E97A003155B0 /* FragmentShaderLibrary.swift in Sources */,
 				5184F6082A7E54FB00EFF10E /* PointLight.swift in Sources */,
 				516D5A352A7A2EB100AA1CD4 /* Collider.swift in Sources */,
+				5151F2282A88B76C002EBF4E /* DeferredShaders.metal in Sources */,
 				512FFD5F2A66D935001987A0 /* DirectionalLight.swift in Sources */,
 				51BA0D212A6415A900A88604 /* Light.swift in Sources */,
 				513C1F582A28FBD4003155B0 /* Preferences.swift in Sources */,
@@ -716,7 +720,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1017;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -751,7 +755,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1017;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

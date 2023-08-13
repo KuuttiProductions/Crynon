@@ -112,7 +112,7 @@ extension Renderer: MTKViewDelegate {
         
         shadowRenderPass(commandBuffer: commandBuffer)
         
-        forwardRenderPass(commandBuffer: commandBuffer)
+        deferredRenderPass(commandBuffer: commandBuffer)
         
         finalRenderPass(commandBuffer: commandBuffer, view: view)
     
@@ -127,24 +127,32 @@ extension Renderer: MTKViewDelegate {
         shadowRenderCommandEncoder?.endEncoding()
     }
     
-    func forwardRenderPass(commandBuffer: MTLCommandBuffer!) {
-        let baseRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
-        baseRenderCommandEncoder?.label = "Base RenderCommandEncoder"
+    func deferredRenderPass(commandBuffer: MTLCommandBuffer!) {
+        let DeferredRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
+        DeferredRenderCommandEncoder?.label = "Deferred RenderCommandEncoder"
         
-        baseRenderCommandEncoder?.pushDebugGroup("InitTransparencyStore")
-        baseRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
-        baseRenderCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
-        baseRenderCommandEncoder?.popDebugGroup()
+        DeferredRenderCommandEncoder?.pushDebugGroup("InitTransparencyStore")
+        DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
+        DeferredRenderCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
+        DeferredRenderCommandEncoder?.popDebugGroup()
 
-        SceneManager.render(baseRenderCommandEncoder)
+        DeferredRenderCommandEncoder?.pushDebugGroup("Geometry Store")
+        SceneManager.render(DeferredRenderCommandEncoder)
+        DeferredRenderCommandEncoder?.popDebugGroup()
         
-        baseRenderCommandEncoder?.pushDebugGroup("Blending Transparency")
-        baseRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
-        baseRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.No])
-        AssetLibrary.meshes[.Quad].draw(baseRenderCommandEncoder)
-        baseRenderCommandEncoder?.popDebugGroup()
+        DeferredRenderCommandEncoder?.pushDebugGroup("Blending Transparency")
+        DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
+        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.No])
+        AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
+        DeferredRenderCommandEncoder?.popDebugGroup()
         
-        baseRenderCommandEncoder?.endEncoding()
+        DeferredRenderCommandEncoder?.pushDebugGroup("Lighting")
+        DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Lighting])
+        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.No])
+        AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
+        DeferredRenderCommandEncoder?.popDebugGroup()
+        
+        DeferredRenderCommandEncoder?.endEncoding()
     }
     
     func finalRenderPass(commandBuffer: MTLCommandBuffer!, view: MTKView) {
