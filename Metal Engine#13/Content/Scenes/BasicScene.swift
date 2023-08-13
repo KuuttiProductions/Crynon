@@ -30,7 +30,6 @@ class BasicScene: Scene {
         addChild(grass)
         addChild(glass)
         addChild(glass2)
-        addChild(glass3)
         addCamera(camera, true)
         addLight(sun)
         addLight(light)
@@ -46,13 +45,14 @@ class BasicScene: Scene {
         cube4.setPos(-15, 10, 0)
         cube4.setScale(5, 0.3, 5)
         grass.setPos(6, -1.8, 2)
-        grass.textureColor = "Grass"
-        glass.setPos(9, -1.8, 4)
-        glass.textureColor = "Window"
-        glass2.setPos(9, -1.8, 2)
-        glass2.textureColor = "Window"
-        glass3.setPos(9, -1.8, 0)
-        glass3.textureColor = "Window"
+        grass.material.textureColor = "Grass"
+        glass.setPos(9, -1.8, 5)
+        glass.material.textureColor = "Window"
+        glass2.setPos(9, -1.5, 2)
+        glass2.material.textureColor = "Window"
+        glass2.addChild(glass3)
+        glass3.setPos(2, 0, 0)
+        glass3.material.textureColor = "Window"
         glass.material.shader = .Transparent
         glass2.material.shader = .Transparent
         glass3.material.shader = .Transparent
@@ -74,5 +74,6 @@ class BasicScene: Scene {
         sun.direction = simd_float3(0, -1, sin(time))
         light.setPosY(sin(time/2)*20+20)
         spotlight.direction = simd_float3(0, sin(time), cos(time))
+        glass2.setRotY(time)
     }
 }

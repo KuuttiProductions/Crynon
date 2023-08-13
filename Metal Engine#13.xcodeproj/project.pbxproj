@@ -64,6 +64,7 @@
 		518E4E862A2B6801007A7C83 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518E4E852A2B6801007A7C83 /* Math.swift */; };
 		51978FFF2A2504E600F87A20 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51978FFE2A2504E600F87A20 /* Core.swift */; };
 		519790012A25065900F87A20 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519790002A25065900F87A20 /* GameView.swift */; };
+		519DC2B42A83E7E60096C7CB /* Skybox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519DC2B32A83E7E60096C7CB /* Skybox.swift */; };
 		51AFC9852A80E38C00AC3CFF /* Grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 51AFC9842A80E38C00AC3CFF /* Grass.png */; };
 		51AFC9872A81034A00AC3CFF /* Window.png in Resources */ = {isa = PBXBuildFile; fileRef = 51AFC9862A81034A00AC3CFF /* Window.png */; };
 		51B299142A505E7E0043F3E1 /* InputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B299132A505E7E0043F3E1 /* InputManager.swift */; };
@@ -136,6 +137,7 @@
 		518E4E852A2B6801007A7C83 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		51978FFE2A2504E600F87A20 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		519790002A25065900F87A20 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		519DC2B32A83E7E60096C7CB /* Skybox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skybox.swift; sourceTree = "<group>"; };
 		51AFC9842A80E38C00AC3CFF /* Grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Grass.png; sourceTree = "<group>"; };
 		51AFC9862A81034A00AC3CFF /* Window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Window.png; sourceTree = "<group>"; };
 		51B299132A505E7E0043F3E1 /* InputManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputManager.swift; sourceTree = "<group>"; };
@@ -406,6 +408,7 @@
 				51BA0D262A6440F000A88604 /* Cameras */,
 				518E4E832A2B5834007A7C83 /* Scenes */,
 				518E4E842A2B5839007A7C83 /* GameObjects */,
+				519DC2B32A83E7E60096C7CB /* Skybox.swift */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 				512439672A6D1FEB0021D320 /* ComputePipelineStateLibrary.swift in Sources */,
 				51CC12902A6AC70C00B7C960 /* rng.metal in Sources */,
 				51CC128F2A6AC70C00B7C960 /* rng_header.metal in Sources */,
+				519DC2B42A83E7E60096C7CB /* Skybox.swift in Sources */,
 				5148D8A22A23AD0F00F02654 /* ContentView.swift in Sources */,
 				512FFD632A66F1A1001987A0 /* SamplerStateLibrary.swift in Sources */,
 				518E4E7F2A2B54B2007A7C83 /* BasicScene.swift in Sources */,
@@ -712,7 +716,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1000;
+				CURRENT_PROJECT_VERSION = 1009;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -747,7 +751,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1000;
+				CURRENT_PROJECT_VERSION = 1009;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

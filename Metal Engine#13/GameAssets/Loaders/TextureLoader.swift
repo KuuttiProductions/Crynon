@@ -19,4 +19,21 @@ class TextureLoader {
         
         return texture
     }
+    
+//    func loadCubeTexture(_ name: String, _ extension: String = "png", _ mipMaps: Bool = false)-> MTLTexture {
+//        let url = Bundle.main.url(forResource: name, withExtension: `extension`)!
+//        let loader: MTKTextureLoader = MTKTextureLoader(device: Core.device)
+//        let options: [ MTKTextureLoader.Option : Any ] = [ MTKTextureLoader.Option.generateMipmaps : mipMaps ]
+//        var texture: MTLTexture!
+//
+//        do {
+//            texture = try loader.newTexture(name: name, scaleFactor: 1.0, bundle: d, options: options)
+//        } catch let error {
+//            print("Error loading texture: \(error)")
+//        }
+//        
+//        texture.label = name
+//        
+//        return texture
+//    }
 }

@@ -10,6 +10,8 @@ class Node {
     var name: String!
     var uuid: String!
     
+    private var parent: Node!
+    
     internal var modelConstant = ModelConstant()
     
     private var _children: [Node] = []
@@ -38,6 +40,7 @@ class Node {
     }
     
     func addChild(_ child: Node) {
+        child.parent = self
         _children.append(child)
     }
     
@@ -59,7 +62,11 @@ class Node {
     
     //Called every frame. For logic that doesn't need physical accuracy
     func tick(_ deltaTime: Float) {
-        self.modelConstant.modelMatrix = self.modelMatrix
+        if parent != nil {
+            self.modelConstant.modelMatrix = matrix_multiply(self.parent.modelMatrix, self.modelMatrix)
+        } else {
+            self.modelConstant.modelMatrix = self.modelMatrix
+        }
         for node in _children {
             node.tick(deltaTime)
         }
@@ -80,6 +87,7 @@ class Node {
         renderCommandEncoder.popDebugGroup()
     }
     
+    //Every frame. For rendering to shadowMaps
     func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         for node in _children {
             node.castShadow(renderCommandEncoder)
