@@ -9,8 +9,8 @@ class Renderer: NSObject {
     
     private var optimalTileSize: MTLSize = MTLSizeMake(32, 16, 1)
 
-    var forwardRenderPassDescriptor = MTLRenderPassDescriptor()
     var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
+    var deferredRenderPassDescriptor = MTLRenderPassDescriptor()
     
     override init() {
         super.init()
@@ -47,46 +47,48 @@ class Renderer: NSObject {
         shadowRenderPassDescriptor.depthAttachment.storeAction = .store
     }
     
-    func createForwardRenderPassDescriptor() {
-        let colorTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.pixelFormat,
+    func createGBuffer() {
+        let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.pixelFormat,
                                                                               width: Int(Renderer.screenWidth),
                                                                               height: Int(Renderer.screenHeight),
                                                                               mipmapped: false)
-        let depthTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.depthFormat,
-                                                                              width: Int(Renderer.screenWidth),
-                                                                              height: Int(Renderer.screenHeight),
-                                                                              mipmapped: false)
-        colorTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
-        colorTextureDescriptor.storageMode = .private
-        let colorTexture = Core.device.makeTexture(descriptor: colorTextureDescriptor)
-        colorTexture?.label = "RenderTargetColor"
-        AssetLibrary.textures.addTexture(colorTexture, key: "RenderTargetColor")
+        bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
+        bufferTextureDescriptor.storageMode = .memoryless
         
-        depthTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
-        depthTextureDescriptor.storageMode = .private
-        let depthTexture = Core.device.makeTexture(descriptor: depthTextureDescriptor)
-        depthTexture?.label = "RenderTargetDepth"
-        AssetLibrary.textures.addTexture(depthTexture, key: "RenderTargetDepth")
+        let colorTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        colorTexture?.label = "GBufferColor"
         
-        forwardRenderPassDescriptor.colorAttachments[0].texture = AssetLibrary.textures["RenderTargetColor"]
-        forwardRenderPassDescriptor.colorAttachments[0].loadAction = .clear
-        forwardRenderPassDescriptor.colorAttachments[0].storeAction = .store
-        forwardRenderPassDescriptor.colorAttachments[0].clearColor = Preferences.clearColor
-        forwardRenderPassDescriptor.depthAttachment.texture = AssetLibrary.textures["RenderTargetDepth"]
-        forwardRenderPassDescriptor.depthAttachment.loadAction = .clear
-        forwardRenderPassDescriptor.depthAttachment.storeAction = .dontCare
-        forwardRenderPassDescriptor.depthAttachment.clearDepth = 1.0
+        let positionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        positionTexture?.label = "GBufferPosition"
         
-        forwardRenderPassDescriptor.tileWidth = optimalTileSize.width
-        forwardRenderPassDescriptor.tileHeight = optimalTileSize.height
-        forwardRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.Transparent].imageblockSampleLength
+        let normalTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        normalTexture?.label = "GBufferNormal"
+        
+        bufferTextureDescriptor.pixelFormat = .r32Float
+        let depthTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        depthTexture?.label = "GBufferDepth"
+        
+        deferredRenderPassDescriptor.colorAttachments[0].clearColor = Preferences.clearColor
+        deferredRenderPassDescriptor.colorAttachments[0].loadAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[1].texture = colorTexture
+        deferredRenderPassDescriptor.colorAttachments[2].texture = positionTexture
+        deferredRenderPassDescriptor.colorAttachments[3].texture = normalTexture
+        deferredRenderPassDescriptor.colorAttachments[4].texture = depthTexture
+        deferredRenderPassDescriptor.colorAttachments[1].storeAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[2].storeAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[3].storeAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[4].storeAction = .dontCare
+        
+        deferredRenderPassDescriptor.tileWidth = optimalTileSize.width
+        deferredRenderPassDescriptor.tileHeight = optimalTileSize.height
+        deferredRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.InitTransparency].imageblockSampleLength
     }
     
     func updateScreenSize(view: MTKView) {
         Renderer.screenWidth = Float((view.bounds.width))*2
         Renderer.screenHeight = Float((view.bounds.height))*2
         if Renderer.screenWidth > 0 && Renderer.screenHeight > 0 {
-            createForwardRenderPassDescriptor()
+            createGBuffer()
         }
     }
 }
@@ -98,8 +100,10 @@ extension Renderer: MTKViewDelegate {
     }
     
     func draw(in view: MTKView) {
-        guard let drawable = view.currentDrawable else { return }
-        
+        guard let drawable = view.currentDrawable, let depthTexture = view.depthStencilTexture else { return }
+        deferredRenderPassDescriptor.colorAttachments[0].texture = drawable.texture
+        deferredRenderPassDescriptor.depthAttachment.texture = depthTexture
+
         //Update scene
         SceneManager.tick(1/Float(Preferences.preferredFPS))
         
@@ -114,7 +118,7 @@ extension Renderer: MTKViewDelegate {
         
         deferredRenderPass(commandBuffer: commandBuffer)
         
-        finalRenderPass(commandBuffer: commandBuffer, view: view)
+        //finalRenderPass(commandBuffer: commandBuffer, view: view)
     
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
@@ -128,7 +132,7 @@ extension Renderer: MTKViewDelegate {
     }
     
     func deferredRenderPass(commandBuffer: MTLCommandBuffer!) {
-        let DeferredRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: forwardRenderPassDescriptor)
+        let DeferredRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: deferredRenderPassDescriptor)
         DeferredRenderCommandEncoder?.label = "Deferred RenderCommandEncoder"
         
         DeferredRenderCommandEncoder?.pushDebugGroup("InitTransparencyStore")

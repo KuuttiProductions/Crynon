@@ -47,6 +47,13 @@ class RenderPipelineState {
     }
 }
 
+func addColorAttachments(descriptor: MTLRenderPipelineDescriptor) {
+    descriptor.colorAttachments[1].pixelFormat = Preferences.pixelFormat
+    descriptor.colorAttachments[2].pixelFormat = Preferences.pixelFormat
+    descriptor.colorAttachments[3].pixelFormat = Preferences.pixelFormat
+    descriptor.colorAttachments[4].pixelFormat = .r32Float
+}
+
 class Forward_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
@@ -60,7 +67,7 @@ class Forward_RenderPipelineState: RenderPipelineState {
         descriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
         descriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
-        descriptor.vertexFunction = GPLibrary.vertexShaders[.Forward]
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Default]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Forward]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Basic RenderPipelineState"
@@ -73,8 +80,9 @@ class Geometry_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
-        descriptor.vertexFunction = GPLibrary.vertexShaders[.Deferred]
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Default]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Deferred]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Geometry RenderPipelineState"
@@ -87,6 +95,7 @@ class Lighting_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Final]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Lighting]
@@ -141,6 +150,10 @@ class InitTransparency: RenderPipelineState {
     override init() {
         super.init()
         tileDescriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        tileDescriptor.colorAttachments[1].pixelFormat = Preferences.pixelFormat
+        tileDescriptor.colorAttachments[2].pixelFormat = Preferences.pixelFormat
+        tileDescriptor.colorAttachments[3].pixelFormat = Preferences.pixelFormat
+        tileDescriptor.colorAttachments[4].pixelFormat = .r32Float
         tileDescriptor.tileFunction = Core.defaultLibrary.makeFunction(name: "initTransparentFragmentStore")!
         tileDescriptor.threadgroupSizeMatchesTileSize = true
         tileDescriptor.label = "Init Transparency RenderPipelineState"
@@ -160,10 +173,11 @@ class Transparent_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
-        descriptor.colorAttachments[0].isBlendingEnabled = false
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.colorAttachments[0].isBlendingEnabled = false
+        addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
-        descriptor.vertexFunction = GPLibrary.vertexShaders[.Forward]
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Default]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Transparent]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Transparent RenderPipelineState"
@@ -176,6 +190,7 @@ class TransparentBlending_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Final]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.TransparentBlending]
