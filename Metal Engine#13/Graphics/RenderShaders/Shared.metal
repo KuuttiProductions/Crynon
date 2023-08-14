@@ -2,6 +2,15 @@
 #include <metal_stdlib>
 using namespace metal;
 
+struct GBuffer {
+    half4 final [[ color(0), raster_order_group(2) ]];
+    half4 color [[ color(1), raster_order_group(1) ]];
+    float4 positionShadow [[ color(2), raster_order_group(1) ]];
+    float4 normal [[ color(3), raster_order_group(1) ]];
+    float depth [[ color(4), raster_order_group(1) ]];
+    float4 metalRoughEmissionIOR [[ color(5), raster_order_group(1) ]];
+};
+
 struct VertexIn {
     float3 position [[ attribute(0) ]];
     float4 color [[ attribute(1) ]];

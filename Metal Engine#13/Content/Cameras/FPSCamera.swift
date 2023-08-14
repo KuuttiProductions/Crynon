@@ -10,7 +10,7 @@ class FPSCamera: Camera {
         super.init("FPSCamera")
         self.fieldOfView = 80
         self.nearPlane = 0.03
-        self.farPlane = 1000
+        self.farPlane = 10000
     }
     
     override func tick(_ deltaTime: Float) {

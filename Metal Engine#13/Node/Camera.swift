@@ -6,7 +6,7 @@ class Camera: Node {
     var cameraType: CameraType!
     var fieldOfView: Float = 70
     var nearPlane: Float = 0.1
-    var farPlane: Float = 1000
+    var farPlane: Float = 10000
     
     override init(_ name: String) {
         super.init(name)

@@ -173,6 +173,10 @@ extension Node {
         self._scale.z = value
     }
     
+    func setScale(_ value: Float) {
+        self._scale = simd_float3(repeating: value)
+    }
+    
     func setScale(_ value: simd_float3) {
         self._scale = value
     }

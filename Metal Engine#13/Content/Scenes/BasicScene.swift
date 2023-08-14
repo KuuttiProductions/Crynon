@@ -17,6 +17,7 @@ class BasicScene: Scene {
     let light = PointLight()
     let spotlight = Spotlight()
     let physics = RigidBody("Cube")
+    let skySphere = SkySphere("OceanSky")
     
     var time: Float = 0.0
     
@@ -30,6 +31,7 @@ class BasicScene: Scene {
         addChild(grass)
         addChild(glass)
         addChild(glass2)
+        addChild(skySphere)
         addCamera(camera, true)
         addLight(sun)
         addLight(light)

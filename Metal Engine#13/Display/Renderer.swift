@@ -58,8 +58,8 @@ class Renderer: NSObject {
         let colorTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         colorTexture?.label = "GBufferColor"
         
-        let positionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
-        positionTexture?.label = "GBufferPosition"
+        let positionShadowTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        positionShadowTexture?.label = "GBufferPosition-Shadow"
         
         let normalTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         normalTexture?.label = "GBufferNormal"
@@ -68,16 +68,33 @@ class Renderer: NSObject {
         let depthTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         depthTexture?.label = "GBufferDepth"
         
+        bufferTextureDescriptor.pixelFormat = Preferences.pixelFormat
+        let metalRoughEmissionIOR = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        metalRoughEmissionIOR?.label = "GBufferMetalRoughEmissionIOR"
+        
         deferredRenderPassDescriptor.colorAttachments[0].clearColor = Preferences.clearColor
-        deferredRenderPassDescriptor.colorAttachments[0].loadAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[1].clearColor = Preferences.clearColor
+        
         deferredRenderPassDescriptor.colorAttachments[1].texture = colorTexture
-        deferredRenderPassDescriptor.colorAttachments[2].texture = positionTexture
+        deferredRenderPassDescriptor.colorAttachments[2].texture = positionShadowTexture
         deferredRenderPassDescriptor.colorAttachments[3].texture = normalTexture
         deferredRenderPassDescriptor.colorAttachments[4].texture = depthTexture
+        deferredRenderPassDescriptor.colorAttachments[5].texture = metalRoughEmissionIOR
+        
+        let loadAction = Preferences.useSkySphere == true ? MTLLoadAction.dontCare : MTLLoadAction.clear
+        deferredRenderPassDescriptor.colorAttachments[0].loadAction = loadAction
+        deferredRenderPassDescriptor.colorAttachments[1].loadAction = loadAction
+        deferredRenderPassDescriptor.colorAttachments[2].loadAction = loadAction
+        deferredRenderPassDescriptor.colorAttachments[3].loadAction = loadAction
+        deferredRenderPassDescriptor.colorAttachments[4].loadAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[5].loadAction = .dontCare
+        
+        deferredRenderPassDescriptor.colorAttachments[0].storeAction = .store
         deferredRenderPassDescriptor.colorAttachments[1].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[2].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[3].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[4].storeAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[5].storeAction = .dontCare
         
         deferredRenderPassDescriptor.tileWidth = optimalTileSize.width
         deferredRenderPassDescriptor.tileHeight = optimalTileSize.height

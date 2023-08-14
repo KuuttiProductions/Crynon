@@ -29,7 +29,6 @@ struct GameView: NSViewRepresentable {
         
         mtkView.colorPixelFormat = Preferences.pixelFormat
         mtkView.depthStencilPixelFormat = Preferences.depthFormat
-        mtkView.clearColor = Preferences.clearColor
         
         mtkView.preferredFramesPerSecond = Preferences.preferredFPS
         

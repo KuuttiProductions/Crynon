@@ -12,6 +12,7 @@ enum RenderPipelineStateType {
     case InitTransparency
     case Transparent
     case TransparentBlending
+    case Sky
 }
 
 class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipelineState> {
@@ -28,6 +29,7 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
         _library.updateValue(InitTransparency(), forKey: .InitTransparency)
         _library.updateValue(Transparent_RenderPipelineState(), forKey: .Transparent)
         _library.updateValue(TransparentBlending_RenderPipelineState(), forKey: .TransparentBlending)
+        _library.updateValue(SkySphere_RenderPipelineState(), forKey: .Sky)
     }
     
     override subscript(type: RenderPipelineStateType) -> MTLRenderPipelineState! {
@@ -52,6 +54,7 @@ func addColorAttachments(descriptor: MTLRenderPipelineDescriptor) {
     descriptor.colorAttachments[2].pixelFormat = Preferences.pixelFormat
     descriptor.colorAttachments[3].pixelFormat = Preferences.pixelFormat
     descriptor.colorAttachments[4].pixelFormat = .r32Float
+    descriptor.colorAttachments[5].pixelFormat = Preferences.pixelFormat
 }
 
 class Forward_RenderPipelineState: RenderPipelineState {
@@ -136,6 +139,7 @@ class PointAndLine_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.PointAndLine]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.PointAndLine]
@@ -154,6 +158,7 @@ class InitTransparency: RenderPipelineState {
         tileDescriptor.colorAttachments[2].pixelFormat = Preferences.pixelFormat
         tileDescriptor.colorAttachments[3].pixelFormat = Preferences.pixelFormat
         tileDescriptor.colorAttachments[4].pixelFormat = .r32Float
+        tileDescriptor.colorAttachments[5].pixelFormat = Preferences.pixelFormat
         tileDescriptor.tileFunction = Core.defaultLibrary.makeFunction(name: "initTransparentFragmentStore")!
         tileDescriptor.threadgroupSizeMatchesTileSize = true
         tileDescriptor.label = "Init Transparency RenderPipelineState"
@@ -196,6 +201,21 @@ class TransparentBlending_RenderPipelineState: RenderPipelineState {
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.TransparentBlending]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "TransparentBlending RenderPipelineState"
+        create()
+    }
+}
+
+class SkySphere_RenderPipelineState : RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        addColorAttachments(descriptor: descriptor)
+        descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Sky]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Deferred]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "SkySphere RenderPipelineState"
         create()
     }
 }

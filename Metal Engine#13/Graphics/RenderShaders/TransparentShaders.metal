@@ -1,9 +1,3 @@
-//
-//  TransparentShaders.metal
-//  Metal Engine#13
-//
-//  Created by Kuutti Taavitsainen on 8.8.2023.
-//
 
 #include <metal_stdlib>
 #import "Shared.metal"

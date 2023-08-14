@@ -26,7 +26,7 @@ fragment half4 forward_fragment(VertexOut VerOut [[ stage_in ]],
     
     float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
-        lightness = 1-clamp(Shadows::getShadowness(shadowMap1, surfacePosition), 0.0, 1.0);
+        lightness = Shadows::getLightness(shadowMap1, surfacePosition);
     }
     
     color.rgb *= PhongShading::getPhongLight(VerOut.worldPosition,
