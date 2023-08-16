@@ -38,8 +38,10 @@ class BasicScene: Scene {
         addLight(spotlight)
         addPhysicsObject(physics)
         object.setPosX(-4)
+        object.material.shaderMaterial.roughness = 0
         cube.setPos(0, -3, 0)
         cube.setScale(300, 0.2, 10)
+        cube.material.shaderMaterial.roughness = 1
         cube2.setPosX(20)
         cube2.setScaleY(3)
         cube3.setPos(4, -1, 0)
@@ -74,7 +76,7 @@ class BasicScene: Scene {
         super.tick(deltaTime)
         time += deltaTime
         sun.direction = simd_float3(0, -1, sin(time))
-        light.setPosY(sin(time/2)*20+20)
+        light.setPosY(-1)
         spotlight.direction = simd_float3(0, sin(time), cos(time))
         glass2.setRotY(time)
     }

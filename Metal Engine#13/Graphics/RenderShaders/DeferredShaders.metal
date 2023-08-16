@@ -14,7 +14,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     gBuffer.color = half4(mat.color);
     gBuffer.depth = VerOut.position.z / VerOut.position.w;
     gBuffer.normal = float4(VerOut.normal, 1);
-    gBuffer.positionShadow.rgb = VerOut.worldPosition;
+    gBuffer.positionShadow.xyz = VerOut.worldPosition;
     gBuffer.metalRoughEmissionIOR.r = mat.metallic;
     gBuffer.metalRoughEmissionIOR.g = mat.roughness;
     gBuffer.metalRoughEmissionIOR.b = mat.emission;
@@ -22,6 +22,9 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     
     if (!is_null_texture(textureColor)) {
         gBuffer.color = half4(textureColor.sample(sampler2d, VerOut.textureCoordinate));
+        if (gBuffer.color.a == 0) {
+            discard_fragment();
+        }
     }
     
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
@@ -43,20 +46,22 @@ fragment finalColor lighting_fragment(GBuffer gBuffer,
 
     finalColor fc;
     fc.color = gBuffer.color;
-    ShaderMaterial sm;
-    sm.color = float4(gBuffer.color);
-    sm.metallic = gBuffer.metalRoughEmissionIOR.r;
-    sm.roughness = gBuffer.metalRoughEmissionIOR.g;
-    sm.emission = gBuffer.metalRoughEmissionIOR.b;
-    sm.ior = gBuffer.metalRoughEmissionIOR.a;
-    half3 lighting = half3(PhongShading::getPhongLight(gBuffer.positionShadow.xyz,
-                                                       gBuffer.normal.xyz,
-                                                       lightData,
-                                                       lightCount,
-                                                       sm,
-                                                       fragmentSceneConstant.cameraPosition,
-                                                       gBuffer.positionShadow.a));
-    fc.color *= half4(lighting, 1);
+    if (gBuffer.metalRoughEmissionIOR.b == 0) {
+        ShaderMaterial sm;
+        sm.color = float4(gBuffer.color);
+        sm.metallic = gBuffer.metalRoughEmissionIOR.r;
+        sm.roughness = gBuffer.metalRoughEmissionIOR.g;
+        sm.emission = gBuffer.metalRoughEmissionIOR.b;
+        sm.ior = gBuffer.metalRoughEmissionIOR.a;
+        half3 lighting = half3(PhongShading::getPhongLight(gBuffer.positionShadow.xyz,
+                                                           gBuffer.normal.xyz,
+                                                           lightData,
+                                                           lightCount,
+                                                           sm,
+                                                           fragmentSceneConstant.cameraPosition,
+                                                           gBuffer.positionShadow.a));
+        fc.color *= half4(lighting, 1);
+    }
     
     return fc;
 }

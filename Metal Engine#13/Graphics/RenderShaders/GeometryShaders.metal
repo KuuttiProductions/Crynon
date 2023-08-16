@@ -4,9 +4,9 @@
 using namespace metal;
 
 vertex VertexOut default_vertex(VertexIn VerIn [[ stage_in ]],
-                              constant ModelConstant &modelConstant [[ buffer(1) ]],
-                              constant VertexSceneConstant &sceneConstant [[ buffer(2) ]],
-                              constant float4x4 &depthViewMatrix [[ buffer(3) ]]) {
+                                constant ModelConstant &modelConstant [[ buffer(1) ]],
+                                constant VertexSceneConstant &sceneConstant [[ buffer(2) ]],
+                                constant float4x4 &depthViewMatrix [[ buffer(3) ]]) {
     
     VertexOut VerOut;
     float4 worldPosition = modelConstant.modelMatrix * float4(VerIn.position, 1);

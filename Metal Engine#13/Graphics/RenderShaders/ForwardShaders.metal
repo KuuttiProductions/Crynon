@@ -4,6 +4,7 @@
 #include "Shadows.metal"
 using namespace metal;
 
+// DEPRECATED
 fragment half4 forward_fragment(VertexOut VerOut [[ stage_in ]],
                               constant ShaderMaterial &material [[ buffer(1) ]],
                               constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],

@@ -5,11 +5,12 @@ class SkySphere: Node {
     
     var texture: String = "OceanSky"
     var mesh: MeshType = .Sphere
+    var material: ShaderMaterial = ShaderMaterial()
     
     override init(_ name: String) {
         super.init(name)
-        self.setScale(9000)
-        self.addRotZ(Float.pi/2)
+        self.setScale(900)
+        self.material.emission = 1
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
@@ -18,6 +19,7 @@ class SkySphere: Node {
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Sky])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteLess])
             renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
+            renderCommandEncoder.setFragmentBytes(&material, length: ShaderMaterial.stride, index: 1)
             renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[texture], index: 3)
             AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
             super.render(renderCommandEncoder)

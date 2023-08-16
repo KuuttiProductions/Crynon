@@ -53,7 +53,6 @@
 		517F00052A83D83900792B27 /* PreferenceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517F00042A83D83900792B27 /* PreferenceTypes.swift */; };
 		517F00092A83DB5900792B27 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517F00082A83DB5900792B27 /* Material.swift */; };
 		51819C8E2A8A771C00A17FC3 /* Sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51819C8C2A8A771B00A17FC3 /* Sphere.mtl */; };
-		51819C8F2A8A771C00A17FC3 /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51819C8D2A8A771B00A17FC3 /* Sphere.obj */; };
 		518323EC2A690F8B00D171FA /* ShadowShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323EB2A690F8B00D171FA /* ShadowShader.metal */; };
 		518323EE2A691E5C00D171FA /* Shadows.metal in Sources */ = {isa = PBXBuildFile; fileRef = 518323ED2A691E5C00D171FA /* Shadows.metal */; };
 		5184F6082A7E54FB00EFF10E /* PointLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5184F6072A7E54FB00EFF10E /* PointLight.swift */; };
@@ -79,6 +78,7 @@
 		51CC128F2A6AC70C00B7C960 /* rng_header.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC128D2A6AC70C00B7C960 /* rng_header.metal */; };
 		51CC12902A6AC70C00B7C960 /* rng.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC128E2A6AC70C00B7C960 /* rng.metal */; };
 		51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */; };
+		51CDDDF42A8D3119003B6F2D /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51CDDDF32A8D3119003B6F2D /* Sphere.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,7 +130,6 @@
 		517F00042A83D83900792B27 /* PreferenceTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceTypes.swift; sourceTree = "<group>"; };
 		517F00082A83DB5900792B27 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
 		51819C8C2A8A771B00A17FC3 /* Sphere.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.mtl; sourceTree = "<group>"; };
-		51819C8D2A8A771B00A17FC3 /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.obj; sourceTree = "<group>"; };
 		518323EB2A690F8B00D171FA /* ShadowShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ShadowShader.metal; sourceTree = "<group>"; };
 		518323ED2A691E5C00D171FA /* Shadows.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shadows.metal; sourceTree = "<group>"; };
 		5184F6072A7E54FB00EFF10E /* PointLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLight.swift; sourceTree = "<group>"; };
@@ -157,6 +156,7 @@
 		51CC128D2A6AC70C00B7C960 /* rng_header.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = rng_header.metal; sourceTree = "<group>"; };
 		51CC128E2A6AC70C00B7C960 /* rng.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = rng.metal; sourceTree = "<group>"; };
 		51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = JitterTextureShader.metal; sourceTree = "<group>"; };
+		51CDDDF32A8D3119003B6F2D /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -373,7 +373,7 @@
 		516E06F42A6D9F510011D18E /* Meshes */ = {
 			isa = PBXGroup;
 			children = (
-				51819C8D2A8A771B00A17FC3 /* Sphere.obj */,
+				51CDDDF32A8D3119003B6F2D /* Sphere.obj */,
 				51819C8C2A8A771B00A17FC3 /* Sphere.mtl */,
 				516E9CB72A7D69C300813B8C /* Cube.obj */,
 				51641C752A2DFA2600F5A16E /* Cube.mtl */,
@@ -519,7 +519,7 @@
 			files = (
 				512FFD5A2A66B965001987A0 /* Metamesh.obj in Resources */,
 				5148D8A72A23AD1000F02654 /* Preview Assets.xcassets in Resources */,
-				51819C8F2A8A771C00A17FC3 /* Sphere.obj in Resources */,
+				51CDDDF42A8D3119003B6F2D /* Sphere.obj in Resources */,
 				516E06F72A6D9FC10011D18E /* Wallpaper.jpeg in Resources */,
 				51AFC9852A80E38C00AC3CFF /* Grass.png in Resources */,
 				516E9CB82A7D69C300813B8C /* Cube.obj in Resources */,
@@ -732,7 +732,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1168;
+				CURRENT_PROJECT_VERSION = 1199;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -767,7 +767,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1168;
+				CURRENT_PROJECT_VERSION = 1199;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
