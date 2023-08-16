@@ -54,7 +54,7 @@ fragment finalColor lighting_fragment(GBuffer gBuffer,
         sm.emission = gBuffer.metalRoughEmissionIOR.b;
         sm.ior = gBuffer.metalRoughEmissionIOR.a;
         half3 lighting = half3(PhongShading::getPhongLight(gBuffer.positionShadow.xyz,
-                                                           gBuffer.normal.xyz,
+                                                           normalize(gBuffer.normal.xyz),
                                                            lightData,
                                                            lightCount,
                                                            sm,

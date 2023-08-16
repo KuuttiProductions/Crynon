@@ -8,7 +8,7 @@ struct GBuffer {
     float4 positionShadow [[ color(2), raster_order_group(1) ]];
     float4 normal [[ color(3), raster_order_group(1) ]];
     float depth [[ color(4), raster_order_group(1) ]];
-    float4 metalRoughEmissionIOR [[ color(5), raster_order_group(1) ]];
+    half4 metalRoughEmissionIOR [[ color(5), raster_order_group(1) ]];
 };
 
 struct VertexIn {

@@ -58,6 +58,7 @@ class Renderer: NSObject {
         let colorTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         colorTexture?.label = "GBufferColor"
         
+        bufferTextureDescriptor.pixelFormat = Preferences.signedPixelFormat
         let positionShadowTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         positionShadowTexture?.label = "GBufferPosition-Shadow"
         
@@ -87,7 +88,7 @@ class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[2].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[3].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[4].loadAction = .dontCare
-        deferredRenderPassDescriptor.colorAttachments[5].loadAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[5].loadAction = loadAction
         
         deferredRenderPassDescriptor.colorAttachments[0].storeAction = .store
         deferredRenderPassDescriptor.colorAttachments[1].storeAction = .dontCare
@@ -95,6 +96,9 @@ class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[3].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[4].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[5].storeAction = .dontCare
+        
+        //Sets the emissive value to 1, so that the sky won't be shaded.
+        deferredRenderPassDescriptor.colorAttachments[5].clearColor = MTLClearColor(red: 0, green: 0, blue: 1, alpha: 0)
         
         deferredRenderPassDescriptor.tileWidth = optimalTileSize.width
         deferredRenderPassDescriptor.tileHeight = optimalTileSize.height
