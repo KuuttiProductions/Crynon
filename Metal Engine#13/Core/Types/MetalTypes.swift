@@ -50,11 +50,15 @@ struct ModelConstant: sizeable {
 
 struct VertexSceneConstant: sizeable {
     var viewMatrix = matrix_identity_float4x4
-    var skyViewMatrix = matrix_identity_float4x4
+    var projectionMatrix = matrix_identity_float4x4
+    var inverseViewProjectionMatrix = matrix_identity_float4x4
+    var cameraPosition: simd_float3 = simd_float3(0,0,0)
 }
 
 struct FragmentSceneConstant: sizeable {
     var cameraPosition: simd_float3 = simd_float3(0,0,0)
+    var inverseViewMatrix = matrix_identity_float4x4
+    var inverseProjectionMatrix = matrix_identity_float4x4
 }
 
 struct LightData: sizeable {

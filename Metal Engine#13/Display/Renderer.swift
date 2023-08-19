@@ -57,13 +57,14 @@ class Renderer: NSObject {
         
         let colorTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         colorTexture?.label = "GBufferColor"
+
+        bufferTextureDescriptor.pixelFormat = Preferences.floatPixelFormat
+        let positionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        positionTexture?.label = "GBufferPosition"
         
         bufferTextureDescriptor.pixelFormat = Preferences.signedPixelFormat
-        let positionShadowTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
-        positionShadowTexture?.label = "GBufferPosition-Shadow"
-        
-        let normalTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
-        normalTexture?.label = "GBufferNormal"
+        let normalShadowTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        normalShadowTexture?.label = "GBufferNormalShadow"
         
         bufferTextureDescriptor.pixelFormat = .r32Float
         let depthTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
@@ -77,8 +78,8 @@ class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[1].clearColor = Preferences.clearColor
         
         deferredRenderPassDescriptor.colorAttachments[1].texture = colorTexture
-        deferredRenderPassDescriptor.colorAttachments[2].texture = positionShadowTexture
-        deferredRenderPassDescriptor.colorAttachments[3].texture = normalTexture
+        deferredRenderPassDescriptor.colorAttachments[2].texture = positionTexture
+        deferredRenderPassDescriptor.colorAttachments[3].texture = normalShadowTexture
         deferredRenderPassDescriptor.colorAttachments[4].texture = depthTexture
         deferredRenderPassDescriptor.colorAttachments[5].texture = metalRoughEmissionIOR
         

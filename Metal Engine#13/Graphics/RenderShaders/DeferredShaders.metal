@@ -12,9 +12,9 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     GBuffer gBuffer;
     
     gBuffer.color = half4(mat.color);
-    gBuffer.depth = VerOut.position.z / VerOut.position.w;
-    gBuffer.normal = float4(VerOut.normal, 1);
-    gBuffer.positionShadow.xyz = VerOut.worldPosition;
+    gBuffer.depth = VerOut.position.z;
+    gBuffer.position.xyz = VerOut.worldPosition;
+    gBuffer.normalShadow.xyz = VerOut.normal;
     gBuffer.metalRoughEmissionIOR.r = mat.metallic;
     gBuffer.metalRoughEmissionIOR.g = mat.roughness;
     gBuffer.metalRoughEmissionIOR.b = mat.emission;
@@ -29,7 +29,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
-        gBuffer.positionShadow.a = Shadows::getLightness(shadowMap1, lightSpacePosition);
+        gBuffer.normalShadow.a = Shadows::getLightness(shadowMap1, lightSpacePosition);
     }
     
     return gBuffer;
@@ -39,7 +39,8 @@ struct finalColor {
     half4 color [[ color(0), raster_order_group(2) ]];
 };
 
-fragment finalColor lighting_fragment(GBuffer gBuffer,
+fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
+                                      GBuffer gBuffer,
                                       constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                                       constant LightData *lightData [[ buffer(3) ]],
                                       constant int &lightCount [[ buffer(4) ]]) {
@@ -53,13 +54,14 @@ fragment finalColor lighting_fragment(GBuffer gBuffer,
         sm.roughness = gBuffer.metalRoughEmissionIOR.g;
         sm.emission = gBuffer.metalRoughEmissionIOR.b;
         sm.ior = gBuffer.metalRoughEmissionIOR.a;
-        half3 lighting = half3(PhongShading::getPhongLight(gBuffer.positionShadow.xyz,
-                                                           normalize(gBuffer.normal.xyz),
+        
+        half3 lighting = half3(PhongShading::getPhongLight(gBuffer.position.xyz,
+                                                           normalize(gBuffer.normalShadow.xyz),
                                                            lightData,
                                                            lightCount,
                                                            sm,
                                                            fragmentSceneConstant.cameraPosition,
-                                                           gBuffer.positionShadow.a));
+                                                           gBuffer.normalShadow.a));
         fc.color *= half4(lighting, 1);
     }
     

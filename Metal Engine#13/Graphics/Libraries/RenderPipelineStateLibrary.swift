@@ -51,7 +51,7 @@ class RenderPipelineState {
 
 func addColorAttachments(descriptor: MTLRenderPipelineDescriptor) {
     descriptor.colorAttachments[1].pixelFormat = Preferences.pixelFormat
-    descriptor.colorAttachments[2].pixelFormat = Preferences.signedPixelFormat
+    descriptor.colorAttachments[2].pixelFormat = Preferences.floatPixelFormat
     descriptor.colorAttachments[3].pixelFormat = Preferences.signedPixelFormat
     descriptor.colorAttachments[4].pixelFormat = .r32Float
     descriptor.colorAttachments[5].pixelFormat = Preferences.pixelFormat
@@ -155,7 +155,7 @@ class InitTransparency: RenderPipelineState {
         super.init()
         tileDescriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
         tileDescriptor.colorAttachments[1].pixelFormat = Preferences.pixelFormat
-        tileDescriptor.colorAttachments[2].pixelFormat = Preferences.signedPixelFormat
+        tileDescriptor.colorAttachments[2].pixelFormat = Preferences.floatPixelFormat
         tileDescriptor.colorAttachments[3].pixelFormat = Preferences.signedPixelFormat
         tileDescriptor.colorAttachments[4].pixelFormat = .r32Float
         tileDescriptor.colorAttachments[5].pixelFormat = Preferences.pixelFormat

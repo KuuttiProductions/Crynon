@@ -65,7 +65,7 @@ class BasicScene: Scene {
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)
         light.setPosY(1)
-        sun.lightData.brightness = 1.0
+        sun.lightData.brightness = 0.8
         light.lightData.brightness = 1.0
         light.lightData.color = simd_float4(0, 1, 1, 1)
         spotlight.setPos(-15, 3, 0)
@@ -76,7 +76,7 @@ class BasicScene: Scene {
         super.tick(deltaTime)
         time += deltaTime
         sun.direction = simd_float3(0, -1, sin(time))
-        light.setPosY(-1)
+        light.setPosY(sin(time)*10+10)
         spotlight.direction = simd_float3(0, sin(time), cos(time))
         glass2.setRotY(time)
     }

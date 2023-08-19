@@ -5,8 +5,8 @@ using namespace metal;
 struct GBuffer {
     half4 final [[ color(0), raster_order_group(2) ]];
     half4 color [[ color(1), raster_order_group(1) ]];
-    float4 positionShadow [[ color(2), raster_order_group(1) ]];
-    float4 normal [[ color(3), raster_order_group(1) ]];
+    float4 position [[ color(2), raster_order_group(1) ]];
+    float4 normalShadow [[ color(3), raster_order_group(1) ]];
     float depth [[ color(4), raster_order_group(1) ]];
     half4 metalRoughEmissionIOR [[ color(5), raster_order_group(1) ]];
 };
@@ -34,10 +34,15 @@ struct ModelConstant {
 
 struct VertexSceneConstant {
     float4x4 viewMatrix;
+    float4x4 projectionMatrix;
+    float4x4 inverseViewProjectionMatrix;
+    float3 cameraPosition;
 };
 
 struct FragmentSceneConstant {
     float3 cameraPosition;
+    float4x4 inverseViewMatrix;
+    float4x4 inverseProjectionMatrix;
 };
 
 struct LightData {

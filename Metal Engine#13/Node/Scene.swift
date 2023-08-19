@@ -26,8 +26,14 @@ class Scene: Node {
         cameraManager.tick(deltaTime: deltaTime)
         lightManager.tick(deltaTime: deltaTime)
         physicsManager.tick(deltaTime: deltaTime)
-        vertexSceneConstant.viewMatrix = cameraManager._currentCamera.projectionMatrix * cameraManager._currentCamera.viewMatrix
+        vertexSceneConstant.viewMatrix = cameraManager._currentCamera.viewMatrix
+        vertexSceneConstant.projectionMatrix = cameraManager._currentCamera.projectionMatrix
         fragmentSceneConstant.cameraPosition = cameraManager._currentCamera.position
+        fragmentSceneConstant.inverseViewMatrix = cameraManager._currentCamera.viewMatrix.inverse
+        fragmentSceneConstant.inverseProjectionMatrix = cameraManager._currentCamera.projectionMatrix.inverse
+        vertexSceneConstant.inverseViewProjectionMatrix = matrix_multiply(cameraManager._currentCamera.projectionMatrix.inverse,
+                                                                      cameraManager._currentCamera.viewMatrix.inverse)
+        vertexSceneConstant.cameraPosition = fragmentSceneConstant.cameraPosition
     }
     
     override func physicsTick(_ deltaTime: Float) {

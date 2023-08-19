@@ -10,7 +10,7 @@ vertex VertexOut default_vertex(VertexIn VerIn [[ stage_in ]],
     
     VertexOut VerOut;
     float4 worldPosition = modelConstant.modelMatrix * float4(VerIn.position, 1);
-    VerOut.position = sceneConstant.viewMatrix * worldPosition;
+    VerOut.position = sceneConstant.projectionMatrix * sceneConstant.viewMatrix * worldPosition;
     
     VerOut.color = VerIn.color;
     VerOut.normal = (modelConstant.modelMatrix * float4(VerIn.normal, 0)).xyz;
