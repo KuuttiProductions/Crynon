@@ -24,7 +24,7 @@ kernel void initTransparentFragmentStore(imageblock<TransparentFragmentValues, i
 }
 
 constexpr sampler sampler2d = sampler(min_filter::linear,
-                              mag_filter::linear);
+                                      mag_filter::linear);
 
 fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage_in ]],
                                                        constant ShaderMaterial &material [[ buffer(1) ]],
@@ -37,13 +37,15 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     TransparentFragmentStore out;
     half4 color = half4(material.color);
     
+    float2 texCoord = VerOut.textureCoordinate;
+    
     if (!is_null_texture(textureColor)) {
-        color = half4(textureColor.sample(sampler2d, VerOut.textureCoordinate));
+        color = half4(textureColor.sample(sampler2d, texCoord));
     }
     
     color.rgb *= color.a;
     
-    half depth = VerOut.position.z / VerOut.position.w;
+    half depth = VerOut.position.z;
     
     for (short i = 0; i < tLayersCount; i++) {
         half4 layerColor = fragmentValues.colors[i];
@@ -61,8 +63,13 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     return out;
 }
 
-fragment half4 blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
-                                         half4 opaqueColors [[ color(0), raster_order_group(0) ]]) {
+struct TransparencyOut {
+    half4 color [[ color(1), raster_order_group(1) ]];
+};
+
+fragment TransparencyOut blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
+                                                   half4 opaqueColors [[ color(1), raster_order_group(1) ]]) {
+    TransparencyOut to;
     half4 color;
     color.rgb = opaqueColors.rgb;
     
@@ -72,7 +79,8 @@ fragment half4 blendTransparent_fragment(TransparentFragmentValues fragmentValue
     }
     
     color.a = 1.0;
+    to.color = color;
     
-    return color;
+    return to;
 }
 

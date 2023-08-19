@@ -10,6 +10,8 @@ class BasicScene: Scene {
     let cube4 = CubeObject()
     let grass = GameObject("Grass")
     let glass = GameObject("Window")
+    let glassF = GameObject("WindowF")
+    let glassH = GameObject("WindowH")
     let glass2 = GameObject("Window2")
     let glass3 = GameObject("Window3")
     let camera = FPSCamera()
@@ -24,14 +26,16 @@ class BasicScene: Scene {
     init() {
         super.init("BasicScene")
         addChild(object)
+        addChild(glass)
+        addChild(glassF)
         addChild(cube)
         addChild(cube2)
         addChild(cube3)
         addChild(cube4)
         addChild(grass)
-        addChild(glass)
         addChild(glass2)
         addChild(skySphere)
+        addChild(glassH)
         addCamera(camera, true)
         addLight(sun)
         addLight(light)
@@ -50,13 +54,19 @@ class BasicScene: Scene {
         cube4.setScale(5, 0.3, 5)
         grass.setPos(6, -1.8, 2)
         grass.material.textureColor = "Grass"
-        glass.setPos(9, -1.8, 5)
+        glass.setPos(5, -1.8, 5)
         glass.material.textureColor = "Window"
+        glassF.setPos(5, -1.8, 4)
+        glassF.material.textureColor = "Window"
+        glassH.setPos(5, -1.8, 3)
+        glassH.material.textureColor = "Window"
         glass2.setPos(9, -1.5, 2)
         glass2.material.textureColor = "Window"
         glass2.addChild(glass3)
         glass3.setPos(2, 0, 0)
         glass3.material.textureColor = "Window"
+        glassH.material.shader = .Transparent
+        glassF.material.shader = .Transparent
         glass.material.shader = .Transparent
         glass2.material.shader = .Transparent
         glass3.material.shader = .Transparent

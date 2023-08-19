@@ -18,7 +18,7 @@ vertex PointOut pointAndLine_vertex(PointIn In [[ stage_in ]],
     
     PointOut po;
     
-    po.position = sceneConstant.viewMatrix * float4(In.position, 1);
+    po.position = sceneConstant.projectionMatrix * sceneConstant.viewMatrix * float4(In.position, 1);
     po.pointSize = In.pointSize;
     
     return po;
@@ -30,7 +30,7 @@ fragment GBuffer pointAndLine_fragment(PointOut PointOut [[ stage_in]],
     GBuffer gBuffer;
     
     gBuffer.color = half4(color);
-    gBuffer.depth = PointOut.position.z / PointOut.position.w;
+    gBuffer.depth = PointOut.position.z;
     gBuffer.metalRoughEmissionIOR.b = 1;
     
     return gBuffer;

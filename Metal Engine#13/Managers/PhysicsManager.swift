@@ -39,4 +39,13 @@ class PhysicsManager {
         }
         renderCommandEncoder.popDebugGroup()
     }
+    
+    func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder) {
+        renderCommandEncoder.pushDebugGroup("Casting Shadow on Physics Objects")
+        for object in _physicsObjects {
+            object.modelConstant.modelMatrix = object.modelMatrix
+            object.castShadow(renderCommandEncoder)
+        }
+        renderCommandEncoder.popDebugGroup()
+    }
 }

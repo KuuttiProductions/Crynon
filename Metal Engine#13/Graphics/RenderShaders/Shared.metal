@@ -35,14 +35,10 @@ struct ModelConstant {
 struct VertexSceneConstant {
     float4x4 viewMatrix;
     float4x4 projectionMatrix;
-    float4x4 inverseViewProjectionMatrix;
-    float3 cameraPosition;
 };
 
 struct FragmentSceneConstant {
     float3 cameraPosition;
-    float4x4 inverseViewMatrix;
-    float4x4 inverseProjectionMatrix;
 };
 
 struct LightData {

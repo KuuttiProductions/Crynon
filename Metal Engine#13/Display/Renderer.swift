@@ -168,13 +168,13 @@ extension Renderer: MTKViewDelegate {
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Blending Transparency")
         DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
-        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.No])
+        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
         AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Lighting")
         DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Lighting])
-        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.No])
+        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
         AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
