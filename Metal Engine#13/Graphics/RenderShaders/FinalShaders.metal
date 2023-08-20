@@ -3,7 +3,8 @@
 #include "Shared.metal"
 using namespace metal;
 
-vertex VertexOut final_vertex(VertexIn VerIn [[ stage_in ]]) {
+vertex VertexOut final_vertex(VertexIn VerIn [[ stage_in ]],
+                              constant VertexSceneConstant &sceneConstant) {
     VertexOut VerOut;
     VerOut.position = float4(VerIn.position, 1);
     VerOut.textureCoordinate = VerIn.textureCoordinate;

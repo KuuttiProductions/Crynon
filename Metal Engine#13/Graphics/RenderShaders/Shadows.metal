@@ -11,7 +11,7 @@ constexpr sampler sampler2d (mag_filter::nearest,
 class Shadows {
 public:
     
-    static float getShadowness(depth2d<float> shadowMap1,
+    static float getLightness(depth2d<float> shadowMap1,
                                float3 lightSpacePosition) {
                 
         int sampleCount = 16;
@@ -43,6 +43,6 @@ public:
             }
         }
         
-        return shadowness/sampleCount;
+        return clamp(1-(shadowness/sampleCount), 0.0, 1.0);
     }
 };

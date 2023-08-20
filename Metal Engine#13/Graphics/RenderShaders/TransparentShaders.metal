@@ -1,9 +1,3 @@
-//
-//  TransparentShaders.metal
-//  Metal Engine#13
-//
-//  Created by Kuutti Taavitsainen on 8.8.2023.
-//
 
 #include <metal_stdlib>
 #import "Shared.metal"
@@ -12,8 +6,8 @@ using namespace metal;
 static constexpr constant short tLayersCount = 4; //Number of transparent layers stored in tile memory
 
 struct TransparentFragmentValues {
-    rgba8snorm<half4> colors [[ raster_order_group(0) ]] [tLayersCount];
-    half depths [[ raster_order_group(0) ]] [tLayersCount];
+    rgba8unorm<half4> colors [[ raster_order_group(2) ]] [tLayersCount];
+    half depths [[ raster_order_group(2) ]] [tLayersCount];
 };
 
 struct TransparentFragmentStore {
@@ -30,7 +24,7 @@ kernel void initTransparentFragmentStore(imageblock<TransparentFragmentValues, i
 }
 
 constexpr sampler sampler2d = sampler(min_filter::linear,
-                              mag_filter::linear);
+                                      mag_filter::linear);
 
 fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage_in ]],
                                                        constant ShaderMaterial &material [[ buffer(1) ]],
@@ -43,13 +37,15 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     TransparentFragmentStore out;
     half4 color = half4(material.color);
     
+    float2 texCoord = VerOut.textureCoordinate;
+    
     if (!is_null_texture(textureColor)) {
-        color = half4(textureColor.sample(sampler2d, VerOut.textureCoordinate));
+        color = half4(textureColor.sample(sampler2d, texCoord));
     }
     
     color.rgb *= color.a;
     
-    half depth = VerOut.position.z / VerOut.position.w;
+    half depth = VerOut.position.z;
     
     for (short i = 0; i < tLayersCount; i++) {
         half4 layerColor = fragmentValues.colors[i];
@@ -67,8 +63,14 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     return out;
 }
 
-fragment half4 blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
-                                         half4 opaqueColors [[ color(0), raster_order_group(0) ]]) {
+struct TransparencyOut {
+    half4 color [[ color(0), raster_order_group(0) ]];
+};
+
+fragment TransparencyOut blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
+                                                   half4 opaqueColors [[ color(0), raster_order_group(0) ]],
+                                                   half4 opaqueDepth [[ color(2), raster_order_group(1) ]]) {
+    TransparencyOut to;
     half4 color;
     color.rgb = opaqueColors.rgb;
     
@@ -78,7 +80,8 @@ fragment half4 blendTransparent_fragment(TransparentFragmentValues fragmentValue
     }
     
     color.a = 1.0;
+    to.color = color;
     
-    return color;
+    return to;
 }
 

@@ -9,7 +9,7 @@ public:
                                 float3 unitNormal,
                                 constant LightData *ld,
                                 int ldc,
-                                constant ShaderMaterial &mt,
+                                ShaderMaterial mt,
                                 float3 cameraPos,
                                 float lightness) {
         

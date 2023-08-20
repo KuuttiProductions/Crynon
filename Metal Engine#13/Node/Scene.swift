@@ -26,7 +26,8 @@ class Scene: Node {
         cameraManager.tick(deltaTime: deltaTime)
         lightManager.tick(deltaTime: deltaTime)
         physicsManager.tick(deltaTime: deltaTime)
-        vertexSceneConstant.viewMatrix = cameraManager._currentCamera.projectionMatrix * cameraManager._currentCamera.viewMatrix
+        vertexSceneConstant.viewMatrix = cameraManager._currentCamera.viewMatrix
+        vertexSceneConstant.projectionMatrix = cameraManager._currentCamera.projectionMatrix
         fragmentSceneConstant.cameraPosition = cameraManager._currentCamera.position
     }
     
@@ -41,8 +42,17 @@ class Scene: Node {
         renderCommandEncoder.setFragmentBytes(&fragmentSceneConstant, length: FragmentSceneConstant.stride, index: 2)
         renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["ShadowMap1"], index: 0)
         renderCommandEncoder.setFragmentSamplerState(GPLibrary.samplerStates[.Linear], index: 0)
+        
+        var viewMatrix = cameraManager._currentCamera.viewMatrix
+        viewMatrix[3][0] = 0
+        viewMatrix[3][2] = 0
+        viewMatrix[3][1] = 0
+        viewMatrix = cameraManager._currentCamera.projectionMatrix * viewMatrix
+        renderCommandEncoder.setVertexBytes(&viewMatrix, length: float4x4.stride, index: 4)
+        
         lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
+        
         super.render(renderCommandEncoder)
         physicsManager.render(renderCommandEncoder)
     }
@@ -50,6 +60,7 @@ class Scene: Node {
     override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         renderCommandEncoder.pushDebugGroup("Shadow work on \(name!)")
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
+        physicsManager.castShadow(renderCommandEncoder)
         super.castShadow(renderCommandEncoder)
     }
 }

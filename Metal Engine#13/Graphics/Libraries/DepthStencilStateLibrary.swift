@@ -3,8 +3,8 @@ import MetalKit
 
 enum DepthStencilType {
     case Less
-    case NoWrite
-    case No
+    case NoWriteLess
+    case NoWriteAlways
 }
 
 class DepthStencilStateLibrary: Library<DepthStencilType, MTLDepthStencilState> {
@@ -13,8 +13,8 @@ class DepthStencilStateLibrary: Library<DepthStencilType, MTLDepthStencilState> 
     
     override func fillLibrary() {
         _library.updateValue(Less_DepthStencilDescriptor(), forKey: .Less)
-        _library.updateValue(NoWrite_DepthStencilDescriptor(), forKey: .NoWrite)
-        _library.updateValue(No_DepthStencilDescriptor(), forKey: .No)
+        _library.updateValue(NoWriteLess_DepthStencilDescriptor(), forKey: .NoWriteLess)
+        _library.updateValue(NoWriteAlways_DepthStencilDescriptor(), forKey: .NoWriteAlways)
     }
     
     override subscript(type: DepthStencilType) -> MTLDepthStencilState! {
@@ -40,7 +40,7 @@ class Less_DepthStencilDescriptor: DepthStencilState {
     }
 }
 
-class NoWrite_DepthStencilDescriptor: DepthStencilState {
+class NoWriteLess_DepthStencilDescriptor: DepthStencilState {
     override init() {
         super.init()
         let descriptor = MTLDepthStencilDescriptor()
@@ -51,7 +51,7 @@ class NoWrite_DepthStencilDescriptor: DepthStencilState {
     }
 }
 
-class No_DepthStencilDescriptor: DepthStencilState {
+class NoWriteAlways_DepthStencilDescriptor: DepthStencilState {
     override init() {
         super.init()
         let descriptor = MTLDepthStencilDescriptor()
@@ -59,7 +59,7 @@ class No_DepthStencilDescriptor: DepthStencilState {
         descriptor.depthCompareFunction = .always
         descriptor.frontFaceStencil = nil
         descriptor.backFaceStencil = nil
-        descriptor.label = "No_DepthStencilState"
+        descriptor.label = "NoWriteAlways_DepthStencilState"
         create(descriptor)
     }
 }

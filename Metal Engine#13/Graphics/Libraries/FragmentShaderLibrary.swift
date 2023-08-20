@@ -2,7 +2,9 @@
 import MetalKit
 
 enum FragmentShaderType {
-    case Basic
+    case Forward
+    case Deferred
+    case Lighting
     case Final
     case Shadow
     case PointAndLine
@@ -15,7 +17,9 @@ class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
     private var _library: [FragmentShaderType : FragmentShader] = [:]
     
     override func fillLibrary() {
-        _library.updateValue(FragmentShader("basic_fragment", "Basic Fragment Function"), forKey: .Basic)
+        _library.updateValue(FragmentShader("forward_fragment", "Basic Fragment Function"), forKey: .Forward)
+        _library.updateValue(FragmentShader("deferred_fragment", "Deferred Fragment Function"), forKey: .Deferred)
+        _library.updateValue(FragmentShader("lighting_fragment", "Lighting Fragment Function"), forKey: .Lighting)
         _library.updateValue(FragmentShader("final_fragment", "Final Fragment Function"), forKey: .Final)
         _library.updateValue(FragmentShader("shadow_fragment", "Shadow Fragment Function"), forKey: .Shadow)
         _library.updateValue(FragmentShader("pointAndLine_fragment", "Point and Line Fragment Function"), forKey: .PointAndLine)

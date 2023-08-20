@@ -10,6 +10,7 @@ class TextureLibrary: Library<String, MTLTexture> {
         _library.updateValue(textureLoader.loadTexture("Wallpaper", "jpeg", true), forKey: "Wallpaper")
         _library.updateValue(textureLoader.loadTexture("Grass", "png", true), forKey: "Grass")
         _library.updateValue(textureLoader.loadTexture("Window"), forKey: "Window")
+        _library.updateValue(textureLoader.loadTexture("OceanSky"), forKey: "OceanSky")
     }
     
     override subscript(type: String) -> MTLTexture! {

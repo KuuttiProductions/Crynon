@@ -9,7 +9,7 @@ class PointAndLine {
             points.append(PointVertex(position: position, pointSize: pointSize))
         }
         renderCommandEncoder.pushDebugGroup("Rendering \(points.count) points")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
+        setDefaults(renderCommandEncoder)
         renderCommandEncoder.setVertexBytes(points, length: PointVertex.stride, index: 0)
         renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
         renderCommandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: points.count)
@@ -20,7 +20,7 @@ class PointAndLine {
         let buffer = Core.device.makeBuffer(bytes: points, length: PointVertex.stride(count: points.count))
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering \(points.count) points")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
+        setDefaults(renderCommandEncoder)
         renderCommandEncoder.setVertexBuffer(buffer, offset: 0, index: 0)
         renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
         renderCommandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: points.count)
@@ -35,7 +35,7 @@ class PointAndLine {
         let buffer = Core.device.makeBuffer(bytes: points, length: PointVertex.stride(count: points.count))
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
+        setDefaults(renderCommandEncoder)
         renderCommandEncoder.setVertexBuffer(buffer, offset: 0, index: 0)
         renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
         renderCommandEncoder.drawPrimitives(type: .lineStrip, vertexStart: 0, vertexCount: points.count)
@@ -46,7 +46,7 @@ class PointAndLine {
         let buffer = Core.device.makeBuffer(bytes: points, length: PointVertex.stride(count: points.count))
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
+        setDefaults(renderCommandEncoder)
         renderCommandEncoder.setVertexBuffer(buffer, offset: 0, index: 0)
         renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
         renderCommandEncoder.drawPrimitives(type: .lineStrip, vertexStart: 0, vertexCount: points.count)
@@ -58,7 +58,7 @@ class PointAndLine {
         let buffer = Core.device.makeBuffer(bytes: points, length: PointVertex.stride(count: points.count))
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
+        setDefaults(renderCommandEncoder)
         renderCommandEncoder.setVertexBuffer(buffer, offset: 0, index: 0)
         renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
         renderCommandEncoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: points.count)
@@ -70,10 +70,15 @@ class PointAndLine {
         let buffer = Core.device.makeBuffer(bytes: points, length: PointVertex.stride(count: points.count))
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
+        setDefaults(renderCommandEncoder)
         renderCommandEncoder.setVertexBuffer(buffer, offset: 0, index: 0)
         renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
         renderCommandEncoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: points.count)
         renderCommandEncoder.popDebugGroup()
+    }
+    
+    static func setDefaults(_ renderCommandEncoder: MTLRenderCommandEncoder) {
+        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
+        renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
     }
 }

@@ -1,9 +1,3 @@
-//
-//  PointAndLineShaders.metal
-//  Metal Engine#13
-//
-//  Created by Kuutti Taavitsainen on 4.8.2023.
-//
 
 #include <metal_stdlib>
 #include "Shared.metal"
@@ -24,14 +18,20 @@ vertex PointOut pointAndLine_vertex(PointIn In [[ stage_in ]],
     
     PointOut po;
     
-    po.position = sceneConstant.viewMatrix * float4(In.position, 1);
+    po.position = sceneConstant.projectionMatrix * sceneConstant.viewMatrix * float4(In.position, 1);
     po.pointSize = In.pointSize;
     
     return po;
 }
 
-fragment half4 pointAndLine_fragment(PointOut PointOut [[ stage_in]],
+fragment GBuffer pointAndLine_fragment(PointOut PointOut [[ stage_in]],
                                      constant float4 &color [[ buffer(1) ]]) {
     
-    return half4(color.r, color.g, color.b, color.a);
+    GBuffer gBuffer;
+    
+    gBuffer.color = half4(color);
+    gBuffer.position.w = PointOut.position.z;
+    gBuffer.metalRoughEmissionIOR.b = 1;
+    
+    return gBuffer;
 }

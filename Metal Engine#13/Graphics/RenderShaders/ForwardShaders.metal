@@ -4,26 +4,8 @@
 #include "Shadows.metal"
 using namespace metal;
 
-vertex VertexOut basic_vertex(VertexIn VerIn [[ stage_in ]],
-                              constant ModelConstant &modelConstant [[ buffer(1) ]],
-                              constant VertexSceneConstant &sceneConstant [[ buffer(2) ]],
-                              constant float4x4 &depthViewMatrix [[ buffer(3) ]]) {
-    
-    VertexOut VerOut;
-    float4 worldPosition = modelConstant.modelMatrix * float4(VerIn.position, 1);
-    VerOut.position = sceneConstant.viewMatrix * worldPosition;
-    
-    VerOut.color = VerIn.color;
-    VerOut.normal = (modelConstant.modelMatrix * float4(VerIn.normal, 0)).xyz;
-    VerOut.worldPosition = worldPosition.xyz;
-    VerOut.textureCoordinate = VerIn.textureCoordinate;
-    VerOut.lightSpacePosition = depthViewMatrix * worldPosition;
-    VerOut.pointSize = 10;
-    
-    return VerOut;
-}
-
-fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
+// DEPRECATED
+fragment half4 forward_fragment(VertexOut VerOut [[ stage_in ]],
                               constant ShaderMaterial &material [[ buffer(1) ]],
                               constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                               constant LightData *lightData [[ buffer(3) ]],
@@ -45,7 +27,7 @@ fragment half4 basic_fragment(VertexOut VerOut [[ stage_in ]],
     
     float3 surfacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
-        lightness = 1-clamp(Shadows::getShadowness(shadowMap1, surfacePosition), 0.0, 1.0);
+        lightness = Shadows::getLightness(shadowMap1, surfacePosition);
     }
     
     color.rgb *= PhongShading::getPhongLight(VerOut.worldPosition,
