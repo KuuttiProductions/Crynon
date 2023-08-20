@@ -575,8 +575,8 @@
 				51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
-				51978FFF2A2504E600F87A20 /* Core.swift in Sources */,
 				513C1F482A28DBBB003155B0 /* RenderPipelineStateLibrary.swift in Sources */,
+				51978FFF2A2504E600F87A20 /* Core.swift in Sources */,
 				518E4E7A2A2B0BA4007A7C83 /* Scene.swift in Sources */,
 				512FFD5C2A66C7AB001987A0 /* TextureLibrary.swift in Sources */,
 				51BA0D232A64171900A88604 /* LightManager.swift in Sources */,
@@ -732,7 +732,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1329;
+				CURRENT_PROJECT_VERSION = 1409;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -767,7 +767,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1329;
+				CURRENT_PROJECT_VERSION = 1409;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

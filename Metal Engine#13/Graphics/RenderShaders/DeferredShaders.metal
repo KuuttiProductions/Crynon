@@ -12,7 +12,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     GBuffer gBuffer;
     
     gBuffer.color = half4(mat.color);
-    gBuffer.depth = VerOut.position.z;
+    gBuffer.position.w = VerOut.position.z;
     gBuffer.position.xyz = VerOut.worldPosition;
     gBuffer.normalShadow.xyz = VerOut.normal;
     gBuffer.metalRoughEmissionIOR.r = mat.metallic;
@@ -36,7 +36,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
 }
 
 struct finalColor {
-    half4 color [[ color(0), raster_order_group(2) ]];
+    half4 color [[ color(0), raster_order_group(0) ]];
 };
 
 fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],

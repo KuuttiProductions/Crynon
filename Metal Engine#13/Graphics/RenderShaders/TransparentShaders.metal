@@ -6,8 +6,8 @@ using namespace metal;
 static constexpr constant short tLayersCount = 4; //Number of transparent layers stored in tile memory
 
 struct TransparentFragmentValues {
-    rgba8snorm<half4> colors [[ raster_order_group(0) ]] [tLayersCount];
-    half depths [[ raster_order_group(0) ]] [tLayersCount];
+    rgba8unorm<half4> colors [[ raster_order_group(2) ]] [tLayersCount];
+    half depths [[ raster_order_group(2) ]] [tLayersCount];
 };
 
 struct TransparentFragmentStore {
@@ -64,11 +64,12 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
 }
 
 struct TransparencyOut {
-    half4 color [[ color(1), raster_order_group(1) ]];
+    half4 color [[ color(0), raster_order_group(0) ]];
 };
 
 fragment TransparencyOut blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
-                                                   half4 opaqueColors [[ color(1), raster_order_group(1) ]]) {
+                                                   half4 opaqueColors [[ color(0), raster_order_group(0) ]],
+                                                   half4 opaqueDepth [[ color(2), raster_order_group(1) ]]) {
     TransparencyOut to;
     half4 color;
     color.rgb = opaqueColors.rgb;

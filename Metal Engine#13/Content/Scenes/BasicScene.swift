@@ -34,8 +34,8 @@ class BasicScene: Scene {
         addChild(cube4)
         addChild(grass)
         addChild(glass2)
-        addChild(skySphere)
         addChild(glassH)
+        addChild(skySphere)
         addCamera(camera, true)
         addLight(sun)
         addLight(light)
@@ -70,6 +70,11 @@ class BasicScene: Scene {
         glass.material.shader = .Transparent
         glass2.material.shader = .Transparent
         glass3.material.shader = .Transparent
+        glassH.material.blendMode = .Alpha
+        glassF.material.blendMode = .Alpha
+        glass.material.blendMode = .Alpha
+        glass2.material.blendMode = .Alpha
+        glass3.material.blendMode = .Alpha
         camera.setPosZ(5)
         physics.setPosY(5)
         sun.lightData.color = simd_float4(1,1,1,1)

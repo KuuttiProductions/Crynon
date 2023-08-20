@@ -62,6 +62,7 @@ class Forward_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.colorAttachments[0].writeMask = []
         descriptor.colorAttachments[0].isBlendingEnabled = true
         descriptor.colorAttachments[0].rgbBlendOperation = .add
         descriptor.colorAttachments[0].alphaBlendOperation = .add
@@ -83,6 +84,7 @@ class Geometry_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].isBlendingEnabled = false
+        descriptor.colorAttachments[0].writeMask = []
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
         addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
@@ -141,6 +143,7 @@ class PointAndLine_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.colorAttachments[0].writeMask = []
         addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.PointAndLine]
@@ -181,6 +184,7 @@ class Transparent_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].isBlendingEnabled = false
+        descriptor.colorAttachments[0].writeMask = []
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
         addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
@@ -212,6 +216,7 @@ class SkySphere_RenderPipelineState : RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].writeMask = []
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
         addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat

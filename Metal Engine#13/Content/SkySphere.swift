@@ -14,7 +14,7 @@ class SkySphere: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if Preferences.useSkySphere {
+        if Preferences.useSkySphere == true {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Sky])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteLess])

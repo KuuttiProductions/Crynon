@@ -61,13 +61,15 @@ class RigidBody: Collider {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
-        renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
-        renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteLess : .Less])
-        renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
-        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["Wallpaper"], index: 3)
-        renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
-        AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
+        if material.blendMode == Renderer.currentBlendMode {
+            renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
+            renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
+            renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteAlways : .Less])
+            renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["Wallpaper"], index: 3)
+            renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
+            AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
+        }
         
         PointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
         PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))

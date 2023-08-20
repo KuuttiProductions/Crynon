@@ -6,6 +6,7 @@ class Renderer: NSObject {
     static var screenWidth: Float!
     static var screenHeight: Float!
     static var aspectRatio: Float { return screenWidth/screenHeight }
+    static var currentBlendMode: BlendMode = .Opaque
     
     private var optimalTileSize: MTLSize = MTLSizeMake(32, 16, 1)
 
@@ -163,17 +164,20 @@ extension Renderer: MTKViewDelegate {
         DeferredRenderCommandEncoder?.popDebugGroup()
 
         DeferredRenderCommandEncoder?.pushDebugGroup("Geometry Store")
+        Renderer.currentBlendMode = .Opaque
         SceneManager.render(DeferredRenderCommandEncoder)
-        DeferredRenderCommandEncoder?.popDebugGroup()
-        
-        DeferredRenderCommandEncoder?.pushDebugGroup("Blending Transparency")
-        DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
-        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
+        Renderer.currentBlendMode = .Alpha
+        SceneManager.render(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Lighting")
         DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Lighting])
+        DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
+        AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
+        DeferredRenderCommandEncoder?.popDebugGroup()
+        
+        DeferredRenderCommandEncoder?.pushDebugGroup("Blending Transparency")
+        DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
         DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
         AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
