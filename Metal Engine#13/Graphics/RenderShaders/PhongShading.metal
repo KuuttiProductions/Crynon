@@ -11,7 +11,8 @@ public:
                                 int ldc,
                                 ShaderMaterial mt,
                                 float3 cameraPos,
-                                float lightness) {
+                                float lightness,
+                                float ambientTerm) {
         
         float3 totalAmbientColor = float3(0,0,0);
         float3 totalDiffuseColor = float3(0,0,0);
@@ -47,7 +48,7 @@ public:
                 attenuation = brightness;
             }
             
-            float3 ambientColor = (float3(1,1,1) * data.color.rgb) * 0.03 * attenuation * brightness * data.color.rgb;
+            float3 ambientColor = (float3(1,1,1) * data.color.rgb) * ambientTerm * attenuation * brightness * data.color.rgb;
             totalAmbientColor += clamp(ambientColor, 0.0, 1.0);
             
             float3 diffuseColor = dot(unitNormal, data.useDirection ? lightDirection : toLightVector) * diffuseness * attenuation * brightness * data.color.rgb * (mt.emission + 1);

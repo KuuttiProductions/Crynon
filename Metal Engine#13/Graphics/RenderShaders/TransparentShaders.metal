@@ -7,7 +7,7 @@ static constexpr constant short tLayersCount = 4; //Number of transparent layers
 
 struct TransparentFragmentValues {
     rgba8unorm<half4> colors [[ raster_order_group(2) ]] [tLayersCount];
-    half depths [[ raster_order_group(2) ]] [tLayersCount];
+    float depths [[ raster_order_group(2) ]] [tLayersCount];
 };
 
 struct TransparentFragmentStore {
@@ -45,7 +45,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     
     color.rgb *= color.a;
     
-    half depth = VerOut.position.z;
+    half depth = VerOut.position.z / VerOut.position.w;
     
     for (short i = 0; i < tLayersCount; i++) {
         half4 layerColor = fragmentValues.colors[i];
@@ -68,7 +68,7 @@ struct TransparencyOut {
 };
 
 fragment TransparencyOut blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
-                                                   half4 opaqueColors [[ color(0), raster_order_group(0) ]],
+                                                   half4 opaqueColors [[ color(1), raster_order_group(1) ]],
                                                    half4 opaqueDepth [[ color(2), raster_order_group(1) ]]) {
     TransparencyOut to;
     half4 color;

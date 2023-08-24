@@ -83,9 +83,8 @@ class Geometry_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
-        descriptor.colorAttachments[0].isBlendingEnabled = false
-        descriptor.colorAttachments[0].writeMask = []
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
+        descriptor.colorAttachments[0].writeMask = []
         addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Default]
@@ -116,6 +115,7 @@ class Final_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].writeMask = []
         descriptor.colorAttachments[0].pixelFormat = Preferences.pixelFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Final]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Final]
@@ -195,6 +195,8 @@ class Transparent_RenderPipelineState: RenderPipelineState {
         create()
     }
 }
+
+/// WRITE MASKS MUST BE THE SOLUTION
 
 class TransparentBlending_RenderPipelineState: RenderPipelineState {
     override init() {

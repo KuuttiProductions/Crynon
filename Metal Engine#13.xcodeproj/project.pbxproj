@@ -79,6 +79,7 @@
 		51CC12902A6AC70C00B7C960 /* rng.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC128E2A6AC70C00B7C960 /* rng.metal */; };
 		51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */; };
 		51CDDDF42A8D3119003B6F2D /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51CDDDF32A8D3119003B6F2D /* Sphere.obj */; };
+		51D2F2D82A93B26100F82ACB /* AmbientOcclusion.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51D2F2D72A93B26100F82ACB /* AmbientOcclusion.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -157,6 +158,7 @@
 		51CC128E2A6AC70C00B7C960 /* rng.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = rng.metal; sourceTree = "<group>"; };
 		51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = JitterTextureShader.metal; sourceTree = "<group>"; };
 		51CDDDF32A8D3119003B6F2D /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.obj; sourceTree = "<group>"; };
+		51D2F2D72A93B26100F82ACB /* AmbientOcclusion.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = AmbientOcclusion.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +254,7 @@
 				518323ED2A691E5C00D171FA /* Shadows.metal */,
 				516E9CB92A7D6AEE00813B8C /* PointAndLineShaders.metal */,
 				5174AC342A890DDE00777778 /* SkyShaders.metal */,
+				51D2F2D72A93B26100F82ACB /* AmbientOcclusion.metal */,
 			);
 			path = RenderShaders;
 			sourceTree = "<group>";
@@ -571,6 +574,7 @@
 				51BA0D252A641F1700A88604 /* PhongShading.metal in Sources */,
 				516D5A332A79264100AA1CD4 /* RigidBody.swift in Sources */,
 				516E06F92A6E90B40011D18E /* TextureLoader.swift in Sources */,
+				51D2F2D82A93B26100F82ACB /* AmbientOcclusion.metal in Sources */,
 				516E9CBA2A7D6AEE00813B8C /* PointAndLineShaders.metal in Sources */,
 				51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
@@ -732,7 +736,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1409;
+				CURRENT_PROJECT_VERSION = 1469;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -767,7 +771,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1409;
+				CURRENT_PROJECT_VERSION = 1469;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

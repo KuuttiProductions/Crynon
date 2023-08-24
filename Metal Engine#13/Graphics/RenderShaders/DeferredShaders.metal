@@ -3,6 +3,7 @@
 #import "Shared.metal"
 #import "Shadows.metal"
 #import "PhongShading.metal"
+#import "AmbientOcclusion.metal"
 using namespace metal;
 
 fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
@@ -12,7 +13,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     GBuffer gBuffer;
     
     gBuffer.color = half4(mat.color);
-    gBuffer.position.w = VerOut.position.z;
+    gBuffer.depth = VerOut.position.z;
     gBuffer.position.xyz = VerOut.worldPosition;
     gBuffer.normalShadow.xyz = VerOut.normal;
     gBuffer.metalRoughEmissionIOR.r = mat.metallic;
@@ -36,7 +37,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
 }
 
 struct finalColor {
-    half4 color [[ color(0), raster_order_group(0) ]];
+    half4 color [[ color(1), raster_order_group(1) ]];
 };
 
 fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
@@ -47,6 +48,10 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
 
     finalColor fc;
     fc.color = gBuffer.color;
+    
+    float ambientTerm = AmbientOcclusion::getAmbientTerm(gBuffer.normalShadow.xyz,
+                                                         gBuffer.depth);
+    
     if (gBuffer.metalRoughEmissionIOR.b == 0) {
         ShaderMaterial sm;
         sm.color = float4(gBuffer.color);
@@ -61,7 +66,8 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                                            lightCount,
                                                            sm,
                                                            fragmentSceneConstant.cameraPosition,
-                                                           gBuffer.normalShadow.a));
+                                                           gBuffer.normalShadow.a,
+                                                           ambientTerm));
         fc.color *= half4(lighting, 1);
     }
     

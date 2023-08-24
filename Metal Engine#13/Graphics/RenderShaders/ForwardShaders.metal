@@ -36,7 +36,7 @@ fragment half4 forward_fragment(VertexOut VerOut [[ stage_in ]],
                                          lightCount,
                                          material,
                                          fragmentSceneConstant.cameraPosition,
-                                         lightness);
+                                         lightness, 0.1);
     
     return half4(color.r, color.g, color.b, color.a);
 }
