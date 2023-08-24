@@ -89,7 +89,7 @@ class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[1].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[2].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[3].loadAction = loadAction
-        deferredRenderPassDescriptor.colorAttachments[4].loadAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[4].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[5].loadAction = loadAction
         
         deferredRenderPassDescriptor.colorAttachments[0].storeAction = .store
@@ -98,6 +98,9 @@ class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[3].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[4].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[5].storeAction = .dontCare
+        
+        //Sets the depth value to 1, so that default depth is infinity
+        deferredRenderPassDescriptor.colorAttachments[4].clearColor = MTLClearColor(red: 1.0, green: 0, blue: 0, alpha: 0)
         
         //Sets the emissive value to 1, so that the sky won't be shaded.
         deferredRenderPassDescriptor.colorAttachments[5].clearColor = MTLClearColor(red: 0, green: 0, blue: 1, alpha: 0)
@@ -158,12 +161,12 @@ extension Renderer: MTKViewDelegate {
         let DeferredRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: deferredRenderPassDescriptor)
         DeferredRenderCommandEncoder?.label = "Deferred RenderCommandEncoder"
         
-        DeferredRenderCommandEncoder?.pushDebugGroup("InitTransparencyStore")
+        DeferredRenderCommandEncoder?.pushDebugGroup("Initialize imageblock storage for transparency")
         DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
         DeferredRenderCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
         DeferredRenderCommandEncoder?.popDebugGroup()
 
-        DeferredRenderCommandEncoder?.pushDebugGroup("Geometry Store")
+        DeferredRenderCommandEncoder?.pushDebugGroup("GBuffer fill")
         Renderer.currentBlendMode = .Opaque
         SceneManager.render(DeferredRenderCommandEncoder)
         Renderer.currentBlendMode = .Alpha

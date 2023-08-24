@@ -39,6 +39,7 @@ struct VertexSceneConstant {
 
 struct FragmentSceneConstant {
     float3 cameraPosition;
+    float fogDensity;
 };
 
 struct LightData {

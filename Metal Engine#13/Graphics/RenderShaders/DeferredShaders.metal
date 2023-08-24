@@ -15,6 +15,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     gBuffer.color = half4(mat.color);
     gBuffer.depth = VerOut.position.z;
     gBuffer.position.xyz = VerOut.worldPosition;
+    gBuffer.position.w = VerOut.position.w;
     gBuffer.normalShadow.xyz = VerOut.normal;
     gBuffer.metalRoughEmissionIOR.r = mat.metallic;
     gBuffer.metalRoughEmissionIOR.g = mat.roughness;
@@ -70,6 +71,11 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                                            ambientTerm));
         fc.color *= half4(lighting, 1);
     }
+    
+    
+    float density = fragmentSceneConstant.fogDensity;
+    float gradient = 100;
+    fc.color *= density == 0 ? 1.0 : clamp(exp(-pow(gBuffer.depth*density, gradient)), 0.0, 1.0);
     
     return fc;
 }

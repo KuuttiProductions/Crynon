@@ -3,7 +3,6 @@ import MetalKit
 import Metal
 
 enum RenderPipelineStateType {
-    case Forward
     case Geometry
     case Lighting
     case Final
@@ -20,7 +19,6 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
     private var _library: [RenderPipelineStateType : RenderPipelineState] = [:]
     
     override func fillLibrary() {
-        _library.updateValue(Forward_RenderPipelineState(), forKey: .Forward)
         _library.updateValue(Geometry_RenderPipelineState(), forKey: .Geometry)
         _library.updateValue(Lighting_RenderPipelineState(), forKey: .Lighting)
         _library.updateValue(Final_RenderPipelineState(), forKey: .Final)
@@ -57,6 +55,7 @@ func addColorAttachments(descriptor: MTLRenderPipelineDescriptor) {
     descriptor.colorAttachments[5].pixelFormat = Preferences.pixelFormat
 }
 
+// Deprecated
 class Forward_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()

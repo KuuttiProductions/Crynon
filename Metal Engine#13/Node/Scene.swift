@@ -29,6 +29,7 @@ class Scene: Node {
         vertexSceneConstant.viewMatrix = cameraManager._currentCamera.viewMatrix
         vertexSceneConstant.projectionMatrix = cameraManager._currentCamera.projectionMatrix
         fragmentSceneConstant.cameraPosition = cameraManager._currentCamera.position
+        fragmentSceneConstant.fogDensity = Preferences.fogAmount
     }
     
     override func physicsTick(_ deltaTime: Float) {

@@ -55,6 +55,7 @@ struct VertexSceneConstant: sizeable {
 
 struct FragmentSceneConstant: sizeable {
     var cameraPosition: simd_float3 = simd_float3(0,0,0)
+    var fogDensity: Float = 1.0
 }
 
 struct LightData: sizeable {

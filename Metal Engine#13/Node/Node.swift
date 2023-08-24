@@ -3,7 +3,7 @@ import MetalKit
 
 //Node is anything that can be placed in a scene,
 //even the scene itself.
-//Can be 2D or 3D, be rendered or not, really
+//Can be 2D, 3D, rendered or not, really
 //it's just a superclass for objects in the scene.
 class Node {
     
