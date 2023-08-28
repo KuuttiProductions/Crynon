@@ -78,8 +78,7 @@ class BasicScene: Scene {
         glass2.material.blendMode = .Alpha
         glass3.material.blendMode = .Alpha
         camera.setPosZ(5)
-        physics.setPosY(5)
-        physics2.setPos(1.5, 5, 1)
+        physics2.setPos(0.2, 3, -0.1)
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)
         light.setPosY(1)
@@ -94,7 +93,7 @@ class BasicScene: Scene {
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         time += deltaTime
-        //sun.direction = simd_float3(0, -1, sin(time))
+        sun.direction = simd_float3(sin(time/5), -1, cos(time/5))
         light.setPosY(sin(time)*10+10)
         spotlight.direction = simd_float3(0, sin(time), cos(time))
         glass2.setRotY(time)

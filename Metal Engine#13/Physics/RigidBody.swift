@@ -34,7 +34,7 @@ class RigidBody: Collider {
 //        self.addRotY(deltaTime/5)
 //        self.addRotZ(deltaTime/5)
         
-        if name == "physics" {
+        if name == "physics2" {
             if InputManager.mouseLeftButton {
                 self.force.y += 13
             }

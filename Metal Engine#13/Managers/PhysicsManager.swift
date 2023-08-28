@@ -26,14 +26,14 @@ class PhysicsManager {
             object.force = simd_float3(0, 0, 0)
         }
         
-        for object in _physicsObjects {
-            for _physicsObject in _physicsObjects {
-                if !(object.uuid == _physicsObject.uuid) {
-                    if checkForAABBCollision(object1: object, object2: _physicsObject) {
-                        //print("Collision found with AABBs! Between \(object.name!) and \(_physicsObject.name!)")
-                    } else {
-                        //print("No collisions!")
-                    }
+        for i in 0..<_physicsObjects.count {
+            for u in i+1..<_physicsObjects.count {
+                let object1 = _physicsObjects[i]
+                let object2 = _physicsObjects[u]
+                
+                if checkForAABBCollision(object1: object1, object2: object2) {
+                    object2.linearVelocity = simd_float3()
+                    object2.force = -gravity
                 }
             }
         }
