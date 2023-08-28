@@ -61,6 +61,17 @@ class FPSCamera: Camera {
             InputManager.playTransientHaptic(InputManager.controllerTriggerR/7, .rightTrigger)
         }
         
+        if InputManager.mouseLeftButton {
+            PointAndLine.point = self.position
+            let end = self.position + (self.forwardVector*3)
+            PointAndLine.point2 = end
+            if getScene().physicsManager.rayCast(origin: self.position, end: end).didHit {
+                print("Yep. We got 'em")
+            } else {
+                print("No hit this time.")
+            }
+        }
+        
         super.tick(deltaTime)
     }
 }

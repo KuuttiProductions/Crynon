@@ -29,16 +29,4 @@ class LightManager {
         }
         renderCommandEncoder.setVertexBytes(&viewMatrix, length: matrix_float4x4.stride, index: 3)
     }
-    
-    func tick(deltaTime: Float) {
-        for light in _lights {
-            light.tick(deltaTime)
-        }
-    }
-    
-    func render(_ renderCommandEncoder: MTLRenderCommandEncoder) {
-        for light in _lights  {
-            light.render(renderCommandEncoder)
-        }
-    }
 }

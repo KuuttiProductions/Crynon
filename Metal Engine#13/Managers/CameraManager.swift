@@ -15,16 +15,4 @@ class CameraManager {
             _currentCamera = camera
         }
     }
-    
-    func tick(deltaTime: Float) {
-        for camera in _cameras {
-            camera.tick(deltaTime)
-        }
-    }
-    
-    func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        for camera in _cameras {
-            camera.render(renderCommandEncoder)
-        }
-    }
 }

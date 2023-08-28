@@ -10,15 +10,18 @@ class RigidBody: Collider {
     var force: simd_float3 = simd_float3(0, 0, 0)
     var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
     //var angularVelocity: simd_float3 = simd_float3()
+    var isActive: Bool = false
     
-    var aabbPoints: [PointVertex] = [PointVertex(),
-                                     PointVertex(),
-                                     PointVertex(),
-                                     PointVertex(),
-                                     PointVertex(),
-                                     PointVertex(),
-                                     PointVertex(),
-                                     PointVertex()]
+    var isColliding: Bool = false
+    
+    private var aabbPoints: [PointVertex] = [PointVertex(),
+                                             PointVertex(),
+                                             PointVertex(),
+                                             PointVertex(),
+                                             PointVertex(),
+                                             PointVertex(),
+                                             PointVertex(),
+                                             PointVertex()]
     
     override init(_ name: String) {
         super.init(name)
@@ -27,12 +30,30 @@ class RigidBody: Collider {
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         
-        self.addRotX(deltaTime/5)
-        self.addRotY(deltaTime/5)
-        self.addRotZ(deltaTime/5)
+//        self.addRotX(deltaTime/5)
+//        self.addRotY(deltaTime/5)
+//        self.addRotZ(deltaTime/5)
         
-        if InputManager.mouseLeftButton {
-            self.force.y += 13
+        if name == "physics" {
+            if InputManager.mouseLeftButton {
+                self.force.y += 13
+            }
+            
+            if InputManager.pressedKeys.contains(.leftArrow) {
+                self.force.x += 5
+            }
+            
+            if InputManager.pressedKeys.contains(.rightArrow) {
+                self.force.x -= 5
+            }
+            
+            if InputManager.pressedKeys.contains(.upArrow) {
+                self.force.z -= 5
+            }
+            
+            if InputManager.pressedKeys.contains(.downArrow) {
+                self.force.z += 5
+            }
         }
         
         for i in 0..<8 {
@@ -61,12 +82,18 @@ class RigidBody: Collider {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        if isColliding {
+            self.material.shaderMaterial.color = simd_float4(1, 0, 0, 1)
+        } else {
+            self.material.shaderMaterial.color = simd_float4(0, 1, 0, 1)
+        }
+        
         if material.blendMode == Renderer.currentBlendMode {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteAlways : .Less])
             renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["Wallpaper"], index: 3)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureColor], index: 3)
             renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
             AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
         }

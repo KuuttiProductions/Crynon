@@ -5,6 +5,7 @@ class GameObject: Node {
     
     var material: Material = Material()
     var mesh: MeshType = .Quad
+    var simulatePhysics: Bool = false
     
     override init(_ name: String) {
         super.init(name)

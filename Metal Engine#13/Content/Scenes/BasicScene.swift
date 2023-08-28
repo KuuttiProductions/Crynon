@@ -18,7 +18,8 @@ class BasicScene: Scene {
     let sun = DirectionalLight()
     let light = PointLight()
     let spotlight = Spotlight()
-    let physics = RigidBody("Cube")
+    let physics = RigidBody("physics")
+    let physics2 = RigidBody("physics2")
     let skySphere = SkySphere("OceanSky")
     
     var time: Float = 0.0
@@ -38,9 +39,10 @@ class BasicScene: Scene {
         addChild(glassH)
         addCamera(camera, true)
         addLight(sun)
-        //addLight(light)
+        addLight(light)
         addLight(spotlight)
         addPhysicsObject(physics)
+        addPhysicsObject(physics2)
         object.setPosX(-4)
         object.material.shaderMaterial.roughness = 0
         cube.setPos(0, -3, 0)
@@ -77,6 +79,7 @@ class BasicScene: Scene {
         glass3.material.blendMode = .Alpha
         camera.setPosZ(5)
         physics.setPosY(5)
+        physics2.setPos(1.5, 5, 1)
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)
         light.setPosY(1)

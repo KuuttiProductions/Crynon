@@ -171,6 +171,7 @@ extension Renderer: MTKViewDelegate {
         SceneManager.render(DeferredRenderCommandEncoder)
         Renderer.currentBlendMode = .Alpha
         SceneManager.render(DeferredRenderCommandEncoder)
+        PointAndLine.drawFrame(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Lighting")

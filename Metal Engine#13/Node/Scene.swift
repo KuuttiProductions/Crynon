@@ -11,25 +11,29 @@ class Scene: Node {
     
     func addCamera(_ camera: Camera, _ setAsCurrent: Bool = true) {
         cameraManager.addCamera(camera, setAsCurrent)
+        addChild(camera)
     }
     
     func addLight(_ light: Light) {
         lightManager.addLight(light)
+        addChild(light)
     }
     
     func addPhysicsObject(_ object: RigidBody) {
         physicsManager.addPhysicsObject(object: object)
+        addChild(object)
     }
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        cameraManager.tick(deltaTime: deltaTime)
-        lightManager.tick(deltaTime: deltaTime)
-        physicsManager.tick(deltaTime: deltaTime)
         vertexSceneConstant.viewMatrix = cameraManager._currentCamera.viewMatrix
         vertexSceneConstant.projectionMatrix = cameraManager._currentCamera.projectionMatrix
         fragmentSceneConstant.cameraPosition = cameraManager._currentCamera.position
         fragmentSceneConstant.fogDensity = Preferences.fogAmount
+    }
+    
+    override func getScene() -> Scene {
+        return self
     }
     
     override func physicsTick(_ deltaTime: Float) {

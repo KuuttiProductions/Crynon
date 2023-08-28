@@ -60,6 +60,10 @@ class Node {
         }
     }
     
+    func getScene()-> Scene {
+        return parent.getScene()
+    }
+    
     //Called every frame. For logic that doesn't need physical accuracy
     func tick(_ deltaTime: Float) {
         if parent != nil {
@@ -97,8 +101,8 @@ class Node {
 }
 
 extension Node {
-    var forwardVector: simd_float3 { return simd_float3(sin(rotation.y), 0, -cos(rotation.y)) }
-    var rightVector: simd_float3 { return simd_float3(sin(rotation.y + Float.pi*0.5), 0, -cos(rotation.y + Float.pi*0.5)) }
+    var forwardVector: simd_float3 { return normalize(simd_float3(sin(rotation.y), -sin(rotation.x), -cos(rotation.y))) }
+    var rightVector: simd_float3 { return  normalize(simd_float3(sin(rotation.y + Float.pi*0.5), 0, -cos(rotation.y + Float.pi*0.5))) }
 }
 
 //Pos, Rot, Scale functions
