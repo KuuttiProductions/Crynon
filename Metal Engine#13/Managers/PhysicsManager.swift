@@ -58,9 +58,9 @@ class PhysicsManager {
         var didHit: Bool = false
         
         for object in _physicsObjects {
-            if object.aabbMax.y < end.y && object.aabbMin.y > end.y {
-                if object.aabbMax.x < end.x && object.aabbMin.x > end.x {
-                    if object.aabbMax.z < end.z && object.aabbMin.z > end.z {
+            if object.aabbMax.y >= end.y && object.aabbMin.y <= end.y {
+                if object.aabbMax.x >= end.x && object.aabbMin.x <= end.x {
+                    if object.aabbMax.z >= end.z && object.aabbMin.z <= end.z {
                         didHit = true
                         hit = hitResult()
                     }
