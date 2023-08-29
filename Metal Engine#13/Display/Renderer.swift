@@ -129,7 +129,7 @@ extension Renderer: MTKViewDelegate {
         guard let drawable = view.currentDrawable, let depthTexture = view.depthStencilTexture else { return }
         deferredRenderPassDescriptor.colorAttachments[0].texture = drawable.texture
         deferredRenderPassDescriptor.depthAttachment.texture = depthTexture
-
+        
         //Update scene
         SceneManager.tick(1/Float(Preferences.preferredFPS))
         

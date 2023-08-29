@@ -1,5 +1,6 @@
 
 import MetalKit
+import SwiftUI
 
 class Preferences {
     public static var pixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
