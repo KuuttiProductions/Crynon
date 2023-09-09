@@ -3,8 +3,8 @@
 #import "Random/rng_header.metal"
 using namespace metal;
 
-constexpr sampler sampler2d (mag_filter::nearest,
-                             min_filter::nearest,
+constexpr sampler sampler2d (mag_filter::linear,
+                             min_filter::linear,
                              border_color::opaque_white,
                              address::clamp_to_border);
 
@@ -20,7 +20,7 @@ public:
         float2 samplePositionDefault = float2(lightSpacePosition.xy) * float2(0.5, -0.5) + 0.5;
         
         if (lightSpacePosition.z > 1.0) {
-            return 0;
+            return 1;
         }
         
         float shadowness = 0;

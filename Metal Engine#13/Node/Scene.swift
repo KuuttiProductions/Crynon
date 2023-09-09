@@ -59,13 +59,11 @@ class Scene: Node {
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
         
         super.render(renderCommandEncoder)
-        physicsManager.render(renderCommandEncoder)
     }
     
     override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         renderCommandEncoder.pushDebugGroup("Shadow work on \(name!)")
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
-        physicsManager.castShadow(renderCommandEncoder)
         super.castShadow(renderCommandEncoder)
     }
 }

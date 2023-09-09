@@ -84,9 +84,12 @@ class PointAndLine {
     
     static var point: simd_float3 = simd_float3()
     static var point2: simd_float3 = simd_float3()
+    static var hasClicked: Bool = false
     
     static func drawFrame(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        drawLine(renderCommandEncoder: renderCommandEncoder, position1: point, position2: point2, color: simd_float4(0,1,0,1))
-        drawPoints(renderCommandEncoder: renderCommandEncoder, positions: [point, point2], color: simd_float4(1,0,1,1), pointSize: 20)
+        if hasClicked {
+            drawLine(renderCommandEncoder: renderCommandEncoder, position1: point, position2: point2, color: simd_float4(0,1,0,1))
+            drawPoints(renderCommandEncoder: renderCommandEncoder, positions: [point, point2], color: simd_float4(1,0,1,1), pointSize: 20)
+        }
     }
 }

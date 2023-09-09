@@ -5,7 +5,7 @@ class PhysicsManager {
     
     private var _physicsObjects: [RigidBody] = []
     private var _colliders: [Collider] = []
-    private var gravity: simd_float3 = simd_float3(0, -9.81/3, 0)
+    private var gravity: simd_float3 = simd_float3(0, -9.81, 0)
     
     func addPhysicsObject(object: RigidBody) {
         _physicsObjects.append(object)
@@ -53,39 +53,51 @@ class PhysicsManager {
         return false
     }
     
-    func rayCast(origin: simd_float3, end: simd_float3)-> (result: hitResult?, didHit: Bool) {
+    func rayCast(origin: simd_float3, end: simd_float3, distance: Float = Float.infinity)-> (result: hitResult?, didHit: Bool) {
         var hit: hitResult!
         var didHit: Bool = false
         
+        let direction = normalize(end - origin)
+        
         for object in _physicsObjects {
-            if object.aabbMax.y >= end.y && object.aabbMin.y <= end.y {
-                if object.aabbMax.x >= end.x && object.aabbMin.x <= end.x {
-                    if object.aabbMax.z >= end.z && object.aabbMin.z <= end.z {
-                        didHit = true
-                        hit = hitResult()
+            let aabbMin = object.aabbMin
+            let aabbMax = object.aabbMax
+            
+            let t1: Float = (aabbMin.x - origin.x) / direction.x
+            let t2: Float = (aabbMax.x - origin.x) / direction.x
+            let t3: Float = (aabbMin.y - origin.y) / direction.y
+            let t4: Float = (aabbMax.y - origin.y) / direction.y
+            let t5: Float = (aabbMin.z - origin.z) / direction.z
+            let t6: Float = (aabbMax.z - origin.z) / direction.z
+ 
+            let tMin: Float = max(max(min(t1, t2), min(t3, t4)), min(t5, t6))
+            let tMax: Float = min(min(max(t1, t2), max(t3, t4)), max(t5, t6))
+            
+            if tMax < 0 || tMin > tMax {
+                continue
+            } else {
+                if tMin <= distance {
+                    didHit = true
+                    hit = hitResult()
+                    hit.distance = tMin
+                    hit.position = origin + direction * tMin
+                    if t1 == tMin {
+                        hit.normal = simd_float3(-1, 0, 0)
+                    } else if t2 == tMin {
+                        hit.normal = simd_float3(1, 0, 0)
+                    } else if t3 == tMin {
+                        hit.normal = simd_float3(0, -1, 0)
+                    } else if t4 == tMin {
+                        hit.normal = simd_float3(0, 1, 0)
+                    } else if t5 == tMin {
+                        hit.normal = simd_float3(0, 0, -1)
+                    } else if t6 == tMin {
+                        hit.normal = simd_float3(0, 0, 1)
                     }
                 }
             }
         }
         
         return (hit, didHit)
-    }
-    
-    func render(_ renderCommandEncoder: MTLRenderCommandEncoder) {
-        renderCommandEncoder.pushDebugGroup("Rendering Physics Objects")
-        for object in _physicsObjects {
-            object.modelConstant.modelMatrix = object.modelMatrix
-            object.render(renderCommandEncoder)
-        }
-        renderCommandEncoder.popDebugGroup()
-    }
-    
-    func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder) {
-        renderCommandEncoder.pushDebugGroup("Casting Shadow on Physics Objects")
-        for object in _physicsObjects {
-            object.modelConstant.modelMatrix = object.modelMatrix
-            object.castShadow(renderCommandEncoder)
-        }
-        renderCommandEncoder.popDebugGroup()
     }
 }

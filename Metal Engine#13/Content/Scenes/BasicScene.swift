@@ -78,7 +78,8 @@ class BasicScene: Scene {
         glass2.material.blendMode = .Alpha
         glass3.material.blendMode = .Alpha
         camera.setPosZ(5)
-        physics2.setPos(0.2, 3, -0.1)
+        physics.setPosZ(-3)
+        physics2.setPos(0.2, 3, -3.1)
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)
         light.setPosY(1)

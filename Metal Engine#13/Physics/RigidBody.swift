@@ -30,13 +30,9 @@ class RigidBody: Collider {
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         
-//        self.addRotX(deltaTime/5)
-//        self.addRotY(deltaTime/5)
-//        self.addRotZ(deltaTime/5)
-        
         if name == "physics2" {
             if InputManager.mouseLeftButton {
-                self.force.y += 13
+                self.force.y += 20
             }
             
             if InputManager.pressedKeys.contains(.leftArrow) {

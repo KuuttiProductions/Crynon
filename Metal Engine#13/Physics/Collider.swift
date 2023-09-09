@@ -9,6 +9,7 @@ class Collider: Node {
     var aabbMax: simd_float3 = simd_float3(repeating: 0)
     
     override func tick(_ deltaTime: Float) {
+        super.tick(deltaTime)
         
         var min: simd_float3 = simd_float3(repeating: .infinity)
         var max: simd_float3 = simd_float3(repeating: -.infinity)
