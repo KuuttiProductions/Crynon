@@ -19,7 +19,7 @@ vertex PointOut pointAndLine_vertex(PointIn In [[ stage_in ]],
     PointOut po;
     
     po.position = sceneConstant.projectionMatrix * sceneConstant.viewMatrix * float4(In.position, 1);
-    po.pointSize = In.pointSize;
+    po.pointSize = In.pointSize / po.position.w;
     
     return po;
 }

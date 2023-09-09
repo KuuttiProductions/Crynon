@@ -80,6 +80,7 @@ class PhysicsManager {
                     didHit = true
                     hit = hitResult()
                     hit.distance = tMin
+                    hit.node = object
                     hit.position = origin + direction * tMin
                     if t1 == tMin {
                         hit.normal = simd_float3(-1, 0, 0)

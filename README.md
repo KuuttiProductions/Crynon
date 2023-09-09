@@ -33,7 +33,7 @@ Here are the current plans for ME13. More will be added.
 - [x] Motion Dynamics
 - [ ] Collision detection
 - [ ] Collision resolving
-- [ ] Ray casting
+- [x] Ray casting
 
 ### User Interface ###
 - [x] SwiftUI for UI
