@@ -3,7 +3,7 @@ import MetalKit
 
 class FPSCamera: Camera {
     
-    var moveSpeed: Float = 3
+    var moveSpeed: Float = 4
     var time: Float = 0.0
     
     init() {

@@ -4,7 +4,7 @@ import simd
 class BasicScene: Scene {
     
     let object = MetameshObject()
-    let cube = CubeObject()
+    let floor = RigidBody("floor")
     let cube2 = CubeObject()
     let cube3 = CubeObject()
     let cube4 = CubeObject()
@@ -30,7 +30,7 @@ class BasicScene: Scene {
         addChild(glass)
         addChild(glassF)
         addChild(skySphere)
-        addChild(cube)
+        addPhysicsObject(floor)
         addChild(cube2)
         addChild(cube3)
         addChild(cube4)
@@ -45,9 +45,11 @@ class BasicScene: Scene {
         addPhysicsObject(physics2)
         object.setPosX(-4)
         object.material.shaderMaterial.roughness = 0
-        cube.setPos(0, -3, 0)
-        cube.setScale(300, 0.2, 10)
-        cube.material.shaderMaterial.roughness = 1
+        floor.setPos(0, -3, 0)
+        floor.setScale(300, 0.2, 10)
+        floor.material.shaderMaterial.roughness = 1
+        floor.material.shaderMaterial.color = simd_float4(0.2, 0.6, 0.0, 1.0)
+        floor.isActive = false
         cube2.setPosX(20)
         cube2.setScaleY(3)
         cube3.setPos(4, -1, 0)

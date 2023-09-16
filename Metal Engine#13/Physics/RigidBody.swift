@@ -3,15 +3,21 @@ import MetalKit
 
 class RigidBody: Collider {
     
-    //var orientation: simd_float3x3 = simd_float3x3()
+    var orientation: simd_float3x3 = simd_float3x3()
+    var invOrientation: simd_float3x3 = simd_float3x3()
     
     var material: Material = Material()
-    var mass: Float = 1
-    var force: simd_float3 = simd_float3(0, 0, 0)
-    var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
-    //var angularVelocity: simd_float3 = simd_float3()
-    var isActive: Bool = false
     
+    var mass: Float = 1
+    var centerOfMass: simd_float3 = simd_float3(0, 0, 0)
+    
+    var force: simd_float3 = simd_float3(0, 0, 0)
+    var forcePosition: simd_float3 = simd_float3(0, 0, 0)
+    
+    var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
+    var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
+    
+    var isActive: Bool = true
     var isColliding: Bool = false
     
     private var aabbPoints: [PointVertex] = [PointVertex(),
@@ -33,6 +39,16 @@ class RigidBody: Collider {
         if name == "physics2" {
             if InputManager.mouseLeftButton {
                 self.force.y += 20
+            }
+            
+            if InputManager.pressedKeys.contains(.keyQ) {
+                self.force += simd_float3(0, 0, 1)
+                self.forcePosition = simd_float3(1, 0, 0)
+            } else if InputManager.pressedKeys.contains(.keyE) {
+                self.force += simd_float3(0, 0, -1)
+                self.forcePosition = simd_float3(1, 0, 0)
+            } else {
+                self.forcePosition = simd_float3(0, 0, 0)
             }
             
             if InputManager.pressedKeys.contains(.leftArrow) {
@@ -78,12 +94,14 @@ class RigidBody: Collider {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if isColliding {
-            self.material.shaderMaterial.color = simd_float4(1, 0, 0, 1)
-        } else {
-            self.material.shaderMaterial.color = simd_float4(0, 1, 0, 1)
+        if isActive {
+            if isColliding {
+                self.material.shaderMaterial.color = simd_float4(1, 0, 0, 1)
+            } else {
+                self.material.shaderMaterial.color = simd_float4(0, 1, 0, 1)
+            }
         }
-        
+
         if material.blendMode == Renderer.currentBlendMode {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])

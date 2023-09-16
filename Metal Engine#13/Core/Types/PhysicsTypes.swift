@@ -1,7 +1,7 @@
 
 import simd
 
-struct hitResult {
+struct rayCastResult {
     var position: simd_float3
     var normal: simd_float3
     var distance: Float
@@ -15,6 +15,6 @@ struct hitResult {
         self.position = position
         self.normal = normal
         self.distance = distance
-        self.node = node!
+        self.node = node != nil ? node : nil
     }
 }

@@ -14,16 +14,21 @@ class PhysicsManager {
     func step(deltaTime: Float) {
         for object in _physicsObjects {
             object.isColliding = false
+        
+            if object.isActive {
+                object.force += object.mass * gravity
+                
+                object.linearVelocity += object.force / object.mass * deltaTime
+                if object.position.y < -10 {
+                    object.linearVelocity = simd_float3(0, -(1/deltaTime) * object.position.y, 0)
+                }
+                object.angularVelocity += cross(object.forcePosition - object.centerOfMass, object.force) / object.mass * deltaTime
+                
+                object.addRot(object.angularVelocity * deltaTime)
+                object.addPos(object.linearVelocity * deltaTime)
             
-            object.force += object.mass * gravity
-            
-            object.linearVelocity += object.force / object.mass * deltaTime
-            if object.position.y < 0 {
-                object.linearVelocity = simd_float3(0, -(1/deltaTime) * object.position.y, 0)
+                object.force = simd_float3(0, 0, 0)
             }
-            object.addPos(object.linearVelocity * deltaTime)
-            
-            object.force = simd_float3(0, 0, 0)
         }
         
         for i in 0..<_physicsObjects.count {
@@ -53,8 +58,8 @@ class PhysicsManager {
         return false
     }
     
-    func rayCast(origin: simd_float3, end: simd_float3, distance: Float = Float.infinity)-> (result: hitResult?, didHit: Bool) {
-        var hit: hitResult!
+    func rayCast(origin: simd_float3, end: simd_float3, distance: Float = Float.infinity)-> (result: rayCastResult?, didHit: Bool) {
+        var hit: rayCastResult!
         var didHit: Bool = false
         
         let direction = normalize(end - origin)
@@ -78,7 +83,7 @@ class PhysicsManager {
             } else {
                 if tMin <= distance {
                     didHit = true
-                    hit = hitResult()
+                    hit = rayCastResult()
                     hit.distance = tMin
                     hit.node = object
                     hit.position = origin + direction * tMin

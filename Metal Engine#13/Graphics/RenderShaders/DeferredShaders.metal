@@ -6,6 +6,9 @@
 #import "AmbientOcclusion.metal"
 using namespace metal;
 
+constexpr static sampler samplerFragment (min_filter::linear,
+                                          mag_filter::linear);
+
 fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
                                    constant ShaderMaterial &mat [[ buffer(1) ]],
                                    depth2d<float> shadowMap1 [[ texture(0) ]],
@@ -23,7 +26,7 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     gBuffer.metalRoughEmissionIOR.a = mat.ior;
     
     if (!is_null_texture(textureColor)) {
-        gBuffer.color = half4(textureColor.sample(sampler2d, VerOut.textureCoordinate));
+        gBuffer.color = half4(textureColor.sample(samplerFragment, VerOut.textureCoordinate));
         if (gBuffer.color.a == 0) {
             discard_fragment();
         }

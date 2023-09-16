@@ -165,6 +165,9 @@ extension Node {
     func addRotZ(_ value: Float) {
         self._rotation.z += value
     }
+    func addRot(_ value: simd_float3) {
+        self._rotation += value
+    }
     
     //Scale
     func setScaleX(_ value: Float) {
