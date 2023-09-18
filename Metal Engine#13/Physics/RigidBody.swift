@@ -1,24 +1,38 @@
 
 import MetalKit
 
-class RigidBody: Collider {
+class RigidBody: Node {
     
+    //Physics variables
     var orientation: simd_float3x3 = simd_float3x3()
     var invOrientation: simd_float3x3 = simd_float3x3()
     
-    var material: Material = Material()
+    var localInvInertiaTensor: simd_float3x3 = simd_float3x3()
+    var globalInvInertiaTensor: simd_float3x3 = simd_float3x3()
     
     var mass: Float = 1
-    var centerOfMass: simd_float3 = simd_float3(0, 0, 0)
-    
-    var force: simd_float3 = simd_float3(0, 0, 0)
-    var forcePosition: simd_float3 = simd_float3(0, 0, 0)
+    var invMass: Float = 1
+    var localCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
+    var globalCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
     
     var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
     var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
     
+    var forceAccumulator: simd_float3 = simd_float3(0, 0, 0)
+    var torqueAccumulator: simd_float3 = simd_float3(0, 0, 0)
+    
+    var colliders: [Collider] = []
+    
+    var mesh: MeshType = .Cube
+    var aabbSimple: [simd_float3] = []
+    var aabbMin: simd_float3 = simd_float3(repeating: 0)
+    var aabbMax: simd_float3 = simd_float3(repeating: 0)
+    
     var isActive: Bool = true
     var isColliding: Bool = false
+    
+    //End of physics variables
+    var material: Material = Material()
     
     private var aabbPoints: [PointVertex] = [PointVertex(),
                                              PointVertex(),
@@ -31,6 +45,121 @@ class RigidBody: Collider {
     
     override init(_ name: String) {
         super.init(name)
+        
+        self.addCollider(Collider(true))
+        
+        let verticePointer = AssetLibrary.meshes[mesh].vertexBuffer.contents()
+        var positions: [simd_float3] = []
+        
+        for i in 0..<AssetLibrary.meshes[mesh].vertexBuffer.length/Vertex.stride {
+            let item = verticePointer.load(fromByteOffset: Vertex.stride(count: i), as: Vertex.self).position
+            positions.append(item)
+        }
+        
+        var minX: Float = .infinity
+        var minY: Float = .infinity
+        var minZ: Float = .infinity
+        var maxX: Float = -.infinity
+        var maxY: Float = -.infinity
+        var maxZ: Float = -.infinity
+        
+        for pos in positions {
+            
+            if pos.x < minX {
+                minX = pos.x
+            }
+            if pos.x > maxX {
+                maxX = pos.x
+            }
+
+            if pos.y < minY {
+                minY = pos.y
+            }
+            if pos.y > maxY {
+                maxY = pos.y
+            }
+
+            if pos.z < minZ {
+                minZ = pos.z
+            }
+            if pos.z > maxZ {
+                maxZ = pos.z
+            }
+        }
+        
+        aabbSimple = [
+            simd_float3(minX, minY, minZ),
+            simd_float3(minX, minY, maxZ),
+            simd_float3(minX, maxY, minZ),
+            simd_float3(minX, maxY, maxZ),
+            simd_float3(maxX, maxY, maxZ),
+            simd_float3(maxX, maxY, minZ),
+            simd_float3(maxX, minY, maxZ),
+            simd_float3(maxX, minY, minZ)
+        ]
+    }
+    
+    func localToGlobal(point: simd_float3)-> simd_float3 {
+        return orientation * point + position
+    }
+    func globalToLocal(point: simd_float3)-> simd_float3 {
+        return invOrientation * (point - position)
+    }
+    func localToGlobalVec(vec: simd_float3)-> simd_float3 {
+        return orientation * vec
+    }
+    func globalToLocalVec(vec: simd_float3)-> simd_float3 {
+        return invOrientation * vec
+    }
+    
+    func updateGlobalCenterOfMassFromPosition() {
+        globalCenterOfMass = orientation * localCenterOfMass + position
+    }
+    func updatePositionFromGlobalCenterOfMass() {
+        setPos(orientation * (-localCenterOfMass) + globalCenterOfMass)
+    }
+    func updateOrientation() {
+        var quat: simd_quatf = simd_quatf(orientation)
+        quat = quat.normalized
+        orientation = quat.toMatrix()
+        
+        invOrientation = orientation.transpose
+    }
+    func updateInvInertiaTensor() {
+        globalInvInertiaTensor = orientation * localInvInertiaTensor * invOrientation
+    }
+    
+    func addCollider(_ collider: Collider) {
+        colliders.append(collider)
+        
+        localCenterOfMass = simd_float3()
+        mass = 0
+        
+        for collider in colliders {
+            mass += collider.mass
+            localCenterOfMass += collider.mass * collider.localCenterOfMass
+        }
+        
+        invMass = 1 / mass
+        
+        localCenterOfMass *= invMass
+        
+        var localInertiaTensor: simd_float3x3 = simd_float3x3()
+        for collider in colliders {
+            let r: simd_float3 = localCenterOfMass - collider.localCenterOfMass
+            let rDotR: Float = dot(r, r)
+            let rOutR: simd_float3x3 = matrix_float3x3.outerProduct(r, r)
+            
+            localInertiaTensor += collider.localInertiaTensor + collider.mass * (rDotR * matrix_identity_float3x3 - rOutR)
+        }
+        
+        localInvInertiaTensor = localInertiaTensor.inverse
+        print(localInvInertiaTensor)
+    }
+    
+    func addForce(force: simd_float3, at: simd_float3) {
+        forceAccumulator += force
+        torqueAccumulator += cross((at - globalCenterOfMass), force)
     }
     
     override func tick(_ deltaTime: Float) {
@@ -38,35 +167,45 @@ class RigidBody: Collider {
         
         if name == "physics2" {
             if InputManager.mouseLeftButton {
-                self.force.y += 20
+                self.addForce(force: simd_float3(0, 20, 0), at: simd_float3(0, 0, 0))
             }
-            
             if InputManager.pressedKeys.contains(.keyQ) {
-                self.force += simd_float3(0, 0, 1)
-                self.forcePosition = simd_float3(1, 0, 0)
+                self.addForce(force: simd_float3(0, 0, 1), at: simd_float3(0.1, 0, 0))
             } else if InputManager.pressedKeys.contains(.keyE) {
-                self.force += simd_float3(0, 0, -1)
-                self.forcePosition = simd_float3(1, 0, 0)
-            } else {
-                self.forcePosition = simd_float3(0, 0, 0)
-            }
-            
-            if InputManager.pressedKeys.contains(.leftArrow) {
-                self.force.x += 5
-            }
-            
-            if InputManager.pressedKeys.contains(.rightArrow) {
-                self.force.x -= 5
-            }
-            
-            if InputManager.pressedKeys.contains(.upArrow) {
-                self.force.z -= 5
-            }
-            
-            if InputManager.pressedKeys.contains(.downArrow) {
-                self.force.z += 5
+                self.addForce(force: simd_float3(0, 0, -1), at: simd_float3(0.1, 0, 0))
             }
         }
+        
+        var min: simd_float3 = simd_float3(repeating: .infinity)
+        var max: simd_float3 = simd_float3(repeating: -.infinity)
+        
+        for pos in aabbSimple {
+            let comparePos = matrix_multiply(self.modelMatrix, simd_float4(pos, 1))
+            
+            if comparePos.x < min.x {
+                min.x = comparePos.x
+            }
+            if comparePos.x > max.x {
+                max.x = comparePos.x
+            }
+
+            if comparePos.y < min.y {
+                min.y = comparePos.y
+            }
+            if comparePos.y > max.y {
+                max.y = comparePos.y
+            }
+
+            if comparePos.z < min.z {
+                min.z = comparePos.z
+            }
+            if comparePos.z > max.z {
+                max.z = comparePos.z
+            }
+        }
+        
+        aabbMin = min
+        aabbMax = max
         
         for i in 0..<8 {
             switch i {

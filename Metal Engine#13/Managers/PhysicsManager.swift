@@ -14,20 +14,30 @@ class PhysicsManager {
     func step(deltaTime: Float) {
         for object in _physicsObjects {
             object.isColliding = false
-        
+            
             if object.isActive {
-                object.force += object.mass * gravity
+                object.forceAccumulator += object.mass * gravity
                 
-                object.linearVelocity += object.force / object.mass * deltaTime
+                object.linearVelocity += object.invMass * (object.forceAccumulator * deltaTime)
+                object.angularVelocity += object.globalInvInertiaTensor * (object.torqueAccumulator * deltaTime)
                 if object.position.y < -10 {
                     object.linearVelocity = simd_float3(0, -(1/deltaTime) * object.position.y, 0)
                 }
-                object.angularVelocity += cross(object.forcePosition - object.centerOfMass, object.force) / object.mass * deltaTime
                 
                 object.addRot(object.angularVelocity * deltaTime)
-                object.addPos(object.linearVelocity * deltaTime)
-            
-                object.force = simd_float3(0, 0, 0)
+                
+                object.globalCenterOfMass += object.linearVelocity * deltaTime
+                let axis: simd_float3 = normalize(object.angularVelocity)
+                let angle: Float = length(object.angularVelocity) * deltaTime
+                object.orientation = matrix_float3x3.rotation(axis: axis, angle: angle) * object.orientation
+    
+                object.updateOrientation()
+                object.updatePositionFromGlobalCenterOfMass()
+                
+                object.forceAccumulator = simd_float3(0, 0, 0)
+                object.torqueAccumulator = simd_float3(0, 0, 0)
+                
+                object.updateInvInertiaTensor()
             }
         }
         
@@ -38,7 +48,7 @@ class PhysicsManager {
                 
                 if checkForAABBCollision(object1: object1, object2: object2) {
                     object2.linearVelocity = simd_float3()
-                    object2.force = -gravity
+                    object2.forceAccumulator = -gravity
                 }
             }
         }

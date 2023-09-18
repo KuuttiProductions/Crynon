@@ -36,7 +36,7 @@ extension Double {
 extension matrix_float4x4 {
     
     mutating func translate(position: simd_float3) {
-        var result = matrix_identity_float4x4
+        var result = matrix_float4x4()
         
         let x = position.x
         let y = position.y
@@ -52,7 +52,7 @@ extension matrix_float4x4 {
     }
     
     mutating func scale(_ scale: simd_float3) {
-        var result = matrix_identity_float4x4
+        var result = matrix_float4x4()
         
         let x = scale.x
         let y = scale.y
@@ -69,7 +69,7 @@ extension matrix_float4x4 {
     }
     
     mutating func rotate(direction: Float, axis: simd_float3) {
-        var result = matrix_identity_float4x4
+        var result = matrix_float4x4()
         
         let x: Float = axis.x
         let y: Float = axis.y
@@ -120,7 +120,7 @@ extension matrix_float4x4 {
         let z: Float = -((far + near) / (far - near))
         let w: Float = -((2 * far * near) / (far - near))
         
-        var result = matrix_identity_float4x4
+        var result = matrix_float4x4()
         result.columns = (
             simd_float4(x, 0, 0,  0),
             simd_float4(0, y, 0,  0),
@@ -164,5 +164,74 @@ extension matrix_float4x4 {
             simd_float4(  x,   y,   z, 1.0)
         )
         return result
+    }
+}
+
+extension matrix_float3x3 {
+    static func outerProduct(_ u: simd_float3, _ v: simd_float3)-> matrix_float3x3 {
+        var result = matrix_float3x3()
+        result.columns = (
+            simd_float3(u.x * v.x, u.x * v.y, u.x * v.z),
+            simd_float3(u.y * v.x, u.y * v.y, u.y * v.z),
+            simd_float3(u.z * v.x, u.z * v.y, u.z * v.z)
+        )
+        return result
+    }
+    
+    static func rotation(axis: simd_float3, angle: Float)-> matrix_float3x3 {
+        var result = matrix_float3x3()
+        
+        let x = axis.x
+        let y = axis.y
+        let z = axis.z
+        let o = angle
+        
+        let r1c1: Float = cos(o) + pow(x, 2) * (1 - cos(o))
+        let r1c2: Float = x * y * (1 - cos(o)) - z * sin(o)
+        let r1c3: Float = x * z * (1 - cos(o)) + y * sin(o)
+        
+        let r2c1: Float = y * x * (1 - cos(o)) + z * sin(o)
+        let r2c2: Float = cos(o) + pow(y, 2) * (1 - cos(o))
+        let r2c3: Float = y * z * (1 - cos(o)) - x * sin(o)
+        
+        let r3c1: Float = z * x * (1 - cos(o)) - y * sin(o)
+        let r3c2: Float = z * y * (1 - cos(o)) + x * sin(o)
+        let r3c3: Float = cos(o) + pow(z, 2) * (1 - cos(o))
+        
+        result.columns = (
+            simd_float3(r1c1, r1c2, r1c3),
+            simd_float3(r2c1, r2c2, r2c3),
+            simd_float3(r3c1, r3c2, r3c3)
+        )
+        return result
+    }
+}
+
+extension simd_quatf {
+    func toMatrix()-> matrix_float3x3 {
+        var result = matrix_float3x3()
+        let x: Float = Float(self.axis.x)
+        let y: Float = Float(self.axis.y)
+        let z: Float = Float(self.axis.z)
+        let w: Float = Float(self.real)
+        
+        let r1c1: Float = 1.0 - (2 * pow(y, 2)) - (2.0 * pow(z, 2.0))
+        let r1c2: Float = (2 * x * y) + (2 * z * w)
+        let r1c3: Float = (2 * x * z) - (2 * y * w)
+        
+        let r2c1: Float = (2 * x * y) - (2 * z * w)
+        let r2c2: Float = 1.0 - (2 * pow(x, 2)) - (2.0 * pow(z, 2.0))
+        let r2c3: Float = (2 * y * z) + (2 * x * w)
+        
+        let r3c1: Float = (2 * x * z) - (2 * y * w)
+        let r3c2: Float = (2 * y * z) - (2 * x * w)
+        let r3c3: Float = 1.0 - (2 * pow(x, 2)) - (2.0 * pow(y, 2.0))
+        
+        result.columns = (
+            simd_float3(r1c1, r1c2, r1c3),
+            simd_float3(r2c1, r2c2, r2c3),
+            simd_float3(r3c1, r3c2, r3c3)
+        )
+        return result.transpose
     }
 }
