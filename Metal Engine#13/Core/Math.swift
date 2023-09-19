@@ -208,13 +208,13 @@ extension matrix_float3x3 {
 }
 
 extension simd_quatf {
-    func toMatrix()-> matrix_float3x3 {
+    static func toMatrix(_ quat: simd_quatf)-> matrix_float3x3 {
         var result = matrix_float3x3()
-        let x: Float = Float(self.axis.x)
-        let y: Float = Float(self.axis.y)
-        let z: Float = Float(self.axis.z)
-        let w: Float = Float(self.real)
-        
+        let x: Float = Float(quat.imag.x)
+        let y: Float = Float(quat.imag.y)
+        let z: Float = Float(quat.imag.z)
+        let w: Float = Float(quat.real)
+
         let r1c1: Float = 1.0 - (2 * pow(y, 2)) - (2.0 * pow(z, 2.0))
         let r1c2: Float = (2 * x * y) + (2 * z * w)
         let r1c3: Float = (2 * x * z) - (2 * y * w)
@@ -232,6 +232,7 @@ extension simd_quatf {
             simd_float3(r2c1, r2c2, r2c3),
             simd_float3(r3c1, r3c2, r3c3)
         )
+        
         return result.transpose
     }
 }

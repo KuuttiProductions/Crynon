@@ -27,7 +27,7 @@ class PhysicsManager {
                 object.addRot(object.angularVelocity * deltaTime)
                 
                 object.globalCenterOfMass += object.linearVelocity * deltaTime
-                let axis: simd_float3 = normalize(object.angularVelocity)
+                let axis: simd_float3 = normalize(object.angularVelocity).x.isNaN ? object.angularVelocity : normalize(object.angularVelocity)
                 let angle: Float = length(object.angularVelocity) * deltaTime
                 object.orientation = matrix_float3x3.rotation(axis: axis, angle: angle) * object.orientation
     

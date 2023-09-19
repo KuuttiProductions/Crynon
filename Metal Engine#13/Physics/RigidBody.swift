@@ -46,6 +46,18 @@ class RigidBody: Node {
     override init(_ name: String) {
         super.init(name)
         
+        self.orientation.columns = (
+            simd_float3(1, 0, 0),
+            simd_float3(0, 1, 0),
+            simd_float3(0, 0, 1)
+        )
+        self.invOrientation = self.orientation.inverse
+        
+        self.globalInvInertiaTensor.columns = (
+            simd_float3(1, 0, 0),
+            simd_float3(0, 1, 0),
+            simd_float3(0, 0, 1)
+        )
         self.addCollider(Collider(true))
         
         let verticePointer = AssetLibrary.meshes[mesh].vertexBuffer.contents()
@@ -121,7 +133,7 @@ class RigidBody: Node {
     func updateOrientation() {
         var quat: simd_quatf = simd_quatf(orientation)
         quat = quat.normalized
-        orientation = quat.toMatrix()
+        orientation = simd_quatf.toMatrix(quat)
         
         invOrientation = orientation.transpose
     }
@@ -144,7 +156,7 @@ class RigidBody: Node {
         
         localCenterOfMass *= invMass
         
-        var localInertiaTensor: simd_float3x3 = simd_float3x3()
+        var localInertiaTensor: simd_float3x3 = simd_float3x3(0)
         for collider in colliders {
             let r: simd_float3 = localCenterOfMass - collider.localCenterOfMass
             let rDotR: Float = dot(r, r)
@@ -154,12 +166,11 @@ class RigidBody: Node {
         }
         
         localInvInertiaTensor = localInertiaTensor.inverse
-        print(localInvInertiaTensor)
     }
     
     func addForce(force: simd_float3, at: simd_float3) {
         forceAccumulator += force
-        torqueAccumulator += cross((at - globalCenterOfMass), force)
+        torqueAccumulator += cross((at - localCenterOfMass), force)
     }
     
     override func tick(_ deltaTime: Float) {
@@ -267,5 +278,16 @@ class RigidBody: Node {
         AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
         
         super.castShadow(renderCommandEncoder)
+    }
+}
+
+extension RigidBody {
+    func setPos(_ x: Float, _ y: Float, _ z: Float, teleport: Bool) {
+        if !teleport {
+            linearVelocity = simd_float3(0, 0, 0)
+            angularVelocity = simd_float3(0, 0, 0)
+        }
+        setPos(x, y, z)
+        updateGlobalCenterOfMassFromPosition()
     }
 }
