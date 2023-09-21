@@ -236,3 +236,11 @@ extension simd_quatf {
         return result.transpose
     }
 }
+
+extension simd_float3 {
+    static func rotationFromMatrix(_ matrix: simd_float3x3)-> simd_float3 {
+        var result =  simd_float3()
+        
+        return result
+    }
+}
