@@ -24,14 +24,14 @@ class PhysicsManager {
                     object.linearVelocity = simd_float3(0, -(1/deltaTime) * object.position.y, 0)
                 }
                 
-                object.addRot(object.angularVelocity * deltaTime)
-                
                 object.globalCenterOfMass += object.linearVelocity * deltaTime
                 let axis: simd_float3 = normalize(object.angularVelocity).x.isNaN ? object.angularVelocity : normalize(object.angularVelocity)
                 let angle: Float = length(object.angularVelocity) * deltaTime
                 object.orientation = matrix_float3x3.rotation(axis: axis, angle: angle) * object.orientation
     
+                //object.invOrientation = object.orientation.inverse
                 object.updateOrientation()
+                object.setRot(simd_float3.rotationFromMatrix(object.orientation))
                 object.updatePositionFromGlobalCenterOfMass()
                 
                 object.forceAccumulator = simd_float3(0, 0, 0)

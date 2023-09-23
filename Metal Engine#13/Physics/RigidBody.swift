@@ -131,11 +131,11 @@ class RigidBody: Node {
         setPos(orientation * (-localCenterOfMass) + globalCenterOfMass)
     }
     func updateOrientation() {
-        var quat: simd_quatf = simd_quatf(orientation)
-        quat = quat.normalized
-        orientation = simd_quatf.toMatrix(quat)
+//        var quat: simd_quatf = simd_quatf(orientation)
+//        quat = quat.normalized
+//        orientation = simd_quatf.toMatrix(quat)
         
-        invOrientation = orientation.transpose
+        invOrientation = orientation.inverse
     }
     func updateInvInertiaTensor() {
         globalInvInertiaTensor = orientation * localInvInertiaTensor * invOrientation
@@ -171,6 +171,10 @@ class RigidBody: Node {
     func addForce(force: simd_float3, at: simd_float3) {
         forceAccumulator += force
         torqueAccumulator += cross((at - localCenterOfMass), force)
+    }
+    
+    func addAngularForce(force: simd_float3) {
+        torqueAccumulator += force
     }
     
     override func tick(_ deltaTime: Float) {
