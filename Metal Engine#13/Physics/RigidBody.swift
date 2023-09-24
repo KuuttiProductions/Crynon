@@ -117,11 +117,11 @@ class RigidBody: Node {
     func globalToLocal(point: simd_float3)-> simd_float3 {
         return invOrientation * (point - position)
     }
-    func localToGlobalVec(vec: simd_float3)-> simd_float3 {
-        return orientation * vec
+    func localToGlobalDir(dir: simd_float3)-> simd_float3 {
+        return orientation * dir
     }
-    func globalToLocalVec(vec: simd_float3)-> simd_float3 {
-        return invOrientation * vec
+    func globalToLocalDir(dir: simd_float3)-> simd_float3 {
+        return invOrientation * dir
     }
     
     func updateGlobalCenterOfMassFromPosition() {
@@ -131,9 +131,9 @@ class RigidBody: Node {
         setPos(orientation * (-localCenterOfMass) + globalCenterOfMass)
     }
     func updateOrientation() {
-//        var quat: simd_quatf = simd_quatf(orientation)
-//        quat = quat.normalized
-//        orientation = simd_quatf.toMatrix(quat)
+        var quat: simd_quatf = simd_quatf(orientation)
+        quat = quat.normalized
+        orientation = matrix_float3x3(quat)
         
         invOrientation = orientation.inverse
     }
@@ -143,6 +143,7 @@ class RigidBody: Node {
     
     func addCollider(_ collider: Collider) {
         colliders.append(collider)
+        collider.body = self
         
         localCenterOfMass = simd_float3()
         mass = 0

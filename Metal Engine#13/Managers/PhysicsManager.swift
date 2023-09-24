@@ -19,6 +19,7 @@ class PhysicsManager {
                 object.forceAccumulator += object.mass * gravity
                 
                 object.linearVelocity += object.invMass * (object.forceAccumulator * deltaTime)
+                
                 object.angularVelocity += object.globalInvInertiaTensor * (object.torqueAccumulator * deltaTime)
                 if object.position.y < -10 {
                     object.linearVelocity = simd_float3(0, -(1/deltaTime) * object.position.y, 0)
@@ -29,7 +30,6 @@ class PhysicsManager {
                 let angle: Float = length(object.angularVelocity) * deltaTime
                 object.orientation = matrix_float3x3.rotation(axis: axis, angle: angle) * object.orientation
     
-                //object.invOrientation = object.orientation.inverse
                 object.updateOrientation()
                 object.setRot(simd_float3.rotationFromMatrix(object.orientation))
                 object.updatePositionFromGlobalCenterOfMass()
@@ -52,6 +52,24 @@ class PhysicsManager {
                 }
             }
         }
+    }
+    
+    func csoSupport(direction: simd_float3,
+                    colliderA: Collider,
+                    colliderB: Collider)-> simd_float3 {
+        let bodyA: RigidBody = colliderA.body
+        let bodyB: RigidBody = colliderB.body
+        
+        let localDirA = bodyA.globalToLocalDir(dir: direction)
+        let localDirB = bodyB.globalToLocalDir(dir: -direction)
+        
+        var supportA = colliderA.support(direction: localDirA)
+        var supportB = colliderB.support(direction: localDirB)
+        
+        supportA = bodyA.localToGlobal(point: supportA)
+        supportB = bodyB.localToGlobal(point: supportB)
+        
+        return supportA - supportB
     }
     
     func checkForAABBCollision(object1: RigidBody, object2: RigidBody)-> Bool {

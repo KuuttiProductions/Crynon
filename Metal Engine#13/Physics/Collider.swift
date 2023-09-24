@@ -6,6 +6,8 @@ class Collider {
     var localInertiaTensor: simd_float3x3!
     var localCenterOfMass: simd_float3!
     
+    var body: RigidBody!
+    
     init(_ useDebugValues: Bool = false) {
         if useDebugValues {
             self.mass = 1
@@ -17,5 +19,9 @@ class Collider {
             )
             self.localCenterOfMass = simd_float3(0, 0, 0)
         }
+    }
+    
+    func support(direction: simd_float3)-> simd_float3 {
+        return direction
     }
 }

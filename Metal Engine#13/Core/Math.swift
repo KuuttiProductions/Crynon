@@ -207,36 +207,6 @@ extension matrix_float3x3 {
     }
 }
 
-extension simd_quatf {
-    static func toMatrix(_ quat: simd_quatf)-> matrix_float3x3 {
-        var result = matrix_float3x3()
-        let x: Float = Float(quat.imag.x)
-        let y: Float = Float(quat.imag.y)
-        let z: Float = Float(quat.imag.z)
-        let w: Float = Float(quat.real)
-
-        let r1c1: Float = 1.0 - (2 * pow(y, 2)) - (2.0 * pow(z, 2.0))
-        let r1c2: Float = (2 * x * y) + (2 * z * w)
-        let r1c3: Float = (2 * x * z) - (2 * y * w)
-        
-        let r2c1: Float = (2 * x * y) - (2 * z * w)
-        let r2c2: Float = 1.0 - (2 * pow(x, 2)) - (2.0 * pow(z, 2.0))
-        let r2c3: Float = (2 * y * z) + (2 * x * w)
-        
-        let r3c1: Float = (2 * x * z) - (2 * y * w)
-        let r3c2: Float = (2 * y * z) - (2 * x * w)
-        let r3c3: Float = 1.0 - (2 * pow(x, 2)) - (2.0 * pow(y, 2.0))
-        
-        result.columns = (
-            simd_float3(r1c1, r1c2, r1c3),
-            simd_float3(r2c1, r2c2, r2c3),
-            simd_float3(r3c1, r3c2, r3c3)
-        )
-        
-        return result.transpose
-    }
-}
-
 extension simd_float3 {
     static func rotationFromMatrix(_ matrix: simd_float3x3)-> simd_float3 {
         let trace = matrix[0][0] + matrix[1][1] + matrix[2][2]
