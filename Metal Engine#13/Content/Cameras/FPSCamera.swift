@@ -41,7 +41,7 @@ class FPSCamera: Camera {
         }
         
         //Changing FOV with scroll
-        self.fieldOfView += InputManager.getScrollDeltaY() * deltaTime * moveSpeed
+        self.fieldOfView = max(min(self.fieldOfView + InputManager.getScrollDeltaY() * deltaTime * 10, 130), 20)
         
         //Movement and rotation with Controller
         self.addRotY(InputManager.controllerRX * deltaTime * moveSpeed)

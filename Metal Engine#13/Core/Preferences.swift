@@ -8,7 +8,7 @@ class Preferences {
     public static var signedPixelFormat: MTLPixelFormat = .rgba8Snorm
     public static var depthFormat: MTLPixelFormat = .depth32Float
     public static var clearColor: MTLClearColor = MTLClearColor(red: 0.3, green: 0.5, blue: 1.0, alpha: 1.0)
-    public static var preferredFPS: Int = 40
+    public static var preferredFPS: Int = 30
     public static var useSkySphere: Bool = true
     public static var fogAmount: Float = 0.0
 }

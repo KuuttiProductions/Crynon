@@ -21,7 +21,7 @@ class PhysicsManager {
                 object.linearVelocity += object.invMass * (object.forceAccumulator * deltaTime)
                 
                 object.angularVelocity += object.globalInvInertiaTensor * (object.torqueAccumulator * deltaTime)
-                if object.position.y < -10 {
+                if object.position.y < 0 {
                     object.linearVelocity = simd_float3(0, -(1/deltaTime) * object.position.y, 0)
                 }
                 
@@ -46,9 +46,16 @@ class PhysicsManager {
                 let object1 = _physicsObjects[i]
                 let object2 = _physicsObjects[u]
                 
-                if checkForAABBCollision(object1: object1, object2: object2) {
+//                if checkForAABBCollision(object1: object1, object2: object2) {
+//                    object1.isColliding = true
+//                    object2.isColliding = true
+//                }
+                let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
+                if gjk.overlap {
                     object2.linearVelocity = simd_float3()
                     object2.forceAccumulator = -gravity
+                    object1.isColliding = true
+                    object2.isColliding = true
                 }
             }
         }
@@ -56,7 +63,9 @@ class PhysicsManager {
     
     func csoSupport(direction: simd_float3,
                     colliderA: Collider,
-                    colliderB: Collider)-> simd_float3 {
+                    colliderB: Collider)-> (support: simd_float3,
+                                            supportA: simd_float3,
+                                            supportB: simd_float3) {
         let bodyA: RigidBody = colliderA.body
         let bodyB: RigidBody = colliderB.body
         
@@ -69,15 +78,13 @@ class PhysicsManager {
         supportA = bodyA.localToGlobal(point: supportA)
         supportB = bodyB.localToGlobal(point: supportB)
         
-        return supportA - supportB
+        return (supportA - supportB, supportA, supportB)
     }
     
     func checkForAABBCollision(object1: RigidBody, object2: RigidBody)-> Bool {
         if object1.aabbMin.y <= object2.aabbMax.y && object1.aabbMax.y >= object2.aabbMin.y {
             if object1.aabbMin.x <= object2.aabbMax.x && object1.aabbMax.x >= object2.aabbMin.x {
                 if object1.aabbMin.z <= object2.aabbMax.z && object1.aabbMax.z >= object2.aabbMin.z {
-                    object1.isColliding = true
-                    object2.isColliding = true
                     return true
                 }
             }
@@ -133,5 +140,95 @@ class PhysicsManager {
         }
         
         return (hit, didHit)
+    }
+}
+
+extension PhysicsManager {
+    func GJK(colliderA: Collider, colliderB: Collider)-> (overlap: Bool, simplex: [simd_float3]) {
+        var simplex: [simd_float3] = []
+        var result: Bool = false
+        
+        func handleSimplex()-> Bool {
+            switch simplex.count {
+            case 2:
+                let a: simd_float3 = simplex[1]
+                let b: simd_float3 = simplex[0]
+                let vAb = b - a
+                let vAo = -a
+                if distance(a, b) == distance(a, simd_float3(0, 0, 0)) + distance(b, simd_float3(0, 0, 0)) {
+                    return true
+                }
+                dir = normalize(cross(cross(vAb, vAo), vAb))
+                return false
+            case 3:
+                let a: simd_float3 = simplex[2]
+                let b: simd_float3 = simplex[1]
+                let c: simd_float3 = simplex[0]
+                let vAb = b - a
+                let vAc = c - a
+                let vAo = -a
+                let vAbPerp = normalize(cross(cross(vAc, vAb), vAb))
+                let vAcPerp = normalize(cross(cross(vAb, vAc), vAc))
+                
+                var normal = cross(b-a, c-a)
+                if dot(normal, vAo) < 0 { normal *= -1 }
+                if dot(vAbPerp, vAo) > 0 {
+                    dir = normal
+                    return false
+                } else if dot(vAcPerp, vAo) > 0 {
+                    dir = normal
+                    return false
+                }
+                return true
+            case 4:
+                let a: simd_float3 = simplex[3]
+                let b: simd_float3 = simplex[2]
+                let c: simd_float3 = simplex[1]
+                let d: simd_float3 = simplex[0]
+                
+                let ab: simd_float3 = b - a
+                let ac: simd_float3 = c - a
+                let ad: simd_float3 = d - a
+                let vAo = -a
+                
+                if dot(cross(ab, ac), vAo) > 0 {
+                    var dir = cross(ab, ac)
+                    simplex.remove(at: 0)
+                    return false
+                } else if dot(cross(ab, ad), vAo) > 0 {
+                    dir = cross(ab, ad)
+                    simplex.remove(at: 1)
+                    return false
+                } else if dot(cross(ad, ac), vAo) > 0 {
+                    dir = cross(ad, ac)
+                    simplex.remove(at: 2)
+                    return false
+                }
+                return true
+            default:
+                fatalError("Simplex in more than 3 dimensions!")
+            }
+        }
+        
+        let initialDirection = normalize(colliderB.body.globalCenterOfMass - colliderA.body.globalCenterOfMass)
+        let initialPoint = csoSupport(direction: initialDirection, colliderA: colliderA, colliderB: colliderB).support
+        simplex.append(initialPoint)
+        
+        var dir = normalize(-simplex[0])
+        
+        for _ in 0...99 {
+            let support = csoSupport(direction: dir, colliderA: colliderA, colliderB: colliderB).support
+            if dot(support, dir) < 0 {
+                break
+            }
+            simplex.append(support)
+
+            if handleSimplex() {
+                result = true
+                break
+            }
+        }
+        
+        return (result, simplex)
     }
 }
