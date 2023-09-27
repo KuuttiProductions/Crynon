@@ -10,4 +10,5 @@ struct Material {
     var textureRoughness: String = ""
     var shader: RenderPipelineStateType = .Geometry
     var blendMode: BlendMode = .Opaque
+    var visible: Bool = true
 }

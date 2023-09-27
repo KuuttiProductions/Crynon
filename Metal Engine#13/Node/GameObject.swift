@@ -12,7 +12,7 @@ class GameObject: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if material.blendMode == Renderer.currentBlendMode {
+        if material.blendMode == Renderer.currentBlendMode && material.visible {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteLess : .Less])

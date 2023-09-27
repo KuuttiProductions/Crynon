@@ -9,17 +9,6 @@ struct ContentView: View {
     var body: some View {
         VStack {
             GameView()
-                .onAppear() {
-                    updateColorScheme()
-                }
-        }
-    }
-    
-    func updateColorScheme() {
-        if colorMode == .light {
-            Preferences.clearColor = MTLClearColor(red: 0, green: 0.2, blue: 1.0, alpha: 1.0)
-        } else if colorMode == .dark {
-            Preferences.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
         }
     }
 }

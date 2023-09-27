@@ -61,18 +61,6 @@ class FPSCamera: Camera {
             InputManager.playTransientHaptic(InputManager.controllerTriggerR/7, .rightTrigger)
         }
         
-        if InputManager.pressedKeys.contains(.keyE) {
-            let end = self.position + self.forwardVector
-            let x = getScene().physicsManager.rayCast(origin: self.position, end: end, distance: 10)
-            if x.didHit {
-                PointAndLine.hasClicked = true
-                PointAndLine.point = x.result!.position
-                PointAndLine.point2 = x.result!.position + x.result!.normal
-            } else {
-                PointAndLine.hasClicked = false
-            }
-        }
-        
         super.tick(deltaTime)
     }
 }

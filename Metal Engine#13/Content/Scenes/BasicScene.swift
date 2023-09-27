@@ -82,6 +82,8 @@ class BasicScene: Scene {
         camera.setPosZ(5)
         physics.setPos(0, 0, -3, teleport: true)
         physics2.setPos(0.2, 3, -3.1, teleport: true)
+        physics.debug_drawCollisionState = true
+        physics2.debug_drawCollisionState = true
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)
         light.setPosY(1)
@@ -91,6 +93,7 @@ class BasicScene: Scene {
         light.lightData.color = simd_float4(0, 1, 1, 1)
         spotlight.setPos(-15, 3, 0)
         spotlight.lightData.color = simd_float4(1,0,0,1)
+        floor.material.visible = false
     }
     
     override func tick(_ deltaTime: Float) {

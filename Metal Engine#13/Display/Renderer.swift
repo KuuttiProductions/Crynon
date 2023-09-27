@@ -104,7 +104,6 @@ class Renderer: NSObject {
         
         //Sets the emissive value to 1, so that the sky won't be shaded.
         deferredRenderPassDescriptor.colorAttachments[5].clearColor = MTLClearColor(red: 0, green: 0, blue: 1, alpha: 0)
-        
         deferredRenderPassDescriptor.tileWidth = optimalTileSize.width
         deferredRenderPassDescriptor.tileHeight = optimalTileSize.height
         deferredRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.InitTransparency].imageblockSampleLength

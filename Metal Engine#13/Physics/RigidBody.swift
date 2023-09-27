@@ -31,6 +31,11 @@ class RigidBody: Node {
     var isActive: Bool = true
     var isColliding: Bool = false
     
+    //Debug
+    var debug_drawAABB: Bool = false
+    var debug_drawCollisionState: Bool = false
+    var debug_simplex: [simd_float3] = []
+    
     //End of physics variables
     var material: Material = Material()
     
@@ -112,16 +117,16 @@ class RigidBody: Node {
     }
     
     func localToGlobal(point: simd_float3)-> simd_float3 {
-        return orientation * point + position
+        return invOrientation * point + position
     }
     func globalToLocal(point: simd_float3)-> simd_float3 {
-        return invOrientation * (point - position)
+        return orientation * (point - position)
     }
     func localToGlobalDir(dir: simd_float3)-> simd_float3 {
-        return orientation * dir
+        return invOrientation * dir
     }
     func globalToLocalDir(dir: simd_float3)-> simd_float3 {
-        return invOrientation * dir
+        return orientation * dir
     }
     
     func updateGlobalCenterOfMassFromPosition() {
@@ -249,7 +254,7 @@ class RigidBody: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if isActive {
+        if isActive && debug_drawCollisionState {
             if isColliding {
                 self.material.shaderMaterial.color = simd_float4(1, 0, 0, 1)
             } else {
@@ -257,7 +262,7 @@ class RigidBody: Node {
             }
         }
 
-        if material.blendMode == Renderer.currentBlendMode {
+        if material.blendMode == Renderer.currentBlendMode && material.visible {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteAlways : .Less])
@@ -267,8 +272,20 @@ class RigidBody: Node {
             AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
         }
         
-        PointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
-        PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
+        if debug_drawAABB {
+            PointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
+            PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
+        }
+        if isActive {
+            for collider in colliders {
+                var points: [simd_float3] = []
+                for vertex in collider.vertices {
+                    points.append(localToGlobal(point: vertex))
+                }
+                PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: points, color: material.shaderMaterial.color)
+            }
+        }
+        if !debug_simplex.isEmpty { PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: debug_simplex, color: simd_float4(0, 0, 1, 1)) }
         super.render(renderCommandEncoder)
     }
     

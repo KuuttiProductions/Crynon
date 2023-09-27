@@ -7,6 +7,8 @@ class PhysicsManager {
     private var _colliders: [Collider] = []
     private var gravity: simd_float3 = simd_float3(0, -9.81, 0)
     
+    private var debug_gjkStepCount: Int = 1
+    
     func addPhysicsObject(object: RigidBody) {
         _physicsObjects.append(object)
     }
@@ -15,7 +17,7 @@ class PhysicsManager {
         for object in _physicsObjects {
             object.isColliding = false
             
-            if object.isActive {
+            if object.isActive && InputManager.pressedKeys.contains(.keyG) {
                 object.forceAccumulator += object.mass * gravity
                 
                 object.linearVelocity += object.invMass * (object.forceAccumulator * deltaTime)
@@ -56,7 +58,8 @@ class PhysicsManager {
                     object2.forceAccumulator = -gravity
                     object1.isColliding = true
                     object2.isColliding = true
-                }
+                    object1.debug_simplex = gjk.simplex
+                } else { object1.debug_simplex = [] }
             }
         }
     }
@@ -153,9 +156,10 @@ extension PhysicsManager {
             case 2:
                 let a: simd_float3 = simplex[1]
                 let b: simd_float3 = simplex[0]
+                let o: simd_float3 = simd_float3(0, 0, 0)
                 let vAb = b - a
                 let vAo = -a
-                if distance(a, b) == distance(a, simd_float3(0, 0, 0)) + distance(b, simd_float3(0, 0, 0)) {
+                if distance(a, b) == distance(a, o) + distance(b, o) {
                     return true
                 }
                 dir = normalize(cross(cross(vAb, vAo), vAb))
@@ -170,12 +174,14 @@ extension PhysicsManager {
                 let vAbPerp = normalize(cross(cross(vAc, vAb), vAb))
                 let vAcPerp = normalize(cross(cross(vAb, vAc), vAc))
                 
-                var normal = cross(b-a, c-a)
+                var normal = normalize(cross(b-a, c-a))
                 if dot(normal, vAo) < 0 { normal *= -1 }
+                
                 if dot(vAbPerp, vAo) > 0 {
                     dir = normal
                     return false
-                } else if dot(vAcPerp, vAo) > 0 {
+                }
+                if dot(vAcPerp, vAo) > 0 {
                     dir = normal
                     return false
                 }
@@ -190,17 +196,17 @@ extension PhysicsManager {
                 let ac: simd_float3 = c - a
                 let ad: simd_float3 = d - a
                 let vAo = -a
-                
+
                 if dot(cross(ab, ac), vAo) > 0 {
-                    var dir = cross(ab, ac)
+                    dir = normalize(cross(ab, ac))
                     simplex.remove(at: 0)
                     return false
                 } else if dot(cross(ab, ad), vAo) > 0 {
-                    dir = cross(ab, ad)
+                    dir = normalize(cross(ab, ad))
                     simplex.remove(at: 1)
                     return false
                 } else if dot(cross(ad, ac), vAo) > 0 {
-                    dir = cross(ad, ac)
+                    dir = normalize(cross(ad, ac))
                     simplex.remove(at: 2)
                     return false
                 }
@@ -228,7 +234,7 @@ extension PhysicsManager {
                 break
             }
         }
-        
+
         return (result, simplex)
     }
 }
