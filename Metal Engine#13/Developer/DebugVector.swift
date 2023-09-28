@@ -56,14 +56,13 @@ class Debug_Vector {
         material.shaderMaterial.emission = emissive ? 1.0 : 0.0
         
         let scale = simd_float3(1, length, 1)
-        let rotation = angle
         
         var modelMatrix: matrix_float4x4 {
             var modelMatrix = matrix_identity_float4x4
             modelMatrix.translate(position: origin)
-            modelMatrix.rotate(direction: rotation.x, axis: .AxisX)
-            modelMatrix.rotate(direction: rotation.y, axis: .AxisY)
-            modelMatrix.rotate(direction: rotation.z, axis: .AxisZ)
+            modelMatrix.rotate(direction: angle.x, axis: .AxisX)
+            modelMatrix.rotate(direction: angle.y, axis: .AxisY)
+            modelMatrix.rotate(direction: angle.z, axis: .AxisZ)
             modelMatrix.scale(scale)
             return modelMatrix
         }

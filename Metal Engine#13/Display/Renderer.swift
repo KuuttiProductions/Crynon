@@ -169,14 +169,12 @@ extension Renderer: MTKViewDelegate {
         DeferredRenderCommandEncoder?.pushDebugGroup("Opaque fill")
         Renderer.currentBlendMode = .Opaque
         SceneManager.render(DeferredRenderCommandEncoder)
+        Debug.pointAndLine.drawFrame(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Alpha fill")
         Renderer.currentBlendMode = .Alpha
         SceneManager.render(DeferredRenderCommandEncoder)
-        DeferredRenderCommandEncoder?.popDebugGroup()
-        
-        Debug.pointAndLine.drawFrame(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Lighting")

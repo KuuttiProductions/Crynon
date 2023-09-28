@@ -81,14 +81,10 @@ class Debug_PointAndLine {
     
     var point: simd_float3 = simd_float3()
     var point2: simd_float3 = simd_float3()
-    var hasClicked: Bool = false
     
     func drawFrame(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if hasClicked {
-            renderCommandEncoder.pushDebugGroup("Rendering PointAndLine")
-            drawLine(renderCommandEncoder: renderCommandEncoder, position1: point, position2: point2, color: simd_float4(0,1,0,1))
-            drawPoints(renderCommandEncoder: renderCommandEncoder, positions: [point, point2], color: simd_float4(1,0,1,1), pointSize: 20)
-            renderCommandEncoder.popDebugGroup()
-        }
+        renderCommandEncoder.pushDebugGroup("Rendering PointAndLine")
+        drawLine(renderCommandEncoder: renderCommandEncoder, position1: simd_float3(0, 0, 0), position2: point2, color: simd_float4(1,1,1,1))
+        renderCommandEncoder.popDebugGroup()
     }
 }

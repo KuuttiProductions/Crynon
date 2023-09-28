@@ -101,7 +101,10 @@ class Node {
 }
 
 extension Node {
-    var forwardVector: simd_float3 { return normalize(simd_float3(sin(rotation.y), -sin(rotation.x), -cos(rotation.y))) }
+    var forwardVector: simd_float3 { return normalize(simd_float3(
+        sin(rotation.y) * cos(rotation.x),
+        -sin(rotation.x),
+        -cos(rotation.y) * cos(rotation.x))) }
     var rightVector: simd_float3 { return  normalize(simd_float3(sin(rotation.y + Float.pi*0.5), 0, -cos(rotation.y + Float.pi*0.5))) }
 }
 
