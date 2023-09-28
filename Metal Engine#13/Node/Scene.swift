@@ -42,7 +42,7 @@ class Scene: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        renderCommandEncoder.pushDebugGroup("Renderwork on \(name!)")
+        renderCommandEncoder.pushDebugGroup("Rendering scene: \(name!)")
         renderCommandEncoder.setVertexBytes(&vertexSceneConstant, length: VertexSceneConstant.stride, index: 2)
         renderCommandEncoder.setFragmentBytes(&fragmentSceneConstant, length: FragmentSceneConstant.stride, index: 2)
         renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["ShadowMap1"], index: 0)

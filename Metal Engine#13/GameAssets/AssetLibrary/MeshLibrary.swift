@@ -6,6 +6,7 @@ enum MeshType {
     case Cube
     case Sphere
     case Metamesh
+    case Vector
 }
 
 class MeshLibrary: Library<MeshType, Mesh> {
@@ -18,6 +19,7 @@ class MeshLibrary: Library<MeshType, Mesh> {
         _library.updateValue(meshLoader.loadNormalMesh("Cube"), forKey: .Cube)
         _library.updateValue(meshLoader.loadNormalMesh("Sphere"), forKey: .Sphere)
         _library.updateValue(meshLoader.loadNormalMesh("Metamesh"), forKey: .Metamesh)
+        _library.updateValue(meshLoader.loadNormalMesh("Vector"), forKey: .Vector)
     }
     
     override subscript(type: MeshType) -> Mesh! {

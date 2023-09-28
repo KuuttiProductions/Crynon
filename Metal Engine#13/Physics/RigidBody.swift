@@ -254,38 +254,38 @@ class RigidBody: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if isActive && debug_drawCollisionState {
-            if isColliding {
-                self.material.shaderMaterial.color = simd_float4(1, 0, 0, 1)
-            } else {
-                self.material.shaderMaterial.color = simd_float4(0, 1, 0, 1)
-            }
-        }
-
+        renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
         if material.blendMode == Renderer.currentBlendMode && material.visible {
-            renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
+            if isActive && debug_drawCollisionState {
+                if isColliding {
+                    self.material.shaderMaterial.color = simd_float4(1, 0, 0, 1)
+                } else {
+                    self.material.shaderMaterial.color = simd_float4(0, 1, 0, 1)
+                }
+            }
+
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteAlways : .Less])
             renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
             renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureColor], index: 3)
             renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
             AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
-        }
-        
-        if debug_drawAABB {
-            PointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
-            PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
-        }
-        if isActive {
-            for collider in colliders {
-                var points: [simd_float3] = []
-                for vertex in collider.vertices {
-                    points.append(localToGlobal(point: vertex))
-                }
-                PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: points, color: material.shaderMaterial.color)
+            
+            if debug_drawAABB {
+                PointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
+                PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
             }
+            if isActive {
+                for collider in colliders {
+                    var points: [simd_float3] = []
+                    for vertex in collider.vertices {
+                        points.append(localToGlobal(point: vertex))
+                    }
+                    PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: points, color: material.shaderMaterial.color)
+                }
+            }
+            if !debug_simplex.isEmpty { PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: debug_simplex, color: simd_float4(0, 0, 1, 1)) }
         }
-        if !debug_simplex.isEmpty { PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: debug_simplex, color: simd_float4(0, 0, 1, 1)) }
         super.render(renderCommandEncoder)
     }
     

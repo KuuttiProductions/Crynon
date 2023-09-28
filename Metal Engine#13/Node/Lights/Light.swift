@@ -31,4 +31,6 @@ class Light: Node {
         viewMatrix.translate(position: -position)
         return viewMatrix
     }
+    
+    override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {}
 }

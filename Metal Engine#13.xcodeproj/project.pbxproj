@@ -79,6 +79,9 @@
 		51CC12902A6AC70C00B7C960 /* rng.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC128E2A6AC70C00B7C960 /* rng.metal */; };
 		51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */; };
 		51CDDDF42A8D3119003B6F2D /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51CDDDF32A8D3119003B6F2D /* Sphere.obj */; };
+		51D29B212AC54918008A49A4 /* Vector.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51D29B1F2AC54918008A49A4 /* Vector.obj */; };
+		51D29B222AC54918008A49A4 /* Vector.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51D29B202AC54918008A49A4 /* Vector.mtl */; };
+		51D29B242AC54973008A49A4 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D29B232AC54973008A49A4 /* Debug.swift */; };
 		51D2F2D82A93B26100F82ACB /* AmbientOcclusion.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51D2F2D72A93B26100F82ACB /* AmbientOcclusion.metal */; };
 /* End PBXBuildFile section */
 
@@ -158,6 +161,9 @@
 		51CC128E2A6AC70C00B7C960 /* rng.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = rng.metal; sourceTree = "<group>"; };
 		51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = JitterTextureShader.metal; sourceTree = "<group>"; };
 		51CDDDF32A8D3119003B6F2D /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.obj; sourceTree = "<group>"; };
+		51D29B1F2AC54918008A49A4 /* Vector.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vector.obj; sourceTree = "<group>"; };
+		51D29B202AC54918008A49A4 /* Vector.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vector.mtl; sourceTree = "<group>"; };
+		51D29B232AC54973008A49A4 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		51D2F2D72A93B26100F82ACB /* AmbientOcclusion.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = AmbientOcclusion.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -376,6 +382,8 @@
 		516E06F42A6D9F510011D18E /* Meshes */ = {
 			isa = PBXGroup;
 			children = (
+				51D29B202AC54918008A49A4 /* Vector.mtl */,
+				51D29B1F2AC54918008A49A4 /* Vector.obj */,
 				51CDDDF32A8D3119003B6F2D /* Sphere.obj */,
 				51819C8C2A8A771B00A17FC3 /* Sphere.mtl */,
 				516E9CB72A7D69C300813B8C /* Cube.obj */,
@@ -401,6 +409,7 @@
 			isa = PBXGroup;
 			children = (
 				516E9CBD2A7D6FE500813B8C /* PointAndLine.swift */,
+				51D29B232AC54973008A49A4 /* Debug.swift */,
 			);
 			path = Developer;
 			sourceTree = "<group>";
@@ -526,7 +535,9 @@
 				516E06F72A6D9FC10011D18E /* Wallpaper.jpeg in Resources */,
 				51AFC9852A80E38C00AC3CFF /* Grass.png in Resources */,
 				516E9CB82A7D69C300813B8C /* Cube.obj in Resources */,
+				51D29B212AC54918008A49A4 /* Vector.obj in Resources */,
 				5174AC332A8909F700777778 /* OceanSky.png in Resources */,
+				51D29B222AC54918008A49A4 /* Vector.mtl in Resources */,
 				51641C772A2DFA2600F5A16E /* Cube.mtl in Resources */,
 				51AFC9872A81034A00AC3CFF /* Window.png in Resources */,
 				512FFD592A66B965001987A0 /* Metamesh.mtl in Resources */,
@@ -573,6 +584,7 @@
 				518323EE2A691E5C00D171FA /* Shadows.metal in Sources */,
 				51BA0D252A641F1700A88604 /* PhongShading.metal in Sources */,
 				516D5A332A79264100AA1CD4 /* RigidBody.swift in Sources */,
+				51D29B242AC54973008A49A4 /* Debug.swift in Sources */,
 				516E06F92A6E90B40011D18E /* TextureLoader.swift in Sources */,
 				51D2F2D82A93B26100F82ACB /* AmbientOcclusion.metal in Sources */,
 				516E9CBA2A7D6AEE00813B8C /* PointAndLineShaders.metal in Sources */,
@@ -736,7 +748,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2001;
+				CURRENT_PROJECT_VERSION = 2032;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -771,7 +783,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2001;
+				CURRENT_PROJECT_VERSION = 2032;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
