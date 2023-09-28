@@ -23,5 +23,7 @@ class Core : ObservableObject {
         InputManager.initialize()
         
         SceneManager.initialize()
+        
+        Debug.initialize()
     }
 }

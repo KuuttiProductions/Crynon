@@ -35,6 +35,8 @@ class RigidBody: Node {
     var debug_drawAABB: Bool = false
     var debug_drawCollisionState: Bool = false
     var debug_simplex: [simd_float3] = []
+    var debug_x: Float = 0
+    var debug_y: Float = 0
     
     //End of physics variables
     var material: Material = Material()
@@ -185,7 +187,7 @@ class RigidBody: Node {
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
-        
+
         if name == "physics2" {
             if InputManager.mouseLeftButton {
                 self.addForce(force: simd_float3(0, 20, 0), at: simd_float3(0, 0, 0))
@@ -272,19 +274,20 @@ class RigidBody: Node {
             AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
             
             if debug_drawAABB {
-                PointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
-                PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
+                Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
+                Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
             }
+            Debug.vector.drawVector(renderCommandEncoder: renderCommandEncoder, angle: self.rotation, length: 3, color: simd_float4(1, 1, 0, 1))
             if isActive {
                 for collider in colliders {
                     var points: [simd_float3] = []
                     for vertex in collider.vertices {
                         points.append(localToGlobal(point: vertex))
                     }
-                    PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: points, color: material.shaderMaterial.color)
+                    Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: points, color: material.shaderMaterial.color)
                 }
             }
-            if !debug_simplex.isEmpty { PointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: debug_simplex, color: simd_float4(0, 0, 1, 1)) }
+            if !debug_simplex.isEmpty { Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: debug_simplex, color: simd_float4(0, 0, 1, 1)) }
         }
         super.render(renderCommandEncoder)
     }

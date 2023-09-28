@@ -104,13 +104,11 @@ class InputManager {
     
     public static func getScrollDeltaX()-> Float {
         let deltaX = scrollDeltaX
-        scrollDeltaX = 0.0
         return deltaX
     }
     
     public static func getScrollDeltaY()-> Float {
         let deltaY = scrollDeltaY
-        scrollDeltaX = 0.0
         return deltaY
     }
 

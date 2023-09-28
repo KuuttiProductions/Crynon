@@ -1,8 +1,8 @@
 
 import MetalKit
 
-class PointAndLine {
-    static func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1), pointSize: Float = 10) {
+class Debug_PointAndLine {
+    func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1), pointSize: Float = 10) {
         var points: [PointVertex] = []
         var color: simd_float4 = color
         for position in positions {
@@ -16,7 +16,7 @@ class PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    static func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
+    func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
         var points = points
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering \(points.count) points")
@@ -27,7 +27,7 @@ class PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    static func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1)) {
+    func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1)) {
         var points: [PointVertex] = []
         for position in positions {
             points.append(PointVertex(position: position))
@@ -41,7 +41,7 @@ class PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    static func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
+    func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
         var points = points
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
@@ -52,7 +52,7 @@ class PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    static func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, point1: PointVertex, point2: PointVertex, color: simd_float4 = simd_float4(1,1,1,1)) {
+    func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, point1: PointVertex, point2: PointVertex, color: simd_float4 = simd_float4(1,1,1,1)) {
         var points: [PointVertex] = [point1, point2]
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
@@ -63,7 +63,7 @@ class PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    static func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, position1: simd_float3, position2: simd_float3, color: simd_float4 = simd_float4(1,1,1,1)) {
+    func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, position1: simd_float3, position2: simd_float3, color: simd_float4 = simd_float4(1,1,1,1)) {
         var points: [PointVertex] = [PointVertex(position: position1), PointVertex(position: position2)]
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
@@ -74,16 +74,16 @@ class PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    static func setDefaults(_ renderCommandEncoder: MTLRenderCommandEncoder) {
+    func setDefaults(_ renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
     }
     
-    static var point: simd_float3 = simd_float3()
-    static var point2: simd_float3 = simd_float3()
-    static var hasClicked: Bool = false
+    var point: simd_float3 = simd_float3()
+    var point2: simd_float3 = simd_float3()
+    var hasClicked: Bool = false
     
-    static func drawFrame(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+    func drawFrame(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         if hasClicked {
             renderCommandEncoder.pushDebugGroup("Rendering PointAndLine")
             drawLine(renderCommandEncoder: renderCommandEncoder, position1: point, position2: point2, color: simd_float4(0,1,0,1))

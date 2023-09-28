@@ -46,7 +46,7 @@
 		516E06F92A6E90B40011D18E /* TextureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E06F82A6E90B40011D18E /* TextureLoader.swift */; };
 		516E9CB82A7D69C300813B8C /* Cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = 516E9CB72A7D69C300813B8C /* Cube.obj */; };
 		516E9CBA2A7D6AEE00813B8C /* PointAndLineShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 516E9CB92A7D6AEE00813B8C /* PointAndLineShaders.metal */; };
-		516E9CBE2A7D6FE500813B8C /* PointAndLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E9CBD2A7D6FE500813B8C /* PointAndLine.swift */; };
+		516E9CBE2A7D6FE500813B8C /* DebugPointAndLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516E9CBD2A7D6FE500813B8C /* DebugPointAndLine.swift */; };
 		51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */; };
 		5174AC332A8909F700777778 /* OceanSky.png in Resources */ = {isa = PBXBuildFile; fileRef = 5174AC322A8909F700777778 /* OceanSky.png */; };
 		5174AC352A890DDE00777778 /* SkyShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5174AC342A890DDE00777778 /* SkyShaders.metal */; };
@@ -83,6 +83,7 @@
 		51D29B222AC54918008A49A4 /* Vector.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51D29B202AC54918008A49A4 /* Vector.mtl */; };
 		51D29B242AC54973008A49A4 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D29B232AC54973008A49A4 /* Debug.swift */; };
 		51D2F2D82A93B26100F82ACB /* AmbientOcclusion.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51D2F2D72A93B26100F82ACB /* AmbientOcclusion.metal */; };
+		51E9C3AE2AC5C6230007D827 /* DebugVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E9C3AD2AC5C6230007D827 /* DebugVector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -127,7 +128,7 @@
 		516E06F82A6E90B40011D18E /* TextureLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureLoader.swift; sourceTree = "<group>"; };
 		516E9CB72A7D69C300813B8C /* Cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.obj; sourceTree = "<group>"; };
 		516E9CB92A7D6AEE00813B8C /* PointAndLineShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PointAndLineShaders.metal; sourceTree = "<group>"; };
-		516E9CBD2A7D6FE500813B8C /* PointAndLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAndLine.swift; sourceTree = "<group>"; };
+		516E9CBD2A7D6FE500813B8C /* DebugPointAndLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugPointAndLine.swift; sourceTree = "<group>"; };
 		51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshLibrary.swift; sourceTree = "<group>"; };
 		5174AC322A8909F700777778 /* OceanSky.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OceanSky.png; sourceTree = "<group>"; };
 		5174AC342A890DDE00777778 /* SkyShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SkyShaders.metal; sourceTree = "<group>"; };
@@ -165,6 +166,7 @@
 		51D29B202AC54918008A49A4 /* Vector.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vector.mtl; sourceTree = "<group>"; };
 		51D29B232AC54973008A49A4 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		51D2F2D72A93B26100F82ACB /* AmbientOcclusion.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = AmbientOcclusion.metal; sourceTree = "<group>"; };
+		51E9C3AD2AC5C6230007D827 /* DebugVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugVector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -408,8 +410,9 @@
 		516E9CBC2A7D6FD100813B8C /* Developer */ = {
 			isa = PBXGroup;
 			children = (
-				516E9CBD2A7D6FE500813B8C /* PointAndLine.swift */,
 				51D29B232AC54973008A49A4 /* Debug.swift */,
+				516E9CBD2A7D6FE500813B8C /* DebugPointAndLine.swift */,
+				51E9C3AD2AC5C6230007D827 /* DebugVector.swift */,
 			);
 			path = Developer;
 			sourceTree = "<group>";
@@ -599,13 +602,14 @@
 				51126EA92A8263B100B1630E /* TransparentShaders.metal in Sources */,
 				518323EC2A690F8B00D171FA /* ShadowShader.metal in Sources */,
 				518E4E782A2B096E007A7C83 /* Node.swift in Sources */,
-				516E9CBE2A7D6FE500813B8C /* PointAndLine.swift in Sources */,
+				516E9CBE2A7D6FE500813B8C /* DebugPointAndLine.swift in Sources */,
 				51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */,
 				51BA0D282A6440FB00A88604 /* FPSCamera.swift in Sources */,
 				51641C712A2DF9AA00F5A16E /* MeshLoader.swift in Sources */,
 				5151F22A2A88BAB7002EBF4E /* GeometryShaders.metal in Sources */,
 				518E4E812A2B56E1007A7C83 /* TestObject.swift in Sources */,
 				513C1F4C2A28E32D003155B0 /* VertexShaderLibrary.swift in Sources */,
+				51E9C3AE2AC5C6230007D827 /* DebugVector.swift in Sources */,
 				511B6C052A27A9C70067AEBF /* MetalTypes.swift in Sources */,
 				51641C792A2E0AF700F5A16E /* DepthStencilStateLibrary.swift in Sources */,
 				5184F60A2A7E651300EFF10E /* Spotlight.swift in Sources */,
@@ -748,7 +752,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2032;
+				CURRENT_PROJECT_VERSION = 2079;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -783,7 +787,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2032;
+				CURRENT_PROJECT_VERSION = 2079;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

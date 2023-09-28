@@ -176,7 +176,7 @@ extension Renderer: MTKViewDelegate {
         SceneManager.render(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
-        PointAndLine.drawFrame(DeferredRenderCommandEncoder)
+        Debug.pointAndLine.drawFrame(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Lighting")
