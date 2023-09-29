@@ -1,6 +1,6 @@
 
 #include <metal_stdlib>
-#import "Shared.metal"
+#import "../Shared.metal"
 using namespace metal;
 
 static constexpr constant short tLayersCount = 4; //Number of transparent layers stored in tile memory

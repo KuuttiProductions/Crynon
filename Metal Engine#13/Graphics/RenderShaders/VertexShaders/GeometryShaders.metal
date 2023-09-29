@@ -1,6 +1,6 @@
 
 #include <metal_stdlib>
-#include "Shared.metal"
+#include "../Shared.metal"
 using namespace metal;
 
 vertex VertexOut default_vertex(VertexIn VerIn [[ stage_in ]],

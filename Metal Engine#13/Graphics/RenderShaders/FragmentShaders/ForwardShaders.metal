@@ -1,7 +1,7 @@
 
 #include <metal_stdlib>
-#include "PhongShading.metal"
-#include "Shadows.metal"
+#include "../PhongShading.metal"
+#include "../Shadows.metal"
 using namespace metal;
 
 // DEPRECATED

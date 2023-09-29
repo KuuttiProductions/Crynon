@@ -13,15 +13,10 @@ class Debug_Vector {
         material.shaderMaterial.color = color
         material.shaderMaterial.emission = emissive ? 1.0 : 0.0
         
-        let scale = simd_float3(1, abs(length(vector)), 1)
-        var rotation = normalize(vector)
-        
-        let reference = simd_float3(0,0,0)
-        let rotationAxis = cross(reference, vector)
-        let dotP = dot(reference, vector)
-        let rotationAngle = acos(dotP)
-        
-        rotation = rotationAxis * rotationAngle
+        let scale = simd_float3(1, length(vector), 1)
+
+        let rotationMatrix = matrix_float3x3.rotation(direction: vector)
+        let rotation = simd_float3.rotationFromMatrix(rotationMatrix)
         
         var modelMatrix: matrix_float4x4 {
             var modelMatrix = matrix_identity_float4x4

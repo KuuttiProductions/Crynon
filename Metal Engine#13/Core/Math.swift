@@ -34,7 +34,6 @@ extension Double {
 }
 
 extension matrix_float4x4 {
-    
     mutating func translate(position: simd_float3) {
         var result = matrix_float4x4()
         
@@ -203,6 +202,21 @@ extension matrix_float3x3 {
             simd_float3(r2c1, r2c2, r2c3),
             simd_float3(r3c1, r3c2, r3c3)
         )
+        return result
+    }
+    
+    static func rotation(direction: simd_float3, up: simd_float3 = simd_float3(0, 1, 0))-> matrix_float3x3 {
+        var result = matrix_float3x3()
+        
+        let xAxis = normalize(cross(up, direction))
+        let yAxis = normalize(cross(direction, xAxis))
+        
+        result.columns = (
+            simd_float3(    xAxis.x,     xAxis.y,     xAxis.z),
+            simd_float3(    yAxis.x,     yAxis.y,     yAxis.z),
+            simd_float3(direction.x, direction.y, direction.z)
+        )
+    
         return result
     }
 }

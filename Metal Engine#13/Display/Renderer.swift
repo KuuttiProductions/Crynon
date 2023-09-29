@@ -6,7 +6,11 @@ class Renderer: NSObject {
     static var screenWidth: Float!
     static var screenHeight: Float!
     static var aspectRatio: Float { return screenWidth/screenHeight }
+    
     static var currentBlendMode: BlendMode = .Opaque
+    static var currentDeltaTime: Float = 0.0
+    
+    static var time: Float = 0.0
     
     private var optimalTileSize: MTLSize = MTLSizeMake(32, 16, 1)
 
@@ -129,10 +133,13 @@ extension Renderer: MTKViewDelegate {
         deferredRenderPassDescriptor.colorAttachments[0].texture = drawable.texture
         deferredRenderPassDescriptor.depthAttachment.texture = depthTexture
         
-        //Update scene
-        SceneManager.tick(1/Float(Preferences.preferredFPS))
+        Renderer.currentDeltaTime = 1/Float(Preferences.preferredFPS)
+        Renderer.time += Renderer.currentDeltaTime
         
-        SceneManager.physicsTick(1/Float(Preferences.preferredFPS))
+        //Update scene
+        SceneManager.tick(Renderer.currentDeltaTime)
+        
+        SceneManager.physicsTick(Renderer.currentDeltaTime)
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"

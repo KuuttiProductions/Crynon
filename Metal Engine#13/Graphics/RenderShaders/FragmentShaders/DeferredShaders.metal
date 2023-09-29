@@ -1,9 +1,9 @@
 
 #include <metal_stdlib>
-#import "Shared.metal"
-#import "Shadows.metal"
-#import "PhongShading.metal"
-#import "AmbientOcclusion.metal"
+#import "../Shared.metal"
+#import "../Shadows.metal"
+#import "../PhongShading.metal"
+#import "../AmbientOcclusion.metal"
 using namespace metal;
 
 constexpr static sampler samplerFragment (min_filter::linear,
