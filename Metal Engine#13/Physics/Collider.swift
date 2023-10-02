@@ -45,7 +45,6 @@ class Collider {
                 index = i
             }
         }
-        
         return vertices[index]
     }
 }

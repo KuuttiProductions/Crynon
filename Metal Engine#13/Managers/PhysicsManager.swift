@@ -168,44 +168,41 @@ extension PhysicsManager {
                 let a: simd_float3 = simplex[2]
                 let b: simd_float3 = simplex[1]
                 let c: simd_float3 = simplex[0]
-                let vAb = b - a
-                let vAc = c - a
-                let vAo = -a
+                let vAb = normalize(b - a)
+                let vAc = normalize(c - a)
+                let vAo = normalize(-a)
                 let vAbPerp = normalize(cross(cross(vAc, vAb), vAb))
                 let vAcPerp = normalize(cross(cross(vAb, vAc), vAc))
                 
-                var normal = normalize(cross(b-a, c-a))
+                var normal = normalize(cross(vAb, vAc))
                 if dot(normal, vAo) < 0 { normal *= -1 }
                 
-                if dot(vAbPerp, vAo) > 0 {
-                    dir = normal
-                    return false
-                }
-                if dot(vAcPerp, vAo) > 0 {
-                    dir = normal
-                    return false
-                }
-                return true
+//                if (dot(vAbPerp, vAo) > 0 || dot(vAcPerp, vAo) > 0) && true {
+//                    dir = normal
+//                    return false
+//                }
+                dir = normal
+                return false
             case 4:
                 let a: simd_float3 = simplex[3]
                 let b: simd_float3 = simplex[2]
                 let c: simd_float3 = simplex[1]
                 let d: simd_float3 = simplex[0]
                 
-                let ab: simd_float3 = b - a
-                let ac: simd_float3 = c - a
-                let ad: simd_float3 = d - a
-                let vAo = -a
+                let ab: simd_float3 = normalize(b - a)
+                let ac: simd_float3 = normalize(c - a)
+                let ad: simd_float3 = normalize(d - a)
+                let vAo = normalize(-a)
 
-                if dot(cross(ab, ac), vAo) > 0 {
+                if dot(cross(ac, ab), vAo) > 0 {
                     dir = normalize(cross(ab, ac))
                     simplex.remove(at: 0)
                     return false
-                } else if dot(cross(ab, ad), vAo) > 0 {
+                } else if dot(cross(ad, ab), vAo) > 0 {
                     dir = normalize(cross(ab, ad))
                     simplex.remove(at: 1)
                     return false
-                } else if dot(cross(ad, ac), vAo) > 0 {
+                } else if dot(cross(ac, ad), vAo) > 0 {
                     dir = normalize(cross(ad, ac))
                     simplex.remove(at: 2)
                     return false
@@ -216,7 +213,7 @@ extension PhysicsManager {
             }
         }
         
-        let initialDirection = normalize(colliderB.body.globalCenterOfMass - colliderA.body.globalCenterOfMass)
+        let initialDirection = colliderB.body.globalCenterOfMass - colliderA.body.globalCenterOfMass
         let initialPoint = csoSupport(direction: initialDirection, colliderA: colliderA, colliderB: colliderB).support
         simplex.append(initialPoint)
         

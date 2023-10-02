@@ -84,7 +84,7 @@ class BasicScene: Scene {
         glass3.material.blendMode = .Alpha
         camera.setPosZ(5)
         physics.setPos(0, 0, -3, teleport: true)
-        physics2.setPos(0.2, 3, -3.1, teleport: true)
+        physics2.setPos(0, 3, -3.1, teleport: true)
         physics.debug_drawCollisionState = true
         physics2.debug_drawCollisionState = true
         sun.lightData.color = simd_float4(1,1,1,1)

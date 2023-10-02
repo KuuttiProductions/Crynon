@@ -197,6 +197,11 @@ class RigidBody: Node {
             } else if InputManager.pressedKeys.contains(.keyE) {
                 self.addForce(force: simd_float3(0, 0, -1), at: simd_float3(0.1, 0, 0))
             }
+            if InputManager.pressedKeys.contains(.leftArrow) {
+                self.addForce(force: simd_float3(-1, 0, 0), at: simd_float3(0, 0, 0))
+            } else if InputManager.pressedKeys.contains(.rightArrow) {
+                self.addForce(force: simd_float3(1, 0, 0), at: simd_float3(0, 0, 0))
+            }
         }
         
         var min: simd_float3 = simd_float3(repeating: .infinity)
@@ -277,11 +282,6 @@ class RigidBody: Node {
                 Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
                 Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
             }
-            Debug.vector.drawVector(renderCommandEncoder: renderCommandEncoder,
-                                    vector: simd_float3(cos(Renderer.time), sin(Renderer.time), 0),
-                                    origin: simd_float3(0, 0, 0),
-                                    color: simd_float4(1, 1, 1, 1),
-                                    emissive: false)
             if isActive {
                 for collider in colliders {
                     var points: [simd_float3] = []
