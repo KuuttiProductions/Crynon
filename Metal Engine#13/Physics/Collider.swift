@@ -10,8 +10,8 @@ class Collider {
     
     var vertices: [simd_float3] = []
     
-    init(_ useDebugValues: Bool = false) {
-        if useDebugValues {
+    init(_ useDebugValues: Int = 0) {
+        if useDebugValues == 1 {
             self.mass = 1
             self.localInertiaTensor = simd_float3x3()
             self.localInertiaTensor.columns = (
@@ -31,6 +31,23 @@ class Collider {
                 simd_float3(1, -1, 1),
                 simd_float3(1, 1, -1),
             ]
+        } else if useDebugValues == 2 {
+            self.mass = 1
+            self.localInertiaTensor = simd_float3x3()
+            self.localInertiaTensor.columns = (
+                simd_float3(1, 0, 0),
+                simd_float3(0, 1, 0),
+                simd_float3(0, 0, 1)
+            )
+            self.localCenterOfMass = simd_float3(0, 0, 0)
+            
+            self.vertices = []
+            for _ in 0...499 {
+                let direction = simd_float3(Float.random(in: -1...1),
+                                            Float.random(in: -1...1),
+                                            Float.random(in: -1...1))
+                self.vertices.append(normalize(direction))
+            }
         }
     }
     

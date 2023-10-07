@@ -96,7 +96,7 @@ class BasicScene: Scene {
         light.lightData.color = simd_float4(0, 1, 1, 1)
         spotlight.setPos(-15, 3, 0)
         spotlight.lightData.color = simd_float4(1,0,0,1)
-        floor.material.visible = false
+        floor.material.visible = true
     }
     
     override func tick(_ deltaTime: Float) {

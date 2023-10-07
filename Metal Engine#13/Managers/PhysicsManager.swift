@@ -156,12 +156,8 @@ extension PhysicsManager {
             case 2:
                 let a: simd_float3 = simplex[1]
                 let b: simd_float3 = simplex[0]
-                let o: simd_float3 = simd_float3(0, 0, 0)
                 let vAb = b - a
                 let vAo = -a
-                if distance(a, b) == distance(a, o) + distance(b, o) {
-                    return true
-                }
                 dir = normalize(cross(cross(vAb, vAo), vAb))
                 return false
             case 3:
@@ -171,16 +167,18 @@ extension PhysicsManager {
                 let vAb = normalize(b - a)
                 let vAc = normalize(c - a)
                 let vAo = normalize(-a)
-                let vAbPerp = normalize(cross(cross(vAc, vAb), vAb))
-                let vAcPerp = normalize(cross(cross(vAb, vAc), vAc))
                 
-                var normal = normalize(cross(vAb, vAc))
-                if dot(normal, vAo) < 0 { normal *= -1 }
-                
+                // Enable triangle collision testing
+//                let vAbPerp = normalize(cross(cross(vAc, vAb), vAb))
+//                let vAcPerp = normalize(cross(cross(vAb, vAc), vAc))
 //                if (dot(vAbPerp, vAo) > 0 || dot(vAcPerp, vAo) > 0) && true {
 //                    dir = normal
 //                    return false
 //                }
+                
+                var normal = normalize(cross(vAb, vAc))
+                if dot(normal, vAo) < 0 { normal *= -1 }
+                
                 dir = normal
                 return false
             case 4:
@@ -195,14 +193,14 @@ extension PhysicsManager {
                 let vAo = normalize(-a)
 
                 if dot(cross(ac, ab), vAo) > 0 {
-                    dir = normalize(cross(ab, ac))
+                    dir = normalize(cross(ac, ab))
                     simplex.remove(at: 0)
                     return false
                 } else if dot(cross(ad, ab), vAo) > 0 {
-                    dir = normalize(cross(ab, ad))
+                    dir = normalize(cross(ad, ab))
                     simplex.remove(at: 1)
                     return false
-                } else if dot(cross(ac, ad), vAo) > 0 {
+                } else if dot(cross(ad, ac), vAo) > 0 {
                     dir = normalize(cross(ad, ac))
                     simplex.remove(at: 2)
                     return false
@@ -221,7 +219,7 @@ extension PhysicsManager {
         
         for _ in 0...99 {
             let support = csoSupport(direction: dir, colliderA: colliderA, colliderB: colliderB).support
-            if dot(support, dir) < 0 {
+            if dot(normalize(support), dir) < 0 {
                 break
             }
             simplex.append(support)
@@ -233,5 +231,9 @@ extension PhysicsManager {
         }
 
         return (result, simplex)
+    }
+    
+    func EPA(colliderA: Collider, colliderB: Collider) {
+        
     }
 }

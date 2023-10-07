@@ -61,9 +61,6 @@ class FPSCamera: Camera {
             InputManager.playTransientHaptic(InputManager.controllerTriggerR/7, .rightTrigger)
         }
         
-        Debug.pointAndLine.point = self.position
-        Debug.pointAndLine.point2 = self.forwardVector
-        
         super.tick(deltaTime)
     }
 }

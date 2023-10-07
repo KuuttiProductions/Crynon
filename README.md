@@ -31,7 +31,7 @@ Here are the current plans for ME13. More will be added.
 
 ### Physics ###
 - [x] Motion Dynamics
-- [ ] Collision detection
+- [ ] Collision detection (Partially working)
 - [ ] Collision resolving
 - [x] Ray casting
 

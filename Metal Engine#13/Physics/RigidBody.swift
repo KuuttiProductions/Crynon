@@ -23,7 +23,6 @@ class RigidBody: Node {
     
     var colliders: [Collider] = []
     
-    var mesh: MeshType = .Cube
     var aabbSimple: [simd_float3] = []
     var aabbMin: simd_float3 = simd_float3(repeating: 0)
     var aabbMax: simd_float3 = simd_float3(repeating: 0)
@@ -40,6 +39,7 @@ class RigidBody: Node {
     
     //End of physics variables
     var material: Material = Material()
+    var mesh: MeshType = .Cube
     
     private var aabbPoints: [PointVertex] = [PointVertex(),
                                              PointVertex(),
@@ -65,7 +65,12 @@ class RigidBody: Node {
             simd_float3(0, 1, 0),
             simd_float3(0, 0, 1)
         )
-        self.addCollider(Collider(true))
+        if self.name == "physics2" {
+            self.addCollider(Collider(2))
+            self.mesh = .Sphere
+        } else {
+            self.addCollider(Collider(1))
+        }
         
         let verticePointer = AssetLibrary.meshes[mesh].vertexBuffer.contents()
         var positions: [simd_float3] = []
@@ -282,16 +287,6 @@ class RigidBody: Node {
                 Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
                 Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
             }
-            if isActive {
-                for collider in colliders {
-                    var points: [simd_float3] = []
-                    for vertex in collider.vertices {
-                        points.append(localToGlobal(point: vertex))
-                    }
-                    Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: points, color: material.shaderMaterial.color)
-                }
-            }
-            if !debug_simplex.isEmpty { Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, positions: debug_simplex, color: simd_float4(0, 0, 1, 1)) }
         }
         super.render(renderCommandEncoder)
     }
