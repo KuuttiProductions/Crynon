@@ -196,8 +196,8 @@ extension PhysicsManager {
                     dir = normalize(cross(ac, ab))
                     simplex.remove(at: 0)
                     return false
-                } else if dot(cross(ad, ab), vAo) > 0 {
-                    dir = normalize(cross(ad, ab))
+                } else if dot(cross(ab, ad), vAo) > 0 {
+                    dir = normalize(cross(ab, ad))
                     simplex.remove(at: 1)
                     return false
                 } else if dot(cross(ad, ac), vAo) > 0 {

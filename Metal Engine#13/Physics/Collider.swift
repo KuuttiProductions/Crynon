@@ -23,13 +23,13 @@ class Collider {
             
             self.vertices = [
                 simd_float3(-1, -1, -1),
-                simd_float3(-1, 1, 1),
-                simd_float3(-1, -1, 1),
-                simd_float3(-1, 1, -1),
-                simd_float3(1, -1, -1),
-                simd_float3(1, 1, 1),
-                simd_float3(1, -1, 1),
-                simd_float3(1, 1, -1),
+                simd_float3(-1,  1,  1),
+                simd_float3(-1, -1,  1),
+                simd_float3(-1,  1, -1),
+                simd_float3( 1, -1, -1),
+                simd_float3( 1,  1,  1),
+                simd_float3( 1, -1,  1),
+                simd_float3( 1,  1, -1),
             ]
         } else if useDebugValues == 2 {
             self.mass = 1
