@@ -48,17 +48,17 @@ class PhysicsManager {
                 let object1 = _physicsObjects[i]
                 let object2 = _physicsObjects[u]
                 
-//                if checkForAABBCollision(object1: object1, object2: object2) {
-//                    object1.isColliding = true
-//                    object2.isColliding = true
-//                }
+                if checkForAABBCollision(object1: object1, object2: object2) {}
+                
                 let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
                 if gjk.overlap {
-                    object2.linearVelocity = simd_float3()
-                    object2.forceAccumulator = -gravity
+                    //let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object1.colliders[0], simplex: gjk.simplex)
                     object1.isColliding = true
                     object2.isColliding = true
+                    object2.linearVelocity = simd_float3()
+                    //object2.forceAccumulator += manifold.contactNormal
                     object1.debug_simplex = gjk.simplex
+                    //Debug.pointAndLine.point2 = manifold.contactNormal
                 } else { object1.debug_simplex = [] }
             }
         }
@@ -167,15 +167,7 @@ extension PhysicsManager {
                 let vAb = normalize(b - a)
                 let vAc = normalize(c - a)
                 let vAo = normalize(-a)
-                
-                // Enable triangle collision testing
-//                let vAbPerp = normalize(cross(cross(vAc, vAb), vAb))
-//                let vAcPerp = normalize(cross(cross(vAb, vAc), vAc))
-//                if (dot(vAbPerp, vAo) > 0 || dot(vAcPerp, vAo) > 0) && true {
-//                    dir = normal
-//                    return false
-//                }
-                
+    
                 var normal = normalize(cross(vAb, vAc))
                 if dot(normal, vAo) < 0 { normal *= -1 }
                 
@@ -233,7 +225,142 @@ extension PhysicsManager {
         return (result, simplex)
     }
     
-    func EPA(colliderA: Collider, colliderB: Collider) {
+    func generateContactData(colliderA: Collider, colliderB: Collider, simplex: [simd_float3])-> CollisionData {
+        var contactData = CollisionData()
         
+        epa()
+        generateTangents()
+        
+        func generateTangents() {
+            let normal = contactData.contactNormal!
+            if normal.x >= 0.57735 {
+                contactData.contactTangentA = simd_float3(normal.y, -normal.x, 0.0)
+            } else {
+                contactData.contactTangentA = simd_float3(0.0, normal.z, -normal.y)
+            }
+            contactData.contactTangentA = normalize(contactData.contactTangentA)
+            contactData.contactTangentB = cross(normal, contactData.contactTangentA)
+        }
+        
+        func getFaceNormals(vertices: [simd_float3], triangles: [Int])-> (normals: [simd_float4], minTriangle: Int) {
+            var normals: [simd_float4] = []
+            var minTriangle: Int = 0
+            var minDistance: Float = .infinity
+            for i in stride(from: 0, to: triangles.count, by: 3) {
+                let a = vertices[triangles[i  ]]
+                let b = vertices[triangles[i+1]]
+                let c = vertices[triangles[i+2]]
+                
+                var normal: simd_float3 = normalize(cross(b-a, c-a))
+                var distance: Float = dot(normal, a)
+                
+                if distance < 0 {
+                    normal *= -1
+                    distance *= -1
+                }
+                
+                normals.append(simd_float4(normal, distance))
+                
+                if distance < minDistance {
+                    minDistance = distance
+                    minTriangle = i / 3
+                }
+            }
+            return (normals, minTriangle)
+        }
+        
+        //If reverse of edge already exists, remove it. Else append new edge to list and return it.
+        func addIfUniqueEdge(edges: [simd_int2], triangles: [Int], a: Int, b: Int)-> [simd_int2] {
+            var edges = edges
+            let reverse = simd_int2(Int32(triangles[b]), Int32(triangles[a]))
+        
+            if edges.contains(reverse) {
+                edges.remove(at: edges.firstIndex(where: {$0 == reverse})!)
+            } else {
+                edges.append(simd_int2(Int32(triangles[a]), Int32(triangles[b])))
+            }
+            return edges
+        }
+        
+        func epa() {
+            var vertices: [simd_float3] = simplex
+            var triangles: [Int] = [
+                0, 1, 2,
+                0, 3, 1,
+                0, 2, 3,
+                1, 3, 2
+            ]
+            
+            var gfn = getFaceNormals(vertices: vertices, triangles: triangles)
+            
+            var minNormal: simd_float3!
+            var minDistance: Float = Float.infinity
+            
+            while(minDistance == Float.infinity) {
+                minNormal = simd_float3(gfn.normals[gfn.minTriangle].x,
+                                        gfn.normals[gfn.minTriangle].y,
+                                        gfn.normals[gfn.minTriangle].z)
+                minDistance = gfn.normals[gfn.minTriangle].w
+                
+                //Find new support point in the direction of the closest facets normal
+                let support = csoSupport(direction: minNormal, colliderA: colliderA, colliderB: colliderB).support
+                let sDistance = dot(minNormal, support)
+                if abs(sDistance - minDistance) > 0.001 {
+                    minDistance = Float.infinity
+                    
+                    var uniqueEdges: [simd_int2] = []
+                    for (i, n) in gfn.normals.enumerated() {
+                        let normal = simd_float3(n.x, n.y, n.z)
+                        if dot(normal, support) > 0 {
+                            let f = i * 3
+                            
+                            uniqueEdges = addIfUniqueEdge(edges: uniqueEdges, triangles: triangles, a: f  , b: f+1)
+                            uniqueEdges = addIfUniqueEdge(edges: uniqueEdges, triangles: triangles, a: f+1, b: f+2)
+                            uniqueEdges = addIfUniqueEdge(edges: uniqueEdges, triangles: triangles, a: f+2, b: f)
+                            
+                            triangles[f + 2] = triangles.last!; triangles.removeLast()
+                            triangles[f + 1] = triangles.last!; triangles.removeLast()
+                            triangles[f    ] = triangles.last!; triangles.removeLast()
+                            
+                            gfn.normals[i] = gfn.normals.last!
+                            gfn.normals.removeLast()
+                        }
+                    }
+                    
+                    var newTriangles: [Int] = []
+                    for (_, x) in uniqueEdges.enumerated() {
+                        newTriangles.append(Int(x.x))
+                        newTriangles.append(Int(x.y))
+                        newTriangles.append(vertices.count)
+                    }
+                    
+                    vertices.append(support)
+                    
+                    let ngfn = getFaceNormals(vertices: vertices, triangles: newTriangles)
+                    
+                    var oldMinDistance = Float.infinity
+                    var minTriangle = 0
+                    for (i, n) in gfn.normals.enumerated() {
+                        if n.w < oldMinDistance {
+                            oldMinDistance = n.w
+                            minTriangle = i
+                        }
+                    }
+                    
+                    if ngfn.normals[ngfn.minTriangle].w < oldMinDistance {
+                        minTriangle = ngfn.minTriangle + gfn.normals.count
+                    }
+                    
+                    triangles.append(contentsOf: newTriangles)
+                    gfn.normals.append(contentsOf: ngfn.normals)
+                    gfn.minTriangle = minTriangle
+                }
+            }
+            
+            contactData.contactNormal = minNormal
+            contactData.depth = minDistance
+        }
+        
+        return contactData
     }
 }

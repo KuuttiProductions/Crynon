@@ -34,8 +34,6 @@ class RigidBody: Node {
     var debug_drawAABB: Bool = false
     var debug_drawCollisionState: Bool = false
     var debug_simplex: [simd_float3] = []
-    var debug_x: Float = 0
-    var debug_y: Float = 0
     
     //End of physics variables
     var material: Material = Material()
@@ -270,9 +268,9 @@ class RigidBody: Node {
         if material.blendMode == Renderer.currentBlendMode && material.visible {
             if isActive && debug_drawCollisionState {
                 if isColliding {
-                    self.material.shaderMaterial.color = simd_float4(1, 0, 0, 1)
+                    self.material.shaderMaterial.color = simd_float4(0.8, 0, 0, 1)
                 } else {
-                    self.material.shaderMaterial.color = simd_float4(0, 1, 0, 1)
+                    self.material.shaderMaterial.color = simd_float4(0, 0.8, 0, 1)
                 }
             }
 
