@@ -52,13 +52,12 @@ class PhysicsManager {
                 
                 let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
                 if gjk.overlap {
-                    //let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object1.colliders[0], simplex: gjk.simplex)
+                    let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object1.colliders[0], simplex: gjk.simplex)
                     object1.isColliding = true
                     object2.isColliding = true
                     object2.linearVelocity = simd_float3()
-                    //object2.forceAccumulator += manifold.contactNormal
                     object1.debug_simplex = gjk.simplex
-                    //Debug.pointAndLine.point2 = manifold.contactNormal
+                    Debug.pointAndLine.point2 = manifold.contactNormal
                 } else { object1.debug_simplex = [] }
             }
         }
@@ -272,7 +271,7 @@ extension PhysicsManager {
         //If reverse of edge already exists, remove it. Else append new edge to list and return it.
         func addIfUniqueEdge(edges: [simd_int2], triangles: [Int], a: Int, b: Int)-> [simd_int2] {
             var edges = edges
-            let reverse = simd_int2(Int32(triangles[b]), Int32(triangles[a]))
+             let reverse = simd_int2(Int32(triangles[b]), Int32(triangles[a]))
         
             if edges.contains(reverse) {
                 edges.remove(at: edges.firstIndex(where: {$0 == reverse})!)
@@ -301,7 +300,6 @@ extension PhysicsManager {
                                         gfn.normals[gfn.minTriangle].y,
                                         gfn.normals[gfn.minTriangle].z)
                 minDistance = gfn.normals[gfn.minTriangle].w
-                
                 //Find new support point in the direction of the closest facets normal
                 let support = csoSupport(direction: minNormal, colliderA: colliderA, colliderB: colliderB).support
                 let sDistance = dot(minNormal, support)
@@ -318,12 +316,11 @@ extension PhysicsManager {
                             uniqueEdges = addIfUniqueEdge(edges: uniqueEdges, triangles: triangles, a: f+1, b: f+2)
                             uniqueEdges = addIfUniqueEdge(edges: uniqueEdges, triangles: triangles, a: f+2, b: f)
                             
-                            triangles[f + 2] = triangles.last!; triangles.removeLast()
-                            triangles[f + 1] = triangles.last!; triangles.removeLast()
-                            triangles[f    ] = triangles.last!; triangles.removeLast()
+                            triangles[f + 2] = triangles.last!
+                            triangles[f + 1] = triangles.last!
+                            triangles[f    ] = triangles.last!
                             
                             gfn.normals[i] = gfn.normals.last!
-                            gfn.normals.removeLast()
                         }
                     }
                     
