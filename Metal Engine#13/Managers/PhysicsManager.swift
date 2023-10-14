@@ -295,13 +295,15 @@ extension PhysicsManager {
             var minNormal: simd_float3!
             var minDistance: Float = Float.infinity
             
+            var support: simd_float3!
+            
             while(minDistance == Float.infinity) {
                 minNormal = simd_float3(gfn.normals[gfn.minTriangle].x,
                                         gfn.normals[gfn.minTriangle].y,
                                         gfn.normals[gfn.minTriangle].z)
                 minDistance = gfn.normals[gfn.minTriangle].w
                 //Find new support point in the direction of the closest facets normal
-                let support = csoSupport(direction: minNormal, colliderA: colliderA, colliderB: colliderB).support
+                support = csoSupport(direction: minNormal, colliderA: colliderA, colliderB: colliderB).support
                 let sDistance = dot(minNormal, support)
                 if abs(sDistance - minDistance) > 0.001 {
                     minDistance = Float.infinity
@@ -354,9 +356,14 @@ extension PhysicsManager {
                 }
             }
             
-            contactData.contactNormal = minNormal
+            contactData.contactNormal = normalize(support)
+            contactData.contactPointA = support
+            contactData.contactPointB = -support
             contactData.depth = minDistance
         }
+        
+        contactData.localContactPointA = colliderA.body.globalToLocal(point: contactData.contactPointA)
+        contactData.localContactPointB = colliderB.body.globalToLocal(point: contactData.contactPointB)
         
         return contactData
     }
