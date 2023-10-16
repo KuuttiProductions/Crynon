@@ -34,6 +34,7 @@ class RigidBody: Node {
     var debug_drawAABB: Bool = false
     var debug_drawCollisionState: Bool = false
     var debug_simplex: [simd_float3] = []
+    var debug_contactPoint: simd_float3!
     
     //End of physics variables
     var material: Material = Material()
@@ -284,6 +285,10 @@ class RigidBody: Node {
             if debug_drawAABB {
                 Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
                 Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
+            }
+            
+            if debug_contactPoint != nil {
+                Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: [PointVertex(position: debug_contactPoint)])
             }
         }
         super.render(renderCommandEncoder)

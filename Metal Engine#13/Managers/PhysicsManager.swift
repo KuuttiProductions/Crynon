@@ -55,7 +55,10 @@ class PhysicsManager {
                     let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object1.colliders[0], simplex: gjk.simplex)
                     object1.isColliding = true
                     object2.isColliding = true
-                    object2.linearVelocity = simd_float3()
+                    object1.debug_contactPoint = manifold.contactPointA
+                    object2.debug_contactPoint = manifold.contactPointB
+                    let magnitude = length(object2.linearVelocity)
+                    object2.addForce(force: manifold.contactNormal * magnitude, at: simd_float3(0, 0, 0))
                     object1.debug_simplex = gjk.simplex
                     Debug.pointAndLine.point2 = manifold.contactNormal
                 } else { object1.debug_simplex = [] }
@@ -296,16 +299,26 @@ extension PhysicsManager {
             var minDistance: Float = Float.infinity
             
             var support: simd_float3!
+            var supportA: simd_float3!
+            var supportB: simd_float3!
+            var iteration: Int = 0
             
             while(minDistance == Float.infinity) {
+                if iteration >= 100 {
+                    break
+                }
+                iteration += 1
                 minNormal = simd_float3(gfn.normals[gfn.minTriangle].x,
                                         gfn.normals[gfn.minTriangle].y,
                                         gfn.normals[gfn.minTriangle].z)
                 minDistance = gfn.normals[gfn.minTriangle].w
                 //Find new support point in the direction of the closest facets normal
-                support = csoSupport(direction: minNormal, colliderA: colliderA, colliderB: colliderB).support
+                let csoSupport = csoSupport(direction: minNormal, colliderA: colliderA, colliderB: colliderB)
+                support = csoSupport.support
+                supportA = csoSupport.supportA
+                supportB = csoSupport.supportB
                 let sDistance = dot(minNormal, support)
-                if abs(sDistance - minDistance) > 0.001 {
+                if abs(sDistance - minDistance) > 0 {
                     minDistance = Float.infinity
                     
                     var uniqueEdges: [simd_int2] = []
@@ -357,8 +370,8 @@ extension PhysicsManager {
             }
             
             contactData.contactNormal = normalize(support)
-            contactData.contactPointA = support
-            contactData.contactPointB = -support
+            contactData.contactPointA = supportA
+            contactData.contactPointB = supportB
             contactData.depth = minDistance
         }
         
