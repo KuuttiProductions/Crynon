@@ -1,9 +1,10 @@
 # Metal-Engine-13
 
 ## About ##
-Metal-Engine-13 or ME13 is a game-engine made in Swift/Metal by KudeKube. ME13 is designed from the ground up to be efficient and leveraging of Apple technologies.
+Metal-Engine-13 or ME13 is a game-engine made in Swift/Metal by KudeKube. ME13 is designed from the ground up to be efficient and leveraging of Apple technologies. Name is subject to change.
 
 Updates are posted on Youtube: [KudeKube](https://www.youtube.com/channel/UCXDI-MFA_Gp8vXyaJ80Zc5Q)
+View roadmap on [Trello](https://trello.com/b/eskU0MZE/metal-engine-13)
 
 ![Logo](MetalEngine.png)
 
@@ -14,7 +15,7 @@ Here are the current plans for ME13. More will be added.
 - [x] Efficient 3D renderer
 - [x] Dynamic Shadows
 - [ ] MetalFX support
-- [ ] HDR (Display)
+- [ ] HDR 
 - [ ] SSAO
 - [ ] Post-processing
     - [ ] Bloom
@@ -31,17 +32,26 @@ Here are the current plans for ME13. More will be added.
 
 ### Physics ###
 - [x] Motion Dynamics
-- [ ] Collision detection (Partially working)
-- [ ] Collision resolving
-- [x] Ray casting
+- [x] Collision Detection
+- [ ] Collision Resolving (Naive solution implemented)
+- [x] Ray casting (Only AABBs at the moment)
+- [ ] AABB Broadphase
+- [ ] Stability Improvements
+- [ ] Performace Optimizations
+ 
+### Input System ###
+- [ ] Input System
+    - [x] Keyboard and Mouse
+    - [x] Game Controllers
+    - [ ] Event Based Input
 
 ### User Interface ###
 - [x] SwiftUI for UI
 - [ ] Premade SwiftUI views for fast use in game
 
-### Other features ###
-- [ ] Input system
-    - [x] Keyboard and Mouse
-    - [x] Game Controllers
-    - [ ] Event based input
+### Level Editor ###
+- [ ] Level file definition
+- [ ] Level editor app
+    
+### Audio ###
 - [ ] Audio playback

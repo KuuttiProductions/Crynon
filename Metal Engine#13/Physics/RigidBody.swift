@@ -67,6 +67,9 @@ class RigidBody: Node {
         if self.name == "physics2" {
             self.addCollider(Collider(2))
             self.mesh = .Sphere
+        } else if self.name == "physics" {
+            self.addCollider(Collider(2))
+            self.mesh = .Sphere
         } else {
             self.addCollider(Collider(1))
         }
@@ -288,7 +291,9 @@ class RigidBody: Node {
             }
             
             if debug_contactPoint != nil {
-                Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: [PointVertex(position: debug_contactPoint)])
+                Debug.pointAndLine.drawLine(renderCommandEncoder: renderCommandEncoder,
+                                            position1: simd_float3(0, 0, 0),
+                                            position2: debug_contactPoint, color: simd_float4(1, 0, 1, 1))
             }
         }
         super.render(renderCommandEncoder)
@@ -310,11 +315,24 @@ class RigidBody: Node {
 
 extension RigidBody {
     func setPos(_ x: Float, _ y: Float, _ z: Float, teleport: Bool) {
-        if !teleport {
-            linearVelocity = simd_float3(0, 0, 0)
-            angularVelocity = simd_float3(0, 0, 0)
+        if self.isActive {
+            if !teleport {
+                linearVelocity = simd_float3(0, 0, 0)
+                angularVelocity = simd_float3(0, 0, 0)
+            }
+            setPos(x, y, z)
+            updateGlobalCenterOfMassFromPosition()
         }
-        setPos(x, y, z)
-        updateGlobalCenterOfMassFromPosition()
+    }
+    
+    func addPos(_ value: simd_float3, teleport: Bool) {
+        if self.isActive {
+            if !teleport {
+                linearVelocity = simd_float3(0, 0, 0)
+                angularVelocity = simd_float3(0, 0, 0)
+            }
+            addPos(value)
+            updateGlobalCenterOfMassFromPosition()
+        }
     }
 }

@@ -48,8 +48,8 @@ class BasicScene: Scene {
         addLight(spotlight)
         object.setPosX(-4)
         object.material.shaderMaterial.roughness = 0
-        floor.setPos(0, -3, 0)
-        floor.setScale(300, 0.2, 10)
+        floor.setPos(0, -3, -3)
+        floor.setScale(1, 1, 1)
         floor.material.shaderMaterial.roughness = 1
         floor.material.shaderMaterial.color = simd_float4(0.2, 0.6, 0.0, 1.0)
         floor.isActive = false
@@ -85,8 +85,6 @@ class BasicScene: Scene {
         camera.setPosZ(5)
         physics.setPos(0, 0, -3, teleport: true)
         physics2.setPos(0, 3, -3.1, teleport: true)
-        physics.debug_drawCollisionState = true
-        physics2.debug_drawCollisionState = true
         physics2.material.shaderMaterial.roughness = 0.1
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)

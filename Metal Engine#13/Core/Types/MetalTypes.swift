@@ -25,6 +25,7 @@ extension sizeable {
 extension Float: sizeable {}
 extension Int: sizeable {}
 extension UInt: sizeable {}
+extension UInt32: sizeable {}
 extension simd_float2: sizeable {}
 extension simd_float3: sizeable {}
 extension simd_float4: sizeable {}

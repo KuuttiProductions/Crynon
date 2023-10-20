@@ -7,7 +7,7 @@ enum VertexShaderType {
     case Shadow
     case PointAndLine
     case Sky
-    case Vector
+    case Simple
 }
 
 class VertexShaderLibrary: Library<VertexShaderType, MTLFunction> {
@@ -20,7 +20,7 @@ class VertexShaderLibrary: Library<VertexShaderType, MTLFunction> {
         _library.updateValue(VertexShader("shadow_vertex", "Shadow Vertex Function"), forKey: .Shadow)
         _library.updateValue(VertexShader("pointAndLine_vertex", "Line and Point Vertex Function"), forKey: .PointAndLine)
         _library.updateValue(VertexShader("sky_vertex", "Sky Sphere Vertex Function"), forKey: .Sky)
-        _library.updateValue(VertexShader("vector_vertex", "Vector Vertex Function"), forKey: .Vector)
+        _library.updateValue(VertexShader("simple_vertex", "Simple Vertex Function"), forKey: .Simple)
     }
     
     override subscript(type: VertexShaderType) -> MTLFunction! {

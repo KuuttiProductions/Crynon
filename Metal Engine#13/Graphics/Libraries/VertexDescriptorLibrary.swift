@@ -4,6 +4,7 @@ import MetalKit
 enum VertexDescriptorType {
     case Basic
     case PointAndLine
+    case Simple
 }
 
 class VertexDescriptorLibrary: Library<VertexDescriptorType, MTLVertexDescriptor> {
@@ -13,6 +14,7 @@ class VertexDescriptorLibrary: Library<VertexDescriptorType, MTLVertexDescriptor
     override func fillLibrary() {
         library.updateValue(Basic_VertexDescriptor(), forKey: .Basic)
         library.updateValue(PointAndLine_VertexDescriptor(), forKey: .PointAndLine)
+        library.updateValue(Simple_VertexDescriptor(), forKey: .Simple)
     }
     
     override subscript(type: VertexDescriptorType) -> MTLVertexDescriptor! {
@@ -71,5 +73,18 @@ class PointAndLine_VertexDescriptor: VertexDescriptor {
         totalOffset += Float.stride
         
         descriptor.layouts[0].stride = PointVertex.stride
+    }
+}
+
+class Simple_VertexDescriptor: VertexDescriptor {
+    override init() {
+        super.init()
+        descriptor = MTLVertexDescriptor()
+        
+        descriptor.attributes[0].format = .float3
+        descriptor.attributes[0].bufferIndex = 0
+        descriptor.attributes[0].offset = 0
+        
+        descriptor.layouts[0].stride = simd_float3.stride
     }
 }

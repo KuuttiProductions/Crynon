@@ -84,7 +84,7 @@ class Debug_PointAndLine {
     
     func drawFrame(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         renderCommandEncoder.pushDebugGroup("Rendering PointAndLine")
-        drawLine(renderCommandEncoder: renderCommandEncoder, position1: simd_float3(0, 0, 0), position2: point2, color: simd_float4(1,1,1,1))
+        drawLine(renderCommandEncoder: renderCommandEncoder, position1: simd_float3(0, 0, 0), position2: point2, color: simd_float4(0.7, 0, 0.7, 1))
         renderCommandEncoder.popDebugGroup()
     }
 }

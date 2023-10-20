@@ -50,7 +50,7 @@
 		51743E4C2A2CE1920062B0B8 /* MeshLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */; };
 		5174AC332A8909F700777778 /* OceanSky.png in Resources */ = {isa = PBXBuildFile; fileRef = 5174AC322A8909F700777778 /* OceanSky.png */; };
 		5174AC352A890DDE00777778 /* SkyShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5174AC342A890DDE00777778 /* SkyShaders.metal */; };
-		517DECB42AC6F02D00A92617 /* VectorGeometry.metal in Sources */ = {isa = PBXBuildFile; fileRef = 517DECB32AC6F02D00A92617 /* VectorGeometry.metal */; };
+		517DECB42AC6F02D00A92617 /* SimpleShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 517DECB32AC6F02D00A92617 /* SimpleShaders.metal */; };
 		517F00052A83D83900792B27 /* PreferenceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517F00042A83D83900792B27 /* PreferenceTypes.swift */; };
 		517F00092A83DB5900792B27 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517F00082A83DB5900792B27 /* Material.swift */; };
 		51819C8E2A8A771C00A17FC3 /* Sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51819C8C2A8A771B00A17FC3 /* Sphere.mtl */; };
@@ -133,7 +133,7 @@
 		51743E4B2A2CE1920062B0B8 /* MeshLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshLibrary.swift; sourceTree = "<group>"; };
 		5174AC322A8909F700777778 /* OceanSky.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OceanSky.png; sourceTree = "<group>"; };
 		5174AC342A890DDE00777778 /* SkyShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SkyShaders.metal; sourceTree = "<group>"; };
-		517DECB32AC6F02D00A92617 /* VectorGeometry.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = VectorGeometry.metal; sourceTree = "<group>"; };
+		517DECB32AC6F02D00A92617 /* SimpleShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = SimpleShaders.metal; sourceTree = "<group>"; };
 		517F00042A83D83900792B27 /* PreferenceTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceTypes.swift; sourceTree = "<group>"; };
 		517F00082A83DB5900792B27 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
 		51819C8C2A8A771B00A17FC3 /* Sphere.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.mtl; sourceTree = "<group>"; };
@@ -420,7 +420,7 @@
 			isa = PBXGroup;
 			children = (
 				5174AC342A890DDE00777778 /* SkyShaders.metal */,
-				517DECB32AC6F02D00A92617 /* VectorGeometry.metal */,
+				517DECB32AC6F02D00A92617 /* SimpleShaders.metal */,
 				5151F2292A88BAB7002EBF4E /* GeometryShaders.metal */,
 			);
 			path = VertexShaders;
@@ -595,7 +595,7 @@
 				5151F2282A88B76C002EBF4E /* DeferredShaders.metal in Sources */,
 				5174AC352A890DDE00777778 /* SkyShaders.metal in Sources */,
 				512FFD5F2A66D935001987A0 /* DirectionalLight.swift in Sources */,
-				517DECB42AC6F02D00A92617 /* VectorGeometry.metal in Sources */,
+				517DECB42AC6F02D00A92617 /* SimpleShaders.metal in Sources */,
 				51BA0D212A6415A900A88604 /* Light.swift in Sources */,
 				513C1F582A28FBD4003155B0 /* Preferences.swift in Sources */,
 				5188BC732A2B920300AD5CB2 /* CameraManager.swift in Sources */,
@@ -772,7 +772,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2287;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -807,7 +807,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2287;
+				CURRENT_PROJECT_VERSION = 2419;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

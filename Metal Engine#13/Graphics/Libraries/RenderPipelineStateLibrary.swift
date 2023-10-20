@@ -12,7 +12,7 @@ enum RenderPipelineStateType {
     case Transparent
     case TransparentBlending
     case Sky
-    case Vector
+    case Simple
 }
 
 class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipelineState> {
@@ -29,7 +29,7 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
         _library.updateValue(Transparent_RenderPipelineState(), forKey: .Transparent)
         _library.updateValue(TransparentBlending_RenderPipelineState(), forKey: .TransparentBlending)
         _library.updateValue(SkySphere_RenderPipelineState(), forKey: .Sky)
-        _library.updateValue(Vector_RenderPipelineState(), forKey: .Vector)
+        _library.updateValue(Simple_RenderPipelineState(), forKey: .Simple)
     }
     
     override subscript(type: RenderPipelineStateType) -> MTLRenderPipelineState! {
@@ -197,8 +197,6 @@ class Transparent_RenderPipelineState: RenderPipelineState {
     }
 }
 
-/// WRITE MASKS MUST BE THE SOLUTION
-
 class TransparentBlending_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
@@ -231,7 +229,7 @@ class SkySphere_RenderPipelineState : RenderPipelineState {
     }
 }
 
-class Vector_RenderPipelineState: RenderPipelineState {
+class Simple_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
@@ -239,10 +237,10 @@ class Vector_RenderPipelineState: RenderPipelineState {
         descriptor.colorAttachments[0].writeMask = []
         addColorAttachments(descriptor: descriptor)
         descriptor.depthAttachmentPixelFormat = Preferences.depthFormat
-        descriptor.vertexFunction = GPLibrary.vertexShaders[.Vector]
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Simple]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Deferred]
-        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
-        descriptor.label = "Vector-Geometry RenderPipelineState"
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Simple]
+        descriptor.label = "Simple RenderPipelineState"
         create()
     }
 }
