@@ -4,6 +4,8 @@ import CoreHaptics
 
 class InputManager {
     
+    private static var subscribers: [EventInput] = []
+    
     //Controller states
     public static var controllerLX: Float = 0.0
     public static var controllerLY: Float = 0.0
@@ -111,6 +113,29 @@ class InputManager {
         let deltaY = scrollDeltaY
         return deltaY
     }
+    
+    //----- Event Input -----
+    static func subscribe(client: EventInput) {
+        subscribers.append(client)
+    }
+    
+    private static func keyEvent(key: GCKeyCode, down: Bool) {
+        for subscriber in subscribers {
+            subscriber.drawKeyInput(key: key, down: down)
+        }
+    }
+    
+    private static func controllerEvent(button: GCButtonElementName, down: Bool) {
+        for subscriber in subscribers {
+            subscriber.drawControllerInput(button: button, down: down)
+        }
+    }
+    
+    private static func mouseEvent(button: MouseButton, down: Bool) {
+        for subscriber in subscribers {
+            subscriber.drawMouseInput(button: button, down: down)
+        }
+    }
 
     //----- Connecting and disconnecting of controllers -----
     static func initialize() {
@@ -129,39 +154,52 @@ class InputManager {
                 controller.extendedGamepad?.valueChangedHandler = { profile, element in
                     if element == profile.leftThumbstick {
                         controllerLX = profile.leftThumbstick.xAxis.value
-                    }
-                    if element == profile.leftThumbstick {
                         controllerLY = profile.leftThumbstick.yAxis.value
                     }
                     if element == profile.rightThumbstick {
                         controllerRX = profile.rightThumbstick.xAxis.value
-                    }
-                    if element == profile.rightThumbstick {
                         controllerRY = profile.rightThumbstick.yAxis.value
+                    }
+                    
+                    if element == profile.leftThumbstickButton {
+                        controllerThumbstickL = profile.leftThumbstickButton!.isPressed
+                        controllerEvent(button: .leftThumbstickButton, down: profile.rightThumbstickButton!.isPressed)
+                    }
+                    if element == profile.rightThumbstickButton {
+                        controllerThumbstickR = profile.rightThumbstickButton!.isPressed
+                        controllerEvent(button: .leftThumbstickButton, down: profile.rightThumbstickButton!.isPressed)
                     }
                     if element == profile.leftTrigger {
                         controllerTriggerL = profile.leftTrigger.value
+                        controllerEvent(button: .leftTrigger, down: profile.leftTrigger.isPressed)
                     }
                     if element == profile.rightTrigger {
                         controllerTriggerR = profile.rightTrigger.value
+                        controllerEvent(button: .rightTrigger, down: profile.rightTrigger.isPressed)
                     }
                     if element == profile.buttonA {
                         controllerA = profile.buttonA.isPressed
+                        controllerEvent(button: .a, down: profile.buttonA.isPressed)
                     }
                     if element == profile.buttonB {
                         controllerB = profile.buttonB.isPressed
+                        controllerEvent(button: .b, down: profile.buttonB.isPressed)
                     }
                     if element == profile.buttonX {
                         controllerX = profile.buttonX.isPressed
+                        controllerEvent(button: .x, down: profile.buttonX.isPressed)
                     }
                     if element == profile.buttonY {
                         controllerY = profile.buttonY.isPressed
+                        controllerEvent(button: .y, down: profile.buttonY.isPressed)
                     }
                     if element == profile.leftShoulder {
                         controllerShoulderL = profile.leftShoulder.isPressed
+                        controllerEvent(button: .leftShoulder, down: profile.leftShoulder.isPressed)
                     }
                     if element == profile.rightShoulder {
                         controllerShoulderR = profile.rightShoulder.isPressed
+                        controllerEvent(button: .rightShoulder, down: profile.rightShoulder.isPressed)
                     }
                     if element == profile.dpad.up {
                         controllerUp = profile.dpad.up.isPressed
@@ -177,6 +215,7 @@ class InputManager {
                     }
                     if element == profile.buttonMenu {
                         controllerMenuR = profile.buttonMenu.isPressed
+                        controllerEvent(button: .menu, down: profile.buttonMenu.isPressed)
                     }
                 }
             }
@@ -199,6 +238,7 @@ class InputManager {
                                                queue: .main) { info in
             guard let keyboard = info.object as? GCKeyboard else { return }
             keyboard.keyboardInput?.keyChangedHandler = { _, _, keycode, pressed in
+                keyEvent(key: keycode, down: pressed)
                 if pressed {
                     pressedKeys.insert(keycode)
                     if keycode == .escape {
@@ -228,12 +268,15 @@ class InputManager {
             }
             mouse.mouseInput?.leftButton.pressedChangedHandler = { _, _, pressed in
                 self.mouseLeftButton = pressed
+                self.mouseEvent(button: .left, down: pressed)
             }
             mouse.mouseInput?.rightButton?.pressedChangedHandler = { _, _, pressed in
                 self.mouseRightButton = pressed
+                self.mouseEvent(button: .right, down: pressed)
             }
             mouse.mouseInput?.middleButton?.pressedChangedHandler = { _, _, pressed in
                 self.mouseMiddleButton = pressed
+                self.mouseEvent(button: .middle, down: pressed)
             }
             mouse.mouseInput?.scroll.xAxis.valueChangedHandler = { _, value in
                 self.scrollDeltaX = value

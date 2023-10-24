@@ -1,5 +1,6 @@
 
 import MetalKit
+import GameController
 
 class FPSCamera: Camera {
     
@@ -11,6 +12,8 @@ class FPSCamera: Camera {
         self.fieldOfView = 80
         self.nearPlane = 0.03
         self.farPlane = 1000
+        
+        InputManager.subscribe(client: self)
     }
     
     override func tick(_ deltaTime: Float) {
@@ -40,9 +43,6 @@ class FPSCamera: Camera {
             self.addPosY(-deltaTime * moveSpeed)
         }
         
-        //Changing FOV with scroll
-        //self.fieldOfView = max(min(self.fieldOfView + InputManager.getScrollDeltaY() * deltaTime * 10, 130), 20)
-        
         //Movement and rotation with Controller
         self.addRotY(InputManager.controllerRX * deltaTime * moveSpeed)
         self.addRotX(-InputManager.controllerRY * deltaTime * moveSpeed)
@@ -63,4 +63,12 @@ class FPSCamera: Camera {
         
         super.tick(deltaTime)
     }
+}
+
+extension FPSCamera: EventInput {
+    func drawControllerInput(button: GCButtonElementName, down: Bool) {}
+    
+    func drawMouseInput(button: MouseButton, down: Bool) {}
+    
+    func drawKeyInput(key: GCKeyCode, down: Bool) {}
 }

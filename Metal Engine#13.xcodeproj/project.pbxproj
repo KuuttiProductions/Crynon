@@ -80,6 +80,7 @@
 		51CC12902A6AC70C00B7C960 /* rng.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC128E2A6AC70C00B7C960 /* rng.metal */; };
 		51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */; };
 		51CDDDF42A8D3119003B6F2D /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51CDDDF32A8D3119003B6F2D /* Sphere.obj */; };
+		51D0ABCC2AE82D1800E5C5F9 /* EventInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D0ABCB2AE82D1800E5C5F9 /* EventInput.swift */; };
 		51D29B212AC54918008A49A4 /* Vector.obj in Resources */ = {isa = PBXBuildFile; fileRef = 51D29B1F2AC54918008A49A4 /* Vector.obj */; };
 		51D29B222AC54918008A49A4 /* Vector.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 51D29B202AC54918008A49A4 /* Vector.mtl */; };
 		51D29B242AC54973008A49A4 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D29B232AC54973008A49A4 /* Debug.swift */; };
@@ -164,6 +165,7 @@
 		51CC128E2A6AC70C00B7C960 /* rng.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = rng.metal; sourceTree = "<group>"; };
 		51CC12912A6BBB0B00B7C960 /* JitterTextureShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = JitterTextureShader.metal; sourceTree = "<group>"; };
 		51CDDDF32A8D3119003B6F2D /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sphere.obj; sourceTree = "<group>"; };
+		51D0ABCB2AE82D1800E5C5F9 /* EventInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInput.swift; sourceTree = "<group>"; };
 		51D29B1F2AC54918008A49A4 /* Vector.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vector.obj; sourceTree = "<group>"; };
 		51D29B202AC54918008A49A4 /* Vector.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Vector.mtl; sourceTree = "<group>"; };
 		51D29B232AC54973008A49A4 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				513C1F572A28FBD4003155B0 /* Preferences.swift */,
 				518E4E852A2B6801007A7C83 /* Math.swift */,
 				513C1F462A28DB92003155B0 /* Types */,
+				51D0ABCA2AE82D0000E5C5F9 /* Protocols */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -493,6 +496,14 @@
 			path = Random;
 			sourceTree = "<group>";
 		};
+		51D0ABCA2AE82D0000E5C5F9 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				51D0ABCB2AE82D1800E5C5F9 /* EventInput.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -612,6 +623,7 @@
 				51D2F2D82A93B26100F82ACB /* AmbientOcclusion.metal in Sources */,
 				516E9CBA2A7D6AEE00813B8C /* PointAndLineShaders.metal in Sources */,
 				51CC12922A6BBB0B00B7C960 /* JitterTextureShader.metal in Sources */,
+				51D0ABCC2AE82D1800E5C5F9 /* EventInput.swift in Sources */,
 				513C1F502A28EBCF003155B0 /* VertexDescriptorLibrary.swift in Sources */,
 				5148D8AF2A23B7C100F02654 /* Renderer.swift in Sources */,
 				513C1F482A28DBBB003155B0 /* RenderPipelineStateLibrary.swift in Sources */,
@@ -772,7 +784,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2419;
+				CURRENT_PROJECT_VERSION = 2435;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;
@@ -807,7 +819,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2419;
+				CURRENT_PROJECT_VERSION = 2435;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Metal Engine#13/Preview Content\"";
 				DEVELOPMENT_TEAM = B8J394Q4M8;

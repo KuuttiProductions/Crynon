@@ -22,14 +22,14 @@ class Collider {
             self.localCenterOfMass = simd_float3(0, 0, 0)
             
             self.vertices = [
-                simd_float3(-1, -1, -1),
-                simd_float3(-1,  1,  1),
-                simd_float3(-1, -1,  1),
-                simd_float3(-1,  1, -1),
-                simd_float3( 1, -1, -1),
-                simd_float3( 1,  1,  1),
-                simd_float3( 1, -1,  1),
-                simd_float3( 1,  1, -1),
+                simd_float3(-10, -1, -10),
+                simd_float3(-10,  1,  10),
+                simd_float3(-10, -1,  10),
+                simd_float3(-10,  1, -10),
+                simd_float3( 10, -1, -10),
+                simd_float3( 10,  1,  10),
+                simd_float3( 10, -1,  10),
+                simd_float3( 10,  1, -10),
             ]
         } else if useDebugValues == 2 {
             self.mass = 1

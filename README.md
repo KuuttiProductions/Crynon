@@ -40,10 +40,13 @@ Here are the current plans for ME13. More will be added.
 - [ ] Performace Optimizations
  
 ### Input System ###
-- [ ] Input System
+- [x] Input
     - [x] Keyboard and Mouse
     - [x] Game Controllers
-    - [ ] Event Based Input
+    - [x] Event Based Input
+- [ ] Haptics
+    - [x] Haptic playback
+    - [ ] Haptic customization
 
 ### User Interface ###
 - [x] SwiftUI for UI

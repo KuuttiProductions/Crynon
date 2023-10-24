@@ -1,7 +1,7 @@
 
 import MetalKit
 
-//Any type that needs MemoryLayout information to be taken off, can be extended with sizeable.
+//Any type that needs MemoryLayout information to be checked, can be extended with sizeable.
 protocol sizeable {}
 
 extension sizeable {
