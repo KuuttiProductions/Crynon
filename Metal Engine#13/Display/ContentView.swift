@@ -4,10 +4,15 @@ import SwiftUI
 struct ContentView: View {
     
     @EnvironmentObject private var core: Core
-    @Environment (\.colorScheme) private var colorMode
+    @State var vsc = CustomVSC.shared
     
     var body: some View {
         VStack {
+            Text("Time: \(vsc.time)")
+                .fontDesign(.rounded)
+                .fontWeight(.semibold)
+                .font(.title)
+                .padding()
             GameView()
         }
     }

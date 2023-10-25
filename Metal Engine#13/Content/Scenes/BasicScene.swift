@@ -48,7 +48,7 @@ class BasicScene: Scene {
         addLight(spotlight)
         object.setPosX(-4)
         object.material.shaderMaterial.roughness = 0
-        floor.setPos(0, -3, -3)
+        floor.setPos(0, -5, -3)
         floor.setScale(10, 1, 10)
         floor.material.shaderMaterial.roughness = 1
         floor.material.shaderMaterial.color = simd_float4(0.2, 0.6, 0.0, 1.0)

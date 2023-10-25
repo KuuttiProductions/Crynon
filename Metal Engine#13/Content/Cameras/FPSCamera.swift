@@ -5,7 +5,6 @@ import GameController
 class FPSCamera: Camera {
     
     var moveSpeed: Float = 4
-    var time: Float = 0.0
     
     init() {
         super.init("FPSCamera")
@@ -17,7 +16,6 @@ class FPSCamera: Camera {
     }
     
     override func tick(_ deltaTime: Float) {
-        self.time += deltaTime
         
         //Rotation with mouse Input
         self.addRotY(InputManager.getMouseDeltaX() * deltaTime * 0.2)
@@ -68,7 +66,11 @@ class FPSCamera: Camera {
 extension FPSCamera: EventInput {
     func drawControllerInput(button: GCButtonElementName, down: Bool) {}
     
-    func drawMouseInput(button: MouseButton, down: Bool) {}
+    func drawMouseInput(button: MouseButton, down: Bool) {
+        if button == .middle && down {
+            CustomVSC.shared.time += 0.69
+        }
+    }
     
     func drawKeyInput(key: GCKeyCode, down: Bool) {}
 }
