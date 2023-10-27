@@ -177,6 +177,22 @@ extension matrix_float3x3 {
         return result
     }
     
+    mutating func scale(_ scale: simd_float3) {
+        var result = matrix_identity_float3x3
+        
+        let x = scale.x
+        let y = scale.y
+        let z = scale.z
+        
+        result.columns = (
+            simd_float3(x, 0, 0),
+            simd_float3(0, y, 0),
+            simd_float3(0, 0, z)
+        )
+        
+        self = matrix_multiply(self, result)
+    }
+    
     static func rotation(axis: simd_float3, angle: Float)-> matrix_float3x3 {
         var result = matrix_float3x3()
         

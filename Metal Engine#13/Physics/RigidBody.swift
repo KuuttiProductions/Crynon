@@ -21,6 +21,8 @@ class RigidBody: Node {
     var forceAccumulator: simd_float3 = simd_float3(0, 0, 0)
     var torqueAccumulator: simd_float3 = simd_float3(0, 0, 0)
     
+    var scaleMatrix: matrix_float3x3 = matrix_identity_float3x3
+    
     var colliders: [Collider] = []
     
     var aabbSimple: [simd_float3] = []
@@ -65,13 +67,13 @@ class RigidBody: Node {
             simd_float3(0, 0, 1)
         )
         if self.name == "physics2" {
-            self.addCollider(Collider(2))
+            self.addCollider(Collider(mesh: .Sphere))
             self.mesh = .Sphere
         } else if self.name == "physics" {
-            self.addCollider(Collider(2))
+            self.addCollider(Collider(mesh: .Sphere))
             self.mesh = .Sphere
         } else {
-            self.addCollider(Collider(1))
+            self.addCollider(Collider(mesh: .Cube))
         }
         
         let verticePointer = AssetLibrary.meshes[mesh].vertexBuffer.contents()
@@ -195,6 +197,9 @@ class RigidBody: Node {
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
 
+        scaleMatrix = matrix_identity_float3x3
+        scaleMatrix.scale(self.scale)
+        
         if name == "physics2" {
             if InputManager.mouseLeftButton {
                 self.addForce(force: simd_float3(0, 20, 0), at: simd_float3(0, 0, 0))
