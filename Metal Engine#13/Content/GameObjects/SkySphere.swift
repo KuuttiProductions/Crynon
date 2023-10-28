@@ -4,12 +4,12 @@ import MetalKit
 class SkySphere: Node {
     
     var texture: String = "OceanSky"
-    var mesh: MeshType = .Sphere
+    var mesh: String = "Sphere"
     var material: ShaderMaterial = ShaderMaterial()
     
     override init(_ name: String) {
         super.init(name)
-        self.setScale(900)
+        self.setScale(999)
         self.material.emission = 1
     }
     

@@ -19,7 +19,8 @@ struct rayCastResult {
     }
 }
 
-struct CollisionData {
+//Generated in the collision detection algorithm
+internal struct CollisionData {
     var contactPointA: simd_float3!
     var contactPointB: simd_float3!
     var localContactPointA: simd_float3!

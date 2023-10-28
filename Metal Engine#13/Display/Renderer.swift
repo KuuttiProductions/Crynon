@@ -187,13 +187,13 @@ extension Renderer: MTKViewDelegate {
         DeferredRenderCommandEncoder?.pushDebugGroup("Lighting")
         DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Lighting])
         DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
+        AssetLibrary.meshes["Quad"].draw(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Blending Transparency")
         DeferredRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
         DeferredRenderCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        AssetLibrary.meshes[.Quad].draw(DeferredRenderCommandEncoder)
+        AssetLibrary.meshes["Quad"].draw(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.endEncoding()
@@ -205,7 +205,7 @@ extension Renderer: MTKViewDelegate {
         finalCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Final])
         finalCommandEncoder?.setFragmentTexture(AssetLibrary.textures["RenderTargetColor"], index: 0)
         finalCommandEncoder?.setFragmentSamplerState(GPLibrary.samplerStates[.Linear], index: 0)
-        AssetLibrary.meshes[.Quad].draw(finalCommandEncoder)
+        AssetLibrary.meshes["Quad"].draw(finalCommandEncoder)
         finalCommandEncoder?.endEncoding()
     }
     

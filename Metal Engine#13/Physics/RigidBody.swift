@@ -35,12 +35,11 @@ class RigidBody: Node {
     //Debug
     var debug_drawAABB: Bool = false
     var debug_drawCollisionState: Bool = false
-    var debug_simplex: [simd_float3] = []
     var debug_contactPoint: simd_float3!
     
     //End of physics variables
     var material: Material = Material()
-    var mesh: MeshType = .Cube
+    var mesh: String = "Cube"
     
     private var aabbPoints: [PointVertex] = [PointVertex(),
                                              PointVertex(),
@@ -66,15 +65,6 @@ class RigidBody: Node {
             simd_float3(0, 1, 0),
             simd_float3(0, 0, 1)
         )
-        if self.name == "physics2" {
-            self.addCollider(Collider(mesh: .Sphere))
-            self.mesh = .Sphere
-        } else if self.name == "physics" {
-            self.addCollider(Collider(mesh: .Sphere))
-            self.mesh = .Sphere
-        } else {
-            self.addCollider(Collider(mesh: .Cube))
-        }
         
         let verticePointer = AssetLibrary.meshes[mesh].vertexBuffer.contents()
         var positions: [simd_float3] = []
@@ -127,33 +117,37 @@ class RigidBody: Node {
         ]
     }
     
-    func localToGlobal(point: simd_float3)-> simd_float3 {
+    func addCollider(_ mesh: String) {
+        self.addCollider(Collider(mesh: mesh))
+    }
+    
+    internal func localToGlobal(point: simd_float3)-> simd_float3 {
         return invOrientation * point + position
     }
-    func globalToLocal(point: simd_float3)-> simd_float3 {
+    internal func globalToLocal(point: simd_float3)-> simd_float3 {
         return orientation * (point - position)
     }
-    func localToGlobalDir(dir: simd_float3)-> simd_float3 {
+    internal func localToGlobalDir(dir: simd_float3)-> simd_float3 {
         return invOrientation * dir
     }
-    func globalToLocalDir(dir: simd_float3)-> simd_float3 {
+    internal func globalToLocalDir(dir: simd_float3)-> simd_float3 {
         return orientation * dir
     }
     
-    func updateGlobalCenterOfMassFromPosition() {
+    internal func updateGlobalCenterOfMassFromPosition() {
         globalCenterOfMass = orientation * localCenterOfMass + position
     }
-    func updatePositionFromGlobalCenterOfMass() {
+    internal func updatePositionFromGlobalCenterOfMass() {
         setPos(orientation * (-localCenterOfMass) + globalCenterOfMass)
     }
-    func updateOrientation() {
+    internal func updateOrientation() {
         var quat: simd_quatf = simd_quatf(orientation)
         quat = quat.normalized
         orientation = matrix_float3x3(quat)
         
         invOrientation = orientation.inverse
     }
-    func updateInvInertiaTensor() {
+    internal func updateInvInertiaTensor() {
         globalInvInertiaTensor = orientation * localInvInertiaTensor * invOrientation
     }
     
@@ -199,22 +193,6 @@ class RigidBody: Node {
 
         scaleMatrix = matrix_identity_float3x3
         scaleMatrix.scale(self.scale)
-        
-        if name == "physics2" {
-            if InputManager.mouseLeftButton {
-                self.addForce(force: simd_float3(0, 20, 0), at: simd_float3(0, 0, 0))
-            }
-            if InputManager.pressedKeys.contains(.keyQ) {
-                self.addForce(force: simd_float3(0, 0, 1), at: simd_float3(0.1, 0, 0))
-            } else if InputManager.pressedKeys.contains(.keyE) {
-                self.addForce(force: simd_float3(0, 0, -1), at: simd_float3(0.1, 0, 0))
-            }
-            if InputManager.pressedKeys.contains(.leftArrow) {
-                self.addForce(force: simd_float3(-1, 0, 0), at: simd_float3(0, 0, 0))
-            } else if InputManager.pressedKeys.contains(.rightArrow) {
-                self.addForce(force: simd_float3(1, 0, 0), at: simd_float3(0, 0, 0))
-            }
-        }
         
         var min: simd_float3 = simd_float3(repeating: .infinity)
         var max: simd_float3 = simd_float3(repeating: -.infinity)
@@ -290,6 +268,7 @@ class RigidBody: Node {
             renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
             AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
             
+            // Debug drawing
             if debug_drawAABB {
                 Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
                 Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))

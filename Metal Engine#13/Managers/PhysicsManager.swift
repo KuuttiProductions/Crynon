@@ -52,7 +52,7 @@ class PhysicsManager {
                         object2.addPos(manifold.contactNormal * manifold.depth * 0.5, teleport: false)
                         object1.addPos(manifold.contactNormal * manifold.depth * -0.5, teleport: false)
                         Debug.pointAndLine.point2 = manifold.contactNormal
-                    } else { object1.debug_simplex = [] }
+                    }
                 }
             }
         }

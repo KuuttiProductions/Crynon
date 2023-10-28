@@ -1,13 +1,11 @@
 
 import simd
 
+//BasicScene is a test scene used in development
 class BasicScene: Scene {
     
-    let object = MetameshObject()
+    let object = GameObject("Metamesh")
     let floor = RigidBody("floor")
-    let cube2 = CubeObject()
-    let cube3 = CubeObject()
-    let cube4 = CubeObject()
     let grass = GameObject("Grass")
     let glass = GameObject("Window")
     let glassF = GameObject("WindowF")
@@ -33,9 +31,6 @@ class BasicScene: Scene {
         addChild(skySphere)
         addPhysicsObject(floor)
         addCamera(camera, true)
-        addChild(cube2)
-        addChild(cube3)
-        addChild(cube4)
         addChild(grass)
         addChild(glass2)
         addChild(glassH)
@@ -48,17 +43,12 @@ class BasicScene: Scene {
         addLight(spotlight)
         object.setPosX(-4)
         object.material.shaderMaterial.roughness = 0
+        object.mesh = "Metamesh"
         floor.setPos(0, -5, -3)
         floor.setScale(10, 1, 10)
         floor.material.shaderMaterial.roughness = 1
         floor.material.shaderMaterial.color = simd_float4(0.2, 0.6, 0.0, 1.0)
         floor.isActive = false
-        cube2.setPosX(20)
-        cube2.setScaleY(3)
-        cube3.setPos(4, -1, 0)
-        cube3.setRotY(Float(30.deg2rad))
-        cube4.setPos(-15, 10, 0)
-        cube4.setScale(5, 0.3, 5)
         grass.setPos(6, -1.8, 2)
         grass.material.textureColor = "Grass"
         glass.setPos(5, -1.8, 5)
@@ -85,6 +75,11 @@ class BasicScene: Scene {
         camera.setPosZ(5)
         physics.setPos(0, 0, -3, teleport: true)
         physics2.setPos(0, 3, -3.1, teleport: true)
+        physics.addCollider("Sphere")
+        physics2.addCollider("Sphere")
+        floor.addCollider("Cube")
+        physics.mesh = "Sphere"
+        physics2.mesh = "Sphere"
         physics2.material.shaderMaterial.roughness = 0.1
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)

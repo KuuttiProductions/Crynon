@@ -1,5 +1,6 @@
 
-class Library<Types, Returns> {
+//Used for internal
+internal class Library<Types, Returns> {
     
     init() {
         fillLibrary()

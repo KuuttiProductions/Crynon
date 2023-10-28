@@ -7,7 +7,7 @@ class Collider {
     var localCenterOfMass: simd_float3!
     
     var body: RigidBody!
-    var mesh: MeshType!
+    var mesh: String!
     
     var vertices: [simd_float3] = []
     
@@ -43,7 +43,7 @@ class Collider {
             )
             self.localCenterOfMass = simd_float3(0, 0, 0)
             
-            self.mesh = .Sphere
+            self.mesh = "Sphere"
             
             let verticePointer = AssetLibrary.meshes[mesh].vertexBuffer.contents()
             for i in 0..<AssetLibrary.meshes[mesh].vertexBuffer.length/Vertex.stride {
@@ -53,7 +53,7 @@ class Collider {
         }
     }
     
-    init(mesh: MeshType) {
+    init(mesh: String) {
         self.mesh = mesh
         self.mass = 1
         self.localInertiaTensor = simd_float3x3()

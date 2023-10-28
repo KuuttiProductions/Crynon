@@ -1,28 +1,20 @@
 
 import MetalKit
 
-enum MeshType {
-    case Quad
-    case Cube
-    case Sphere
-    case Metamesh
-    case Vector
-}
-
-class MeshLibrary: Library<MeshType, Mesh> {
+class MeshLibrary: Library<String, Mesh> {
     
     private var meshLoader = MeshLoader()
-    private var _library: [MeshType : Mesh] = [:]
+    private var _library: [String : Mesh] = [:]
     
     override func fillLibrary() {
-        _library.updateValue(Quad_Mesh(), forKey: .Quad)
-        _library.updateValue(meshLoader.loadNormalMesh("Cube"), forKey: .Cube)
-        _library.updateValue(meshLoader.loadNormalMesh("Sphere"), forKey: .Sphere)
-        _library.updateValue(meshLoader.loadNormalMesh("Metamesh"), forKey: .Metamesh)
-        _library.updateValue(meshLoader.loadNormalMesh("Vector"), forKey: .Vector)
+        _library.updateValue(Quad_Mesh(), forKey: "Quad")
+        _library.updateValue(meshLoader.loadNormalMesh("Cube"), forKey: "Cube")
+        _library.updateValue(meshLoader.loadNormalMesh("Sphere"), forKey: "Sphere")
+        _library.updateValue(meshLoader.loadNormalMesh("Metamesh"), forKey: "Metamesh")
+        _library.updateValue(meshLoader.loadNormalMesh("Vector"), forKey: "Vector")
     }
     
-    override subscript(type: MeshType) -> Mesh! {
+    override subscript(type: String) -> Mesh! {
         return _library[type]
     }
 }

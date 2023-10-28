@@ -2,6 +2,7 @@
 import MetalKit
 import GameController
 
+//FPSCamera is a simple fly-around camera
 class FPSCamera: Camera {
     
     var moveSpeed: Float = 4
@@ -66,11 +67,7 @@ class FPSCamera: Camera {
 extension FPSCamera: EventInput {
     func drawControllerInput(button: GCButtonElementName, down: Bool) {}
     
-    func drawMouseInput(button: MouseButton, down: Bool) {
-        if button == .middle && down {
-            CustomVSC.shared.time += 0.69
-        }
-    }
+    func drawMouseInput(button: MouseButton, down: Bool) {}
     
     func drawKeyInput(key: GCKeyCode, down: Bool) {}
 }
