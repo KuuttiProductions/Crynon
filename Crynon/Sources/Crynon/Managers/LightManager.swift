@@ -1,7 +1,7 @@
 
 import MetalKit
 
-class LightManager {
+final class LightManager {
     
     private var _lights: [Light] = []
     

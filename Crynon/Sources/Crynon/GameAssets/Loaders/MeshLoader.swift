@@ -4,14 +4,20 @@ import ModelIO
 
 class MeshLoader {
 
-    func loadNormalMesh(_ name: String, _ extension: String = "obj")-> Mesh {
+    func loadNormalMesh(_ name: String, _ extension: String = "obj", engineContent: Bool = false)-> Mesh {
         let descriptor = MTKModelIOVertexDescriptorFromMetal(GPLibrary.vertexDescriptors[.Basic])
         (descriptor.attributes[0] as! MDLVertexAttribute).name = MDLVertexAttributePosition
         (descriptor.attributes[1] as! MDLVertexAttribute).name = MDLVertexAttributeColor
         (descriptor.attributes[2] as! MDLVertexAttribute).name = MDLVertexAttributeTextureCoordinate
         (descriptor.attributes[3] as! MDLVertexAttribute).name = MDLVertexAttributeNormal
         
-        let url = Bundle.main.url(forResource: name, withExtension: `extension`)
+        var url: URL!
+        if engineContent {
+            url = Bundle.module.url(forResource: name, withExtension: `extension`)
+            print(Bundle.module.url)
+        } else {
+            url = Bundle.main.url(forResource: name, withExtension: `extension`)
+        }
         let bufferAllocator = MTKMeshBufferAllocator.init(device: Core.device)
         var error: NSError?
         let asset = MDLAsset.init(url: url!,

@@ -2,6 +2,7 @@
 import MetalKit
 import SwiftUI
 
+@available(macOS 10.15, *)
 struct GameView: NSViewRepresentable {
     
     class InputView: MTKView {

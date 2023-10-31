@@ -8,10 +8,10 @@ class MeshLibrary: Library<String, Mesh> {
     
     override func fillLibrary() {
         _library.updateValue(Quad_Mesh(), forKey: "Quad")
-        _library.updateValue(meshLoader.loadNormalMesh("Cube"), forKey: "Cube")
-        _library.updateValue(meshLoader.loadNormalMesh("Sphere"), forKey: "Sphere")
-        _library.updateValue(meshLoader.loadNormalMesh("Metamesh"), forKey: "Metamesh")
-        _library.updateValue(meshLoader.loadNormalMesh("Vector"), forKey: "Vector")
+        _library.updateValue(meshLoader.loadNormalMesh("Cube", engineContent: true), forKey: "Cube")
+        _library.updateValue(meshLoader.loadNormalMesh("Sphere", engineContent: true), forKey: "Sphere")
+        _library.updateValue(meshLoader.loadNormalMesh("Metamesh", engineContent: true), forKey: "Metamesh")
+        _library.updateValue(meshLoader.loadNormalMesh("Vector", engineContent: true), forKey: "Vector")
     }
     
     override subscript(type: String) -> Mesh! {

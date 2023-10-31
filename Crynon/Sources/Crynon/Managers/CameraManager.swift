@@ -5,7 +5,7 @@ enum CameraType {
     case FPS
 }
 
-class CameraManager {
+final class CameraManager {
     var _currentCamera: Camera!
     private var _cameras: [Camera] = []
     

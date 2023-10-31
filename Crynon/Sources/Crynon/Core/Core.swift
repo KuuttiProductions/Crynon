@@ -2,7 +2,7 @@
 import Metal
 
 //Handles states of all core components
-class Core : ObservableObject {
+open class Core: ObservableObject {
     
     private static var _commandQueue: MTLCommandQueue!
     private static var _defaultLibrary: MTLLibrary!
@@ -12,10 +12,10 @@ class Core : ObservableObject {
     public static var defaultLibrary: MTLLibrary { _defaultLibrary }
     public static var device: MTLDevice { _device }
     
-    init() {
+    public init() {
         Core._device = MTLCreateSystemDefaultDevice()
         Core._commandQueue = Core.device.makeCommandQueue()
-        Core._defaultLibrary = Core.device.makeDefaultLibrary()
+        Core._defaultLibrary = try! Core.device.makeDefaultLibrary(bundle: .module)
         
         GPLibrary.initialize()
         AssetLibrary.initialize()

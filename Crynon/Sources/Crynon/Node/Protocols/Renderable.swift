@@ -1,4 +1,0 @@
-
-protocol Renderable {
-    func render()
-}

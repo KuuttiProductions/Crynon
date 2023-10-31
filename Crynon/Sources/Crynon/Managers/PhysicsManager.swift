@@ -1,7 +1,7 @@
 
 import MetalKit
 
-class PhysicsManager {
+final class PhysicsManager {
     
     private var _physicsObjects: [RigidBody] = []
     private var _colliders: [Collider] = []

@@ -8,7 +8,7 @@ enum SceneType {
 
 //Takes care of updating the current Scene
 //and switching of scenes.
-class SceneManager {
+final class SceneManager {
     
     static private var _currentScene: Scene!
     
