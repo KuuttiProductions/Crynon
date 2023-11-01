@@ -18,6 +18,6 @@ let package = Package(
             resources: [.process("Assets")]),
         .testTarget(
             name: "CrynonTests",
-            dependencies: ["Crynon"]),
+            dependencies: ["Crynon"])
     ]
 )

@@ -1,13 +1,12 @@
 
 import MetalKit
 
-class GameObject: Node {
+open class GameObject: Node {
     
-    var material: Material = Material()
-    var mesh: String = "Quad"
-    var simulatePhysics: Bool = false
+    public var material: Material = Material()
+    public var mesh: String = "Quad"
     
-    override init(_ name: String) {
+    public override init(_ name: String) {
         super.init(name)
     }
     

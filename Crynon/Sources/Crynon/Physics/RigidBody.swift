@@ -1,7 +1,7 @@
 
 import MetalKit
 
-class RigidBody: Node {
+open class RigidBody: Node {
     
     //Physics variables
     var orientation: simd_float3x3 = simd_float3x3()
@@ -50,7 +50,7 @@ class RigidBody: Node {
                                              PointVertex(),
                                              PointVertex()]
     
-    override init(_ name: String) {
+    public override init(_ name: String) {
         super.init(name)
         
         self.orientation.columns = (

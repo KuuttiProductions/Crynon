@@ -2,7 +2,7 @@
 import MetalKit
 
 //Any type that needs MemoryLayout information to be checked, can be extended with sizeable.
-protocol sizeable {}
+public protocol sizeable {}
 
 extension sizeable {
     static var stride: Int {
@@ -59,20 +59,20 @@ struct FragmentSceneConstant: sizeable {
     var fogDensity: Float = 1.0
 }
 
-struct LightData: sizeable {
-    var brightness: Float = 1.0
-    var color: simd_float4 = simd_float4(1,1,1,1)
-    var position: simd_float3 = simd_float3()
-    var direction: simd_float3 = simd_float3(0,0,0)
-    var useDirection: Bool = false
-    var cutoff: Float = 0.0
-    var cutoffInner: Float = 0.0
+public struct LightData: sizeable {
+    public var brightness: Float = 1.0
+    public var color: simd_float4 = simd_float4(1,1,1,1)
+    public var position: simd_float3 = simd_float3()
+    public var direction: simd_float3 = simd_float3(0,0,0)
+    public var useDirection: Bool = false
+    public var cutoff: Float = 0.0
+    public var cutoffInner: Float = 0.0
 }
 
-struct ShaderMaterial: sizeable {
-    var color: simd_float4 = simd_float4(1,1,1,1)
-    var metallic: Float = 0.0
-    var roughness: Float = 0.5
-    var emission: Float = 0.0
-    var ior: Float = 1.45
+public struct ShaderMaterial: sizeable {
+    public var color: simd_float4 = simd_float4(1,1,1,1)
+    public var metallic: Float = 0.0
+    public var roughness: Float = 0.5
+    public var emission: Float = 0.0
+    public var ior: Float = 1.45
 }

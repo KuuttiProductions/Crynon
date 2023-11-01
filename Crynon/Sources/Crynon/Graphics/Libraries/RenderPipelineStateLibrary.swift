@@ -2,7 +2,7 @@
 import MetalKit
 import Metal
 
-enum RenderPipelineStateType {
+public enum RenderPipelineStateType {
     case Geometry
     case Lighting
     case Final

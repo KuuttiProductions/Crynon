@@ -1,9 +1,9 @@
 
 import MetalKit
 
-class PointLight: Light {
+open class PointLight: Light {
     
-    init() {
+    public init() {
         super.init("PointLight")
     }
 }

@@ -1,7 +1,7 @@
 
 import simd
 
-struct rayCastResult {
+public struct rayCastResult {
     var position: simd_float3
     var normal: simd_float3
     var distance: Float

@@ -1,7 +1,7 @@
 
 import simd
 
-//BasicScene is a test scene used in development
+//BasicScene is just a test scene used in development
 class BasicScene: Scene {
     
     let object = GameObject("Metamesh")
@@ -43,6 +43,7 @@ class BasicScene: Scene {
         addLight(spotlight)
         object.setPosX(-4)
         object.material.shaderMaterial.roughness = 0
+        object.material.shaderMaterial.color = simd_float4(0.5, 0.3, 0.0, 1.0)
         object.mesh = "Metamesh"
         floor.setPos(0, -5, -3)
         floor.setScale(10, 1, 10)

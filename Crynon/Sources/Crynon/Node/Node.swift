@@ -5,7 +5,7 @@ import MetalKit
 //even the scene itself.
 //Can be 2D, 3D, rendered or not, really
 //it's just a superclass for objects in the scene.
-class Node {
+open class Node {
     
     var name: String!
     var uuid: String!
@@ -34,12 +34,12 @@ class Node {
         return modelMatrix
     }
     
-    init(_ name: String) {
+    public init(_ name: String) {
         self.name = name
         self.uuid = UUID().uuidString
     }
     
-    func addChild(_ child: Node) {
+    open func addChild(_ child: Node) {
         child.parent = self
         _children.append(child)
     }
@@ -121,7 +121,7 @@ extension Node {
         self._position.z = value
     }
     
-    func setPos(_ value: simd_float3) {
+    public func setPos(_ value: simd_float3) {
         self._position = value
     }
     func setPos(_ x: Float, _ y: Float, _ z: Float) {

@@ -3,11 +3,11 @@ import MetalKit
 import GameController
 
 //FPSCamera is a simple fly-around camera
-class FPSCamera: Camera {
+open class FPSCamera: Camera {
     
     var moveSpeed: Float = 4
     
-    init() {
+    public init() {
         super.init("FPSCamera")
         self.fieldOfView = 80
         self.nearPlane = 0.03

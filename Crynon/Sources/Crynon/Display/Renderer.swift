@@ -133,24 +133,26 @@ extension Renderer: MTKViewDelegate {
         deferredRenderPassDescriptor.colorAttachments[0].texture = drawable.texture
         deferredRenderPassDescriptor.depthAttachment.texture = depthTexture
         
+        let commandBuffer = Core.commandQueue.makeCommandBuffer()
+        commandBuffer?.label = "Main CommandBuffer"
+        
         Renderer.currentDeltaTime = 1/Float(Preferences.preferredFPS)
         Renderer.time += Renderer.currentDeltaTime
         
         //Update scene
-        SceneManager.tick(Renderer.currentDeltaTime)
-        
-        SceneManager.physicsTick(Renderer.currentDeltaTime)
-        
-        let commandBuffer = Core.commandQueue.makeCommandBuffer()
-        commandBuffer?.label = "Main CommandBuffer"
-        
-        computePass(commandBuffer: commandBuffer)
-        
-        shadowRenderPass(commandBuffer: commandBuffer)
-        
-        deferredRenderPass(commandBuffer: commandBuffer)
-        
-        //finalRenderPass(commandBuffer: commandBuffer, view: view)
+        if SceneManager.inScene() {
+            SceneManager.tick(Renderer.currentDeltaTime)
+            
+            SceneManager.physicsTick(Renderer.currentDeltaTime)
+            
+            computePass(commandBuffer: commandBuffer)
+            
+            shadowRenderPass(commandBuffer: commandBuffer)
+            
+            deferredRenderPass(commandBuffer: commandBuffer)
+            
+            //finalRenderPass(commandBuffer: commandBuffer, view: view)
+        }
     
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
@@ -176,7 +178,6 @@ extension Renderer: MTKViewDelegate {
         DeferredRenderCommandEncoder?.pushDebugGroup("Opaque fill")
         Renderer.currentBlendMode = .Opaque
         SceneManager.render(DeferredRenderCommandEncoder)
-        Debug.pointAndLine.drawFrame(DeferredRenderCommandEncoder)
         DeferredRenderCommandEncoder?.popDebugGroup()
         
         DeferredRenderCommandEncoder?.pushDebugGroup("Alpha fill")

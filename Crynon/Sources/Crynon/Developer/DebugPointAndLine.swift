@@ -78,13 +78,4 @@ class Debug_PointAndLine {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
     }
-    
-    var point: simd_float3 = simd_float3()
-    var point2: simd_float3 = simd_float3()
-    
-    func drawFrame(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        renderCommandEncoder.pushDebugGroup("Rendering PointAndLine")
-        drawLine(renderCommandEncoder: renderCommandEncoder, position1: simd_float3(0, 0, 0), position2: point2, color: simd_float4(0.7, 0, 0.7, 1))
-        renderCommandEncoder.popDebugGroup()
-    }
 }

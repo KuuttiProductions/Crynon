@@ -1,11 +1,11 @@
 
 import MetalKit
 
-class DirectionalLight: Light {
+open class DirectionalLight: Light {
     
-    override var shadows: Bool { true }
+    public override var shadows: Bool { true }
     
-    init() {
+    public init() {
         super.init("DirectionalLight")
         self.lightData.useDirection = true
     }

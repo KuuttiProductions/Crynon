@@ -53,6 +53,11 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
     finalColor fc;
     fc.color = gBuffer.color;
     
+    if (!lightData) {
+        fc.color = half4(1, 0, 0, 1);
+        return fc;
+    }
+    
     float ambientTerm = AmbientOcclusion::getAmbientTerm(gBuffer.normalShadow.xyz,
                                                          gBuffer.depth);
     
@@ -74,7 +79,6 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                                            ambientTerm));
         fc.color *= half4(lighting, 1);
     }
-    
     
     float density = fragmentSceneConstant.fogDensity;
     float gradient = 100;

@@ -1,16 +1,16 @@
 
 import MetalKit
 
-class Light: Node {
+open class Light: Node {
     
-    var lightData: LightData = LightData()
-    var fieldOfView: Float = 80
-    var nearPlane: Float = 0.1
-    var farPlane: Float = 1000
-    var shadows: Bool { false }
-    var direction: simd_float3 = simd_float3(0,0,0)
+    public var lightData: LightData = LightData()
+    public var fieldOfView: Float = 80
+    public var nearPlane: Float = 0.1
+    public var farPlane: Float = 1000
+    public var shadows: Bool { false }
+    public var direction: simd_float3 = simd_float3(0,0,0)
 
-    override func tick(_ deltaTime: Float) {
+    public override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
         lightData.position = self.position
         lightData.direction = direction

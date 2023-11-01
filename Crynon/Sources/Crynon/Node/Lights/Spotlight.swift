@@ -1,9 +1,9 @@
 
 import MetalKit
 
-class Spotlight: Light {
+open class Spotlight: Light {
     
-    init() {
+    public init() {
         super.init("Spotlight")
         self.lightData.cutoff = Float(50.deg2rad)
         self.lightData.cutoffInner = Float(45.deg2rad)

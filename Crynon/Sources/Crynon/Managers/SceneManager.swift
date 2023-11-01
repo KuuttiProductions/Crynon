@@ -2,25 +2,19 @@
 import MetalKit
 import SwiftUI
 
-enum SceneType {
-    case Basic
-}
-
 //Takes care of updating the current Scene
 //and switching of scenes.
-final class SceneManager {
+open class SceneManager {
     
     static private var _currentScene: Scene!
+    static public var inScene = { return _currentScene == nil ? false : true }
     
     static func initialize() {
-        changeScene(.Basic)
+ 
     }
     
-    static func changeScene(_ newScene: SceneType) {
-        switch newScene {
-        case .Basic:
-            _currentScene = BasicScene()
-        }
+    public static func changeScene(_ newScene: Scene) {
+        _currentScene = newScene
     }
     
     static func tick(_ deltaTime: Float) {
