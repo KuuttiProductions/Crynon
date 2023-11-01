@@ -14,7 +14,6 @@ class MeshLoader {
         var url: URL!
         if engineContent {
             url = Bundle.module.url(forResource: name, withExtension: `extension`)
-            print(Bundle.module.url)
         } else {
             url = Bundle.main.url(forResource: name, withExtension: `extension`)
         }

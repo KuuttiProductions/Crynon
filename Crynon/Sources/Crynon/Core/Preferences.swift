@@ -2,7 +2,7 @@
 import MetalKit
 import SwiftUI
 
-class Preferences {
+open class Preferences {
     public static var pixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     public static var floatPixelFormat: MTLPixelFormat = .rgba16Float
     public static var signedPixelFormat: MTLPixelFormat = .rgba8Snorm
