@@ -3,10 +3,9 @@ import MetalKit
 
 open class Camera: Node {
     
-    var cameraType: CameraType!
-    var fieldOfView: Float = 70
-    var nearPlane: Float = 0.1
-    var farPlane: Float = 1000
+    public var fieldOfView: Float = 70
+    public var nearPlane: Float = 0.1
+    public var farPlane: Float = 1000
     
     public override init(_ name: String) {
         super.init(name)

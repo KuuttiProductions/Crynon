@@ -1,10 +1,6 @@
 
 import MetalKit
 
-enum CameraType {
-    case FPS
-}
-
 final class CameraManager {
     var _currentCamera: Camera!
     private var _cameras: [Camera] = []
