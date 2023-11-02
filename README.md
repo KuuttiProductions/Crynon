@@ -1,15 +1,15 @@
-# Metal-Engine-13
+# Crynon
 
 ## About ##
-Metal-Engine-13 or ME13 is a game-engine made in Swift/Metal by KudeKube. ME13 is designed from the ground up to be efficient and leveraging of Apple technologies. Name is subject to change.
+Crynon is a game-engine made in Swift/Metal by KudeKube. It's designed from the ground up to be efficient and leveraging of Apple technologies. Name is subject to change.
 
 Updates are posted on Youtube: [KudeKube](https://www.youtube.com/channel/UCXDI-MFA_Gp8vXyaJ80Zc5Q)
-View roadmap on [Trello](https://trello.com/b/eskU0MZE/metal-engine-13)
+View roadmap on [Trello](https://trello.com/b/eskU0MZE/crynon)
 
-![Logo](MetalEngine.png)
+![Logo](Crynon.png)
 
 ## Plans ##
-Here are the current plans for ME13. More will be added.
+Here are the current plans for Crynon. More will be added.
 
 ### Rendering ###
 - [x] Efficient 3D renderer

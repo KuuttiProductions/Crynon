@@ -1,4 +1,0 @@
-
-protocol ShadowCaster {
-    func castShadow()
-}
