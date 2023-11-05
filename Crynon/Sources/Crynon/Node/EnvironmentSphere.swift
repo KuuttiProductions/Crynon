@@ -3,10 +3,10 @@ import MetalKit
 
 open class EnvironmentSphere: Node {
     
-    var texture: String!
+    public var texture: String!
     private var material: ShaderMaterial = ShaderMaterial()
     
-    override init(_ name: String) {
+    public override init(_ name: String) {
         super.init(name)
         self.setScale(999)
         self.material.emission = 1
@@ -20,7 +20,7 @@ open class EnvironmentSphere: Node {
             renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
             renderCommandEncoder.setFragmentBytes(&material, length: ShaderMaterial.stride, index: 1)
             renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[texture], index: 3)
-            AssetLibrary.meshes["sphere"].draw(renderCommandEncoder)
+            AssetLibrary.meshes["Sphere"].draw(renderCommandEncoder)
             super.render(renderCommandEncoder)
         }
     }

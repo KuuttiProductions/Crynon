@@ -101,8 +101,8 @@ open class Node {
         renderCommandEncoder.popDebugGroup()
     }
     
-    public func renderCustom(_ renderCommandEncoder: MTLRenderCommandEncoder!) {}
-    public func tickCustom(_ deltaTime: Float) {}
+    open func renderCustom(_ renderCommandEncoder: MTLRenderCommandEncoder!) {}
+    open func tickCustom(_ deltaTime: Float) {}
 }
 
 extension Node {
