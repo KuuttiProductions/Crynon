@@ -33,14 +33,14 @@ extension matrix_float4x4: sizeable {}
 
 //===== Types that are used with Metal =====
 
-struct Vertex: sizeable {
+public struct Vertex: sizeable {
     var position: simd_float3 = simd_float3(0,0,0)
     var color: simd_float4 = simd_float4(0,0,0,0)
     var textureCoordinate: simd_float2 = simd_float2(0,0)
     var normal: simd_float3 = simd_float3(0,0,0)
 }
 
-struct PointVertex: sizeable {
+public struct PointVertex: sizeable {
     var position: simd_float3 = simd_float3(0,0,0)
     var pointSize: Float = 1
 }

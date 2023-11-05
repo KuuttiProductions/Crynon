@@ -1,7 +1,7 @@
 
 import MetalKit
 
-class TextureLibrary: Library<String, MTLTexture> {
+public class TextureLibrary: Library<String, MTLTexture> {
     
     private var textureLoader = TextureLoader()
     private var _library: [String : MTLTexture] = [:]
@@ -11,6 +11,10 @@ class TextureLibrary: Library<String, MTLTexture> {
         _library.updateValue(textureLoader.loadTexture("Grass", "png", true, engineContent: true), forKey: "Grass")
         _library.updateValue(textureLoader.loadTexture("Window", engineContent: true), forKey: "Window")
         _library.updateValue(textureLoader.loadTexture("OceanSky", engineContent: true), forKey: "OceanSky")
+    }
+    
+    public func addTexture(textureName: String) {
+        _library.updateValue(textureLoader.loadTexture(textureName, engineContent: false), forKey: textureName)
     }
     
     override subscript(type: String) -> MTLTexture! {

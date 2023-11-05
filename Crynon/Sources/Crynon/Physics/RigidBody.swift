@@ -29,7 +29,7 @@ open class RigidBody: Node {
     var aabbMin: simd_float3 = simd_float3(repeating: 0)
     var aabbMax: simd_float3 = simd_float3(repeating: 0)
     
-    var isActive: Bool = true
+    public var isActive: Bool = true
     var isColliding: Bool = false
     
     //Debug
@@ -38,8 +38,8 @@ open class RigidBody: Node {
     var debug_contactPoint: simd_float3!
     
     //End of physics variables
-    var material: Material = Material()
-    var mesh: String = "Cube"
+    public var material: Material = Material()
+    public var mesh: String = "Cube"
     
     private var aabbPoints: [PointVertex] = [PointVertex(),
                                              PointVertex(),
@@ -117,7 +117,7 @@ open class RigidBody: Node {
         ]
     }
     
-    func addCollider(_ mesh: String) {
+    public func addCollider(_ mesh: String) {
         self.addCollider(Collider(mesh: mesh))
     }
     
@@ -151,7 +151,7 @@ open class RigidBody: Node {
         globalInvInertiaTensor = orientation * localInvInertiaTensor * invOrientation
     }
     
-    func addCollider(_ collider: Collider) {
+    internal func addCollider(_ collider: Collider) {
         colliders.append(collider)
         collider.body = self
         

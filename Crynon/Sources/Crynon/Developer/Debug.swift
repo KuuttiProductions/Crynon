@@ -1,7 +1,7 @@
 
 import MetalKit
 
-class Debug {
+public class Debug {
     
     private static var _pointAndLine: Debug_PointAndLine!
     public static var pointAndLine: Debug_PointAndLine { return _pointAndLine }

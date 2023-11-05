@@ -6,21 +6,21 @@ open class Scene: Node {
     var cameraManager = CameraManager()
     var lightManager = LightManager()
     var physicsManager = PhysicsManager()
-    var vertexSceneConstant = VertexSceneConstant()
-    var viewMatrix: matrix_float4x4 = matrix_float4x4()
-    var fragmentSceneConstant = FragmentSceneConstant()
+    private var vertexSceneConstant = VertexSceneConstant()
+    private var viewMatrix: matrix_float4x4 = matrix_float4x4()
+    private var fragmentSceneConstant = FragmentSceneConstant()
     
-    open func addCamera(_ camera: Camera, _ setAsCurrent: Bool = true) {
+    public func addCamera(_ camera: Camera, _ setAsCurrent: Bool = true) {
         cameraManager.addCamera(camera, setAsCurrent)
         addChild(camera)
     }
     
-    open func addLight(_ light: Light) {
+    public func addLight(_ light: Light) {
         lightManager.addLight(light)
         addChild(light)
     }
     
-    open func addPhysicsObject(_ object: RigidBody) {
+    public func addPhysicsObject(_ object: RigidBody) {
         physicsManager.addPhysicsObject(object: object)
         addChild(object)
     }
@@ -40,7 +40,7 @@ open class Scene: Node {
         fragmentSceneConstant.fogDensity = Preferences.fogAmount
     }
     
-    override func getScene() -> Scene {
+    public override func getScene() -> Scene {
         return self
     }
     

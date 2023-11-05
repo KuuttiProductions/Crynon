@@ -1,8 +1,8 @@
 
 import MetalKit
 
-class Debug_PointAndLine {
-    func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1), pointSize: Float = 10) {
+public class Debug_PointAndLine {
+    public func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1), pointSize: Float = 10) {
         var points: [PointVertex] = []
         var color: simd_float4 = color
         for position in positions {
@@ -16,7 +16,7 @@ class Debug_PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
+    public func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
         var points = points
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering \(points.count) points")
@@ -27,7 +27,7 @@ class Debug_PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1)) {
+    public func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1)) {
         var points: [PointVertex] = []
         for position in positions {
             points.append(PointVertex(position: position))
@@ -41,7 +41,7 @@ class Debug_PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
+    public func drawLineStrip(renderCommandEncoder: MTLRenderCommandEncoder, points: [PointVertex], color: simd_float4 = simd_float4(1,1,1,1)) {
         var points = points
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
@@ -52,7 +52,7 @@ class Debug_PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, point1: PointVertex, point2: PointVertex, color: simd_float4 = simd_float4(1,1,1,1)) {
+    public func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, point1: PointVertex, point2: PointVertex, color: simd_float4 = simd_float4(1,1,1,1)) {
         var points: [PointVertex] = [point1, point2]
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
@@ -63,7 +63,7 @@ class Debug_PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, position1: simd_float3, position2: simd_float3, color: simd_float4 = simd_float4(1,1,1,1)) {
+    public func drawLine(renderCommandEncoder: MTLRenderCommandEncoder, position1: simd_float3, position2: simd_float3, color: simd_float4 = simd_float4(1,1,1,1)) {
         var points: [PointVertex] = [PointVertex(position: position1), PointVertex(position: position2)]
         var color: simd_float4 = color
         renderCommandEncoder.pushDebugGroup("Rendering lines with \(points.count) points")
@@ -74,7 +74,7 @@ class Debug_PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    func setDefaults(_ renderCommandEncoder: MTLRenderCommandEncoder) {
+    public func setDefaults(_ renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
     }

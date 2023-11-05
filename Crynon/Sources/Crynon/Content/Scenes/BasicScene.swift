@@ -19,7 +19,7 @@ class BasicScene: Scene {
     let spotlight = Spotlight()
     let physics = RigidBody("physics")
     let physics2 = RigidBody("physics2")
-    let skySphere = SkySphere("OceanSky")
+    let skySphere = EnvironmentSphere("OceanSky")
     
     var time: Float = 0.0
     

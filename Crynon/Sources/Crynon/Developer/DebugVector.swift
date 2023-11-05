@@ -1,8 +1,8 @@
 
 import MetalKit
 
-class Debug_Vector {
-    func drawVector(renderCommandEncoder: MTLRenderCommandEncoder,
+public class Debug_Vector {
+    public func drawVector(renderCommandEncoder: MTLRenderCommandEncoder,
                     vector: simd_float3,
                     origin: simd_float3 = simd_float3(0, 0, 0),
                     color: simd_float4 = simd_float4(1, 1, 1, 1),
@@ -38,7 +38,7 @@ class Debug_Vector {
         renderCommandEncoder.popDebugGroup()
     }
     
-    func drawVector(renderCommandEncoder: MTLRenderCommandEncoder,
+    public func drawVector(renderCommandEncoder: MTLRenderCommandEncoder,
                     angle: simd_float3,
                     length: Float,
                     origin: simd_float3 = simd_float3(0, 0, 0),

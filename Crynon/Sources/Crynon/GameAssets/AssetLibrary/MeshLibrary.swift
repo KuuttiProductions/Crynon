@@ -1,7 +1,7 @@
 
 import MetalKit
 
-class MeshLibrary: Library<String, Mesh> {
+public class MeshLibrary: Library<String, Mesh> {
     
     private var meshLoader = MeshLoader()
     private var _library: [String : Mesh] = [:]
@@ -14,6 +14,10 @@ class MeshLibrary: Library<String, Mesh> {
         _library.updateValue(meshLoader.loadNormalMesh("Vector", engineContent: true), forKey: "Vector")
     }
     
+    public func addMesh(meshName: String) {
+        _library.updateValue(meshLoader.loadNormalMesh(meshName, engineContent: false), forKey: meshName)
+    }
+    
     override subscript(type: String) -> Mesh! {
         return _library[type]
     }
@@ -21,7 +25,7 @@ class MeshLibrary: Library<String, Mesh> {
 
 //Mesh class is for storing vertices and being able to draw them on call.
 //Contains vertices and a vertex buffer with other attributes in the future.
-class Mesh {
+public class Mesh {
     var vertices: [Vertex] = []
     var vertexBuffer: MTLBuffer!
     var submeshes: [Submesh] = []

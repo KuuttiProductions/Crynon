@@ -1,5 +1,5 @@
 
-class AssetLibrary {
+public class AssetLibrary {
 
     private static var _meshLibrary: MeshLibrary!
     public static var meshes: MeshLibrary { _meshLibrary }
