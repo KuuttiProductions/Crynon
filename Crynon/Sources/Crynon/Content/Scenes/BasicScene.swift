@@ -2,7 +2,7 @@
 import simd
 
 //BasicScene is just a test scene used in development
-class BasicScene: Scene {
+public class BasicScene: Scene {
     
     let object = GameObject("Metamesh")
     let floor = RigidBody("floor")
@@ -23,7 +23,7 @@ class BasicScene: Scene {
     
     var time: Float = 0.0
     
-    init() {
+    public init() {
         super.init("BasicScene")
         addChild(object)
         addChild(glass)

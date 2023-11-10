@@ -46,11 +46,30 @@ final class PhysicsManager {
                 if checkForAABBCollision(object1: object1, object2: object2) {
                     let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
                     if gjk.overlap {
+                        if !object1.collidingBodies.contains(object2.uuid) {
+                            object1.collidingBodies.append(object2.uuid)
+                            object1.onBeginCollide(collidingObject: object2)
+                        }
+                        if !object2.collidingBodies.contains(object1.uuid) {
+                            object2.collidingBodies.append(object1.uuid)
+                            object2.onBeginCollide(collidingObject: object1)
+                        }
                         let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object2.colliders[0], simplex: gjk.simplex)
                         object1.isColliding = true
                         object2.isColliding = true
                         object2.addPos(manifold.contactNormal * manifold.depth * 0.5, teleport: false)
                         object1.addPos(manifold.contactNormal * manifold.depth * -0.5, teleport: false)
+                    } else {
+                        if object1.collidingBodies.contains(object2.uuid) {
+                            let index = object1.collidingBodies.firstIndex(of: object2.uuid)!
+                            object1.collidingBodies.remove(at: index)
+                            object1.onEndCollide(collidingObject: object2)
+                        }
+                        if object2.collidingBodies.contains(object1.uuid) {
+                            let index = object2.collidingBodies.firstIndex(of: object1.uuid)!
+                            object2.collidingBodies.remove(at: index)
+                            object2.onEndCollide(collidingObject: object1)
+                        }
                     }
                 }
             }

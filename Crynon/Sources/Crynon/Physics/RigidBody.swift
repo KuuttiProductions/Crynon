@@ -10,7 +10,7 @@ open class RigidBody: Node {
     var localInvInertiaTensor: simd_float3x3 = simd_float3x3()
     var globalInvInertiaTensor: simd_float3x3 = simd_float3x3()
     
-    var mass: Float = 1
+    public var mass: Float = 1
     var invMass: Float = 1
     var localCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
     var globalCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
@@ -31,6 +31,7 @@ open class RigidBody: Node {
     
     public var isActive: Bool = true
     var isColliding: Bool = false
+    internal var collidingBodies: [String] = []
     
     //Debug
     var debug_drawAABB: Bool = false
@@ -179,14 +180,18 @@ open class RigidBody: Node {
         localInvInertiaTensor = localInertiaTensor.inverse
     }
     
-    func addForce(force: simd_float3, at: simd_float3) {
+    public  func addForce(force: simd_float3, at: simd_float3) {
         forceAccumulator += force
         torqueAccumulator += cross((at - localCenterOfMass), force)
     }
     
-    func addAngularForce(force: simd_float3) {
+    public func addAngularForce(force: simd_float3) {
         torqueAccumulator += force
     }
+    
+    open func onBeginCollide(collidingObject: RigidBody) {}
+    
+    open func onEndCollide(collidingObject: RigidBody) {}
     
     override func tick(_ deltaTime: Float) {
         super.tick(deltaTime)
