@@ -44,6 +44,11 @@ open class Scene: Node {
         return self
     }
     
+    public override func removeChild(_ uuid: String) {
+        super.removeChild(uuid)
+        physicsManager.toBeRemoved.append(uuid)
+    }
+    
     override func physicsTick(_ deltaTime: Float) {
         super.physicsTick(deltaTime)
         physicsManager.step(deltaTime: deltaTime)

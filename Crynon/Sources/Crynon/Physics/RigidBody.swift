@@ -10,13 +10,14 @@ open class RigidBody: Node {
     var localInvInertiaTensor: simd_float3x3 = simd_float3x3()
     var globalInvInertiaTensor: simd_float3x3 = simd_float3x3()
     
-    public var mass: Float = 1
-    var invMass: Float = 1
+    public var mass: Float = 1.0
+    var invMass: Float = 1.0
     var localCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
     var globalCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
     
-    var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
-    var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
+    public var gravityScalar: Float = 1.0
+    public var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
+    public var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
     
     var forceAccumulator: simd_float3 = simd_float3(0, 0, 0)
     var torqueAccumulator: simd_float3 = simd_float3(0, 0, 0)
@@ -189,7 +190,7 @@ open class RigidBody: Node {
         torqueAccumulator += force
     }
     
-    open func onBeginCollide(collidingObject: RigidBody) {}
+    open func onBeginCollide(collidingObject: RigidBody)-> Bool { return true }
     
     open func onEndCollide(collidingObject: RigidBody) {}
     
@@ -303,7 +304,7 @@ open class RigidBody: Node {
 }
 
 extension RigidBody {
-    func setPos(_ x: Float, _ y: Float, _ z: Float, teleport: Bool) {
+    public func setPos(_ x: Float, _ y: Float, _ z: Float, teleport: Bool) {
         if self.isActive {
             if !teleport {
                 linearVelocity = simd_float3(0, 0, 0)
@@ -313,8 +314,18 @@ extension RigidBody {
             updateGlobalCenterOfMassFromPosition()
         }
     }
+    public func setPos(_ position: simd_float3, teleport: Bool) {
+        if self.isActive {
+            if !teleport {
+                linearVelocity = simd_float3(0, 0, 0)
+                angularVelocity = simd_float3(0, 0, 0)
+            }
+            setPos(position)
+            updateGlobalCenterOfMassFromPosition()
+        }
+    }
     
-    func addPos(_ value: simd_float3, teleport: Bool) {
+    public func addPos(_ value: simd_float3, teleport: Bool) {
         if self.isActive {
             if !teleport {
                 linearVelocity = simd_float3(0, 0, 0)

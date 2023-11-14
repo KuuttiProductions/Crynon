@@ -2,7 +2,7 @@
 import GameController
 import CoreHaptics
 
-final class InputManager {
+final public class InputManager {
     
     private static var subscribers: [EventInput] = []
     
@@ -115,7 +115,7 @@ final class InputManager {
     }
     
     //----- Event Input -----
-    static func subscribe(client: EventInput) {
+    public static func subscribe(client: EventInput) {
         subscribers.append(client)
     }
     

@@ -6,18 +6,30 @@ final class PhysicsManager {
     private var _physicsObjects: [RigidBody] = []
     private var _colliders: [Collider] = []
     private var gravity: simd_float3 = simd_float3(0, -9.81, 0)
-    
-    private var debug_gjkStepCount: Int = 1
+    var toBeRemoved: [String] = []
     
     func addPhysicsObject(object: RigidBody) {
         _physicsObjects.append(object)
     }
     
+    private func removePhysicsObject(uuid: String) {
+        for (i, element) in _physicsObjects.enumerated() {
+            if element.uuid == uuid {
+                _physicsObjects.remove(at: i)
+                break
+            }
+        }
+    }
+    
     func step(deltaTime: Float) {
+        for uuid in toBeRemoved {
+            removePhysicsObject(uuid: uuid)
+        }
+        
         for object in _physicsObjects {
             if object.isActive {
                 object.isColliding = false
-                object.forceAccumulator += object.mass * gravity
+                object.forceAccumulator += object.mass * (gravity * object.gravityScalar)
                 
                 object.linearVelocity += object.invMass * (object.forceAccumulator * deltaTime)
                 object.angularVelocity += object.globalInvInertiaTensor * (object.torqueAccumulator * deltaTime)
@@ -46,19 +58,22 @@ final class PhysicsManager {
                 if checkForAABBCollision(object1: object1, object2: object2) {
                     let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
                     if gjk.overlap {
+                        var interact: Bool = true
                         if !object1.collidingBodies.contains(object2.uuid) {
                             object1.collidingBodies.append(object2.uuid)
-                            object1.onBeginCollide(collidingObject: object2)
+                            interact = object1.onBeginCollide(collidingObject: object2)
                         }
                         if !object2.collidingBodies.contains(object1.uuid) {
                             object2.collidingBodies.append(object1.uuid)
-                            object2.onBeginCollide(collidingObject: object1)
+                            interact = object2.onBeginCollide(collidingObject: object1)
                         }
-                        let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object2.colliders[0], simplex: gjk.simplex)
                         object1.isColliding = true
                         object2.isColliding = true
-                        object2.addPos(manifold.contactNormal * manifold.depth * 0.5, teleport: false)
-                        object1.addPos(manifold.contactNormal * manifold.depth * -0.5, teleport: false)
+                        if interact {
+                            let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object2.colliders[0], simplex: gjk.simplex)
+                            object2.addPos(manifold.contactNormal * manifold.depth * 0.5, teleport: false)
+                            object1.addPos(manifold.contactNormal * manifold.depth * -0.5, teleport: false)
+                        }
                     } else {
                         if object1.collidingBodies.contains(object2.uuid) {
                             let index = object1.collidingBodies.firstIndex(of: object2.uuid)!

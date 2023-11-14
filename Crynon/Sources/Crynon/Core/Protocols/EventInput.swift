@@ -1,13 +1,13 @@
 
 import GameController
 
-enum MouseButton {
+public enum MouseButton {
     case left
     case right
     case middle
 }
 
-protocol EventInput {
+public protocol EventInput {
     func drawKeyInput(key: GCKeyCode, down: Bool)
     
     func drawControllerInput(button: GCButtonElementName, down: Bool)

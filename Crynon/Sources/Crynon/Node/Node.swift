@@ -49,15 +49,16 @@ open class Node {
     }
     
     public func removeChild(_ uuid: String) {
-        for child in _children {
-            var i = 0
-            if child.uuid == uuid {
+        for (i, element) in _children.enumerated() {
+            if element.uuid == uuid {
                 _children.remove(at: i)
                 break
-            } else {
-                i += 1
             }
         }
+    }
+    
+    public func removeSelf() {
+        getScene().removeChild(self.uuid)
     }
     
     public func getScene()-> Scene {

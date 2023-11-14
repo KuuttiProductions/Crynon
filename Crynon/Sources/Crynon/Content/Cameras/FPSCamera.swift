@@ -65,9 +65,9 @@ open class FPSCamera: Camera {
 }
 
 extension FPSCamera: EventInput {
-    func drawControllerInput(button: GCButtonElementName, down: Bool) {}
-    
-    func drawMouseInput(button: MouseButton, down: Bool) {}
-    
-    func drawKeyInput(key: GCKeyCode, down: Bool) {}
+    public func drawControllerInput(button: GCButtonElementName, down: Bool) {}
+
+    public func drawMouseInput(button: MouseButton, down: Bool) {}
+
+    public func drawKeyInput(key: GCKeyCode, down: Bool) {}
 }
