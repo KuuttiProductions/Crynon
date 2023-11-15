@@ -5,27 +5,26 @@ final class PhysicsManager {
     
     private var _physicsObjects: [RigidBody] = []
     private var _colliders: [Collider] = []
-    private var gravity: simd_float3 = simd_float3(0, -9.81, 0)
     var toBeRemoved: [String] = []
+    
+    private var gravity: simd_float3 = simd_float3(0, -9.81, 0)
     
     func addPhysicsObject(object: RigidBody) {
         _physicsObjects.append(object)
     }
     
-    private func removePhysicsObject(uuid: String) {
-        for (i, element) in _physicsObjects.enumerated() {
-            if element.uuid == uuid {
-                _physicsObjects.remove(at: i)
-                break
+    func removePhysicsObjects() {
+        for uuid in toBeRemoved {
+            for (i, element) in _physicsObjects.enumerated() {
+                if element.uuid == uuid {
+                    _physicsObjects.remove(at: i)
+                    break
+                }
             }
         }
     }
     
     func step(deltaTime: Float) {
-        for uuid in toBeRemoved {
-            removePhysicsObject(uuid: uuid)
-        }
-        
         for object in _physicsObjects {
             if object.isActive {
                 object.isColliding = false
@@ -54,18 +53,18 @@ final class PhysicsManager {
             for u in i+1..<_physicsObjects.count {
                 let object1 = _physicsObjects[i]
                 let object2 = _physicsObjects[u]
-                
+            
                 if checkForAABBCollision(object1: object1, object2: object2) {
                     let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
                     if gjk.overlap {
                         var interact: Bool = true
                         if !object1.collidingBodies.contains(object2.uuid) {
                             object1.collidingBodies.append(object2.uuid)
-                            interact = object1.onBeginCollide(collidingObject: object2)
+                            if !object1.onBeginCollide(collidingObject: object2) { interact = false }
                         }
                         if !object2.collidingBodies.contains(object1.uuid) {
                             object2.collidingBodies.append(object1.uuid)
-                            interact = object2.onBeginCollide(collidingObject: object1)
+                            if !object2.onBeginCollide(collidingObject: object1) { interact = false }
                         }
                         object1.isColliding = true
                         object2.isColliding = true
@@ -89,6 +88,7 @@ final class PhysicsManager {
                 }
             }
         }
+        removePhysicsObjects()
     }
     
     func csoSupport(direction: simd_float3,
