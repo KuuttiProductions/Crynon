@@ -266,12 +266,12 @@ open class RigidBody: Node {
                     self.material.shaderMaterial.color = simd_float4(0, 0.8, 0, 1)
                 }
             }
-
+            
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
-            renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteAlways : .Less])
-            renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
+            renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteLess : .Less])
+            renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
             renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureColor], index: 3)
-            renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
+            renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
             AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
             
             // Debug drawing

@@ -53,7 +53,7 @@ final class PhysicsManager {
             for u in i+1..<_physicsObjects.count {
                 let object1 = _physicsObjects[i]
                 let object2 = _physicsObjects[u]
-            
+
                 if checkForAABBCollision(object1: object1, object2: object2) {
                     let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
                     if gjk.overlap {

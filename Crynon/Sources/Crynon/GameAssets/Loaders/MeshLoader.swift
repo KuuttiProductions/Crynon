@@ -22,7 +22,7 @@ class MeshLoader {
         let asset = MDLAsset.init(url: url!,
                                   vertexDescriptor: descriptor,
                                   bufferAllocator: bufferAllocator,
-                                  preserveTopology: false,
+                                  preserveTopology: true,
                                   error: &error)
         
         var mdlMesh: MDLMesh!

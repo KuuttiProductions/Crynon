@@ -82,6 +82,9 @@ public class BasicScene: Scene {
         physics.mesh = "Sphere"
         physics2.mesh = "Sphere"
         physics2.material.shaderMaterial.roughness = 0.1
+        physics2.material.shader = .Transparent
+        physics2.material.blendMode = .Alpha
+        physics2.material.textureColor = "Window"
         sun.lightData.color = simd_float4(1,1,1,1)
         sun.setRotX(Float(45).deg2rad)
         light.setPosY(1)
@@ -92,6 +95,7 @@ public class BasicScene: Scene {
         spotlight.setPos(-15, 3, 0)
         spotlight.lightData.color = simd_float4(1,0,0,1)
         floor.material.visible = true
+        skySphere.texture = "hdr"
     }
     
     override func tick(_ deltaTime: Float) {

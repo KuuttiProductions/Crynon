@@ -1,9 +1,18 @@
 
 import MetalKit
 
+public enum TextureOrigin {
+    case bottomLeft
+    case topLeft
+}
+
 class TextureLoader {
     
-    func loadTexture(_ name: String, _ extension: String = "png", _ mipMaps: Bool = true, engineContent: Bool = false)-> MTLTexture {
+    func loadTexture(name: String,
+                     extension: String = "png",
+                     mipMaps: Bool = true,
+                     origin: TextureOrigin = .bottomLeft,
+                     engineContent: Bool = false)-> MTLTexture {
         var url: URL!
         if engineContent {
             url = Bundle.module.url(forResource: name, withExtension: `extension`)!
@@ -11,7 +20,9 @@ class TextureLoader {
             url = Bundle.main.url(forResource: name, withExtension: `extension`)!
         }
         let loader = MTKTextureLoader(device: Core.device)
-        let options: [ MTKTextureLoader.Option : Any ] = [ MTKTextureLoader.Option.generateMipmaps : mipMaps ]
+        let origin = origin == .bottomLeft ? MTKTextureLoader.Origin.bottomLeft : MTKTextureLoader.Origin.topLeft
+        let options: [ MTKTextureLoader.Option : Any ] = [MTKTextureLoader.Option.generateMipmaps : mipMaps,
+                                                          MTKTextureLoader.Option.origin : origin]
         var texture: MTLTexture!
         
         do {
