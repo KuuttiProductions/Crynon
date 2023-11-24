@@ -3,7 +3,9 @@ import MetalKit
 import SwiftUI
 
 @available(macOS 10.15, *)
-struct GameView: NSViewRepresentable {
+public struct GameView: NSViewRepresentable {
+    
+    public init() {}
     
     class InputView: MTKView {
         override var acceptsFirstResponder: Bool { true }
@@ -11,15 +13,15 @@ struct GameView: NSViewRepresentable {
         override func keyUp(with event: NSEvent) {}
     }
     
-    func updateNSView(_ nsView: MTKView, context: Context) {
+    public func updateNSView(_ nsView: MTKView, context: Context) {
         context.coordinator.mtkView(nsView, drawableSizeWillChange: nsView.drawableSize)
     }
 
-    func makeCoordinator() -> Renderer {
+    public func makeCoordinator() -> Renderer {
         return Renderer()
     }
     
-    func makeNSView(context: Context) -> MTKView {
+    public func makeNSView(context: Context) -> MTKView {
         let mtkView = InputView()
     
         if let device = MTLCreateSystemDefaultDevice() {

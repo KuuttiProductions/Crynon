@@ -217,6 +217,7 @@ final public class InputManager {
                         controllerMenuR = profile.buttonMenu.isPressed
                         controllerEvent(button: .menu, down: profile.buttonMenu.isPressed)
                     }
+                    captureMouse(true)
                 }
             }
             hapticEngineHandles = controller.haptics?.createEngine(withLocality: .handles)

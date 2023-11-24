@@ -1,7 +1,7 @@
 
 import MetalKit
 
-class Renderer: NSObject {
+public class Renderer: NSObject {
     
     static var screenWidth: Float!
     static var screenHeight: Float!
@@ -124,11 +124,11 @@ class Renderer: NSObject {
 
 extension Renderer: MTKViewDelegate {
     
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         updateScreenSize(view: view)
     }
     
-    func draw(in view: MTKView) {
+    public func draw(in view: MTKView) {
         guard let drawable = view.currentDrawable, let depthTexture = view.depthStencilTexture else { return }
         deferredRenderPassDescriptor.colorAttachments[0].texture = drawable.texture
         deferredRenderPassDescriptor.depthAttachment.texture = depthTexture
