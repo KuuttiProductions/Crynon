@@ -38,6 +38,8 @@ final public class InputManager {
     private static var scrollDeltaX: Float = 0.0
     private static var scrollDeltaY: Float = 0.0
     private static var mouseCaptured: Bool = false
+    private static var acceptsInput: Bool = true
+    public static var requiresCaptureForInput: Bool = true
     
     //----- Haptics -----
     public static var hapticEngineHandles: CHHapticEngine!
@@ -87,6 +89,15 @@ final public class InputManager {
         } else {
             NSCursor.unhide()
             CGAssociateMouseAndMouseCursorPosition(1)
+        }
+    }
+    
+    public static func acceptInput(_ accept: Bool = true) {
+        if accept {
+            acceptsInput = true
+        } else {
+            acceptsInput = false
+            captureMouse(false)
         }
     }
     
@@ -152,6 +163,9 @@ final public class InputManager {
 
             if controller.extendedGamepad != nil {
                 controller.extendedGamepad?.valueChangedHandler = { profile, element in
+                    if !acceptsInput { return }
+                    if requiresCaptureForInput && !mouseCaptured { return }
+                    
                     if element == profile.leftThumbstick {
                         controllerLX = profile.leftThumbstick.xAxis.value
                         controllerLY = profile.leftThumbstick.yAxis.value
@@ -217,7 +231,6 @@ final public class InputManager {
                         controllerMenuR = profile.buttonMenu.isPressed
                         controllerEvent(button: .menu, down: profile.buttonMenu.isPressed)
                     }
-                    captureMouse(true)
                 }
             }
             hapticEngineHandles = controller.haptics?.createEngine(withLocality: .handles)
@@ -239,12 +252,15 @@ final public class InputManager {
                                                queue: .main) { info in
             guard let keyboard = info.object as? GCKeyboard else { return }
             keyboard.keyboardInput?.keyChangedHandler = { _, _, keycode, pressed in
+                if !acceptsInput { return }
+                if pressed && keycode == .escape {
+                    captureMouse(!isMouseCaptured)
+                }
+                if requiresCaptureForInput && !mouseCaptured { return }
+                
                 keyEvent(key: keycode, down: pressed)
                 if pressed {
                     pressedKeys.insert(keycode)
-                    if keycode == .escape {
-                        captureMouse(!isMouseCaptured)
-                    }
                 } else {
                     pressedKeys.remove(keycode)
                 }
@@ -259,6 +275,8 @@ final public class InputManager {
             guard let mouse = info.object as? GCMouse else { return }
                     
             mouse.mouseInput?.mouseMovedHandler = { _, deltaX, deltaY in
+                if !acceptsInput { return }
+                
                 if mouseCaptured {
                     self.mouseDeltaX = deltaX
                     self.mouseDeltaY = deltaY
@@ -268,21 +286,36 @@ final public class InputManager {
                 }
             }
             mouse.mouseInput?.leftButton.pressedChangedHandler = { _, _, pressed in
+                if !acceptsInput { return }
+                if requiresCaptureForInput && !mouseCaptured { return }
+                
                 self.mouseLeftButton = pressed
                 self.mouseEvent(button: .left, down: pressed)
             }
             mouse.mouseInput?.rightButton?.pressedChangedHandler = { _, _, pressed in
+                if !acceptsInput { return }
+                if requiresCaptureForInput && !mouseCaptured { return }
+                
                 self.mouseRightButton = pressed
                 self.mouseEvent(button: .right, down: pressed)
             }
             mouse.mouseInput?.middleButton?.pressedChangedHandler = { _, _, pressed in
+                if !acceptsInput { return }
+                if requiresCaptureForInput && !mouseCaptured { return }
+                
                 self.mouseMiddleButton = pressed
                 self.mouseEvent(button: .middle, down: pressed)
             }
             mouse.mouseInput?.scroll.xAxis.valueChangedHandler = { _, value in
+                if !acceptsInput { return }
+                if requiresCaptureForInput && !mouseCaptured { return }
+                
                 self.scrollDeltaX = value
             }
             mouse.mouseInput?.scroll.yAxis.valueChangedHandler = { _, value in
+                if !acceptsInput { return }
+                if requiresCaptureForInput && !mouseCaptured { return }
+                
                 self.scrollDeltaY = value
             }
         }
