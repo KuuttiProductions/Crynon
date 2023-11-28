@@ -1,7 +1,7 @@
 # Crynon
 
 ## About ##
-Crynon is a game-engine made in Swift/Metal by KudeKube. It's designed from the ground up to be efficient and leveraging of Apple technologies. Name is subject to change.
+Crynon is a game-engine made with Swift and Metal.
 
 Updates are posted on Youtube: [KudeKube](https://www.youtube.com/channel/UCXDI-MFA_Gp8vXyaJ80Zc5Q)
 View roadmap on [Trello](https://trello.com/b/eskU0MZE/crynon)
@@ -9,7 +9,7 @@ View roadmap on [Trello](https://trello.com/b/eskU0MZE/crynon)
 ![Logo](Crynon.png)
 
 ## Plans ##
-Here are the current plans for Crynon. More will be added.
+Here are the current plans for Crynon. Better view on Trello.
 
 ### Rendering ###
 - [x] Efficient 3D renderer
@@ -20,6 +20,7 @@ Here are the current plans for Crynon. More will be added.
 - [ ] Post-processing
     - [ ] Bloom
     - [ ] Depth Of Field
+    - [ ] Motion Blur
 - [ ] Tessellation
 - [x] Transparency and translucency
 

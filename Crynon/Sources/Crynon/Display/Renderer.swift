@@ -129,6 +129,10 @@ extension Renderer: MTKViewDelegate {
     }
     
     public func draw(in view: MTKView) {
+        if Core.paused {
+            return
+        }
+
         guard let drawable = view.currentDrawable, let depthTexture = view.depthStencilTexture else { return }
         deferredRenderPassDescriptor.colorAttachments[0].texture = drawable.texture
         deferredRenderPassDescriptor.depthAttachment.texture = depthTexture

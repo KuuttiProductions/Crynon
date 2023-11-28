@@ -11,6 +11,7 @@ open class Core: ObservableObject {
     public static var commandQueue: MTLCommandQueue { _commandQueue }
     public static var defaultLibrary: MTLLibrary { _defaultLibrary }
     public static var device: MTLDevice { _device }
+    public static var paused: Bool = false
     
     public init() {
         Core._device = MTLCreateSystemDefaultDevice()
