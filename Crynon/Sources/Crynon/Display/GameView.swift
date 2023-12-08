@@ -33,8 +33,10 @@ public struct GameView: NSViewRepresentable {
         mtkView.colorPixelFormat = Preferences.pixelFormat
         mtkView.depthStencilPixelFormat = Preferences.depthFormat
         
-        mtkView.preferredFramesPerSecond = Preferences.preferredFPS
-        
+        if let fps = Preferences.preferredFPS {
+            mtkView.preferredFramesPerSecond = fps
+        }
+
         return mtkView
     }
 }

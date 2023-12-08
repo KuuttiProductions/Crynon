@@ -22,6 +22,7 @@ final class PhysicsManager {
                 }
             }
         }
+        toBeRemoved = []
     }
     
     func step(deltaTime: Float) {
@@ -54,6 +55,7 @@ final class PhysicsManager {
                 let object1 = _physicsObjects[i]
                 let object2 = _physicsObjects[u]
                 
+                if !object1.collides || !object2.collides { return }
                 if checkForAABBCollision(object1: object1, object2: object2) {
                     let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
                     if gjk.overlap {
@@ -68,7 +70,6 @@ final class PhysicsManager {
                         }
                         object1.isColliding = true
                         object2.isColliding = true
-                        print("\(object1.name!) ja \(object2.name!) int: \(interact)")
                         if interact {
                             let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object2.colliders[0], simplex: gjk.simplex)
                             object2.addPos(manifold.contactNormal * manifold.depth * 0.5, teleport: false)

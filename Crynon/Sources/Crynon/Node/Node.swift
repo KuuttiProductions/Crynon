@@ -58,7 +58,7 @@ open class Node {
     }
     
     public func removeSelf() {
-        getScene().removeChild(self.uuid)
+        parent.removeChild(self.uuid)
     }
     
     public func getScene()-> Scene {

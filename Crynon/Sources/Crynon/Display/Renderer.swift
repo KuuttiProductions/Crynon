@@ -126,11 +126,17 @@ extension Renderer: MTKViewDelegate {
     
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         updateScreenSize(view: view)
+        if let fps = view.window?.screen?.maximumFramesPerSecond {
+            view.preferredFramesPerSecond = fps
+        }
     }
     
     public func draw(in view: MTKView) {
         if Core.paused {
             return
+        }
+        if let fps =  Preferences.preferredFPS {
+            view.preferredFramesPerSecond = fps
         }
 
         guard let drawable = view.currentDrawable, let depthTexture = view.depthStencilTexture else { return }
@@ -140,7 +146,7 @@ extension Renderer: MTKViewDelegate {
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
         
-        Renderer.currentDeltaTime = 1/Float(Preferences.preferredFPS)
+        Renderer.currentDeltaTime = 1/Float(view.preferredFramesPerSecond)
         Renderer.time += Renderer.currentDeltaTime
         
         //Update scene

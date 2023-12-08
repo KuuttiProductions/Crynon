@@ -31,6 +31,7 @@ open class RigidBody: Node {
     var aabbMax: simd_float3 = simd_float3(repeating: 0)
     
     public var isActive: Bool = true
+    public var collides: Bool = true
     var isColliding: Bool = false
     internal var collidingBodies: [String] = []
     
