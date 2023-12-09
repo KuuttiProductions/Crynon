@@ -13,7 +13,7 @@ extension simd_float3 {
     }
 }
 
-extension Float {
+public extension Float {
     var deg2rad: Float {
         return self * Float.pi / 180
     }
@@ -23,7 +23,7 @@ extension Float {
     }
 }
 
-extension Double {
+public extension Double {
     var deg2rad: Double {
         return self * Double.pi / 180
     }
