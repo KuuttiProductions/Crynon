@@ -6,10 +6,20 @@ Crynon is a game-engine made with Swift and Metal.
 Updates are posted on Youtube: [KudeKube](https://www.youtube.com/channel/UCXDI-MFA_Gp8vXyaJ80Zc5Q)
 View roadmap on [Trello](https://trello.com/b/eskU0MZE/crynon)
 
-![Logo](Crynon.png)
+## Setting up ##
+
+Installation
+1. Open your project that uses SwiftUI
+2. Add Crynon package to your project with Xcode package manager. You will need a key to do this.
+3. Import Crynon to your file to start using it
+
+Setting up your project
+4. Initialize Crynon.core
+5. Change scene with SceneManager.changeScene(_: scene)
+6. Add DefaultView or a custom GameView to your view.
 
 ## Plans ##
-Here are the current plans for Crynon. Better view on Trello.
+Here are the current plans for Crynon. Actual roadmap on Trello.
 
 ### Rendering ###
 - [x] Efficient 3D renderer
