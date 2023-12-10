@@ -15,7 +15,7 @@ let package = Package(
     targets: [
         .target(
             name: "Crynon",
-            resources: [.process("Assets")]),
+            resources: [.process("DefaultAssets")]),
         .testTarget(
             name: "CrynonTests",
             dependencies: ["Crynon"])
