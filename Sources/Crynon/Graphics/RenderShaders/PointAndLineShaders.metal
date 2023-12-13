@@ -31,7 +31,7 @@ fragment GBuffer pointAndLine_fragment(PointOut PointOut [[ stage_in]],
     
     gBuffer.color = half4(color);
     gBuffer.depth = PointOut.position.z;
-    gBuffer.metalRoughEmissionIOR.b = 1;
+    gBuffer.emission = half4(color);
     
     return gBuffer;
 }

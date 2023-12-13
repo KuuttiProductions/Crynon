@@ -51,7 +51,8 @@ public:
             float3 ambientColor = (float3(1,1,1) * data.color.rgb) * ambientTerm * attenuation * brightness * data.color.rgb;
             totalAmbientColor += clamp(ambientColor, 0.0, 1.0);
             
-            float3 diffuseColor = dot(unitNormal, data.useDirection ? lightDirection : toLightVector) * diffuseness * attenuation * brightness * data.color.rgb * (mt.emission + 1);
+            float determinant = dot(unitNormal, data.useDirection ? lightDirection : toLightVector);
+            float3 diffuseColor = determinant * diffuseness * attenuation * brightness * data.color.rgb * (mt.emission + 1).a;
             totalDiffuseColor += clamp(diffuseColor, 0.0, 1.0);
             if (data.useDirection == true) {
                 totalDiffuseColor *= lightness;

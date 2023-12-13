@@ -12,19 +12,28 @@ constexpr static sampler samplerFragment (min_filter::linear,
 fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
                                    constant ShaderMaterial &mat [[ buffer(1) ]],
                                    depth2d<float> shadowMap1 [[ texture(0) ]],
-                                   texture2d<float> textureColor [[ texture(3) ]]) {
+                                   depth2d<float> shadowMap2 [[ texture(1) ]],
+                                   depth2d<float> shadowMap3 [[ texture(2) ]],
+                                   
+                                   texture2d<float> textureColor [[ texture(3) ]],
+                                   texture2d<float> textureNormal [[ texture(4) ]],
+                                   texture2d<float> textureEmission [[ texture(5) ]],
+                                   texture2d<float> textureRoughness [[ texture(6) ]],
+                                   texture2d<float> textureMetallic [[ texture(7) ]],
+                                   texture2d<float> textureAoRoughMetal [[ texture(8) ]]) {
     GBuffer gBuffer;
     
     gBuffer.color = half4(mat.color);
     gBuffer.depth = VerOut.position.z;
     gBuffer.position.xyz = VerOut.worldPosition;
     gBuffer.position.w = VerOut.position.w;
-    gBuffer.normalShadow.xyz = VerOut.normal;
-    gBuffer.metalRoughEmissionIOR.r = mat.metallic;
-    gBuffer.metalRoughEmissionIOR.g = mat.roughness;
-    gBuffer.metalRoughEmissionIOR.b = mat.emission;
-    gBuffer.metalRoughEmissionIOR.a = mat.ior;
+    gBuffer.metalRoughAoIOR.r = mat.metallic;
+    gBuffer.metalRoughAoIOR.g = mat.roughness;
+    gBuffer.metalRoughAoIOR.b = 1.0;
+    gBuffer.metalRoughAoIOR.a = mat.ior;
+    gBuffer.emission = half4(mat.emission);
     
+    //Color
     if (!is_null_texture(textureColor)) {
         gBuffer.color = half4(textureColor.sample(samplerFragment, VerOut.textureCoordinate));
         if (gBuffer.color.a == 0) {
@@ -32,6 +41,34 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
         }
     }
     
+    //Normal
+    if (!is_null_texture(textureNormal)) {
+        gBuffer.normalShadow.xyz = textureNormal.sample(samplerFragment, VerOut.textureCoordinate).xyz;
+    } else {
+        gBuffer.normalShadow.xyz = VerOut.normal;
+    }
+    
+    //Roughness and Metallic
+    if (!is_null_texture(textureAoRoughMetal)) {
+        float3 aoRoughMetal = textureAoRoughMetal.sample(samplerFragment, VerOut.textureCoordinate).rgb;
+        gBuffer.metalRoughAoIOR.r = aoRoughMetal.b;
+        gBuffer.metalRoughAoIOR.g = aoRoughMetal.g;
+        gBuffer.metalRoughAoIOR.b = aoRoughMetal.r;
+    } else {
+        if (!is_null_texture(textureRoughness)) {
+            gBuffer.metalRoughAoIOR.g = textureRoughness.sample(samplerFragment, VerOut.textureCoordinate).r;
+        }
+        if (!is_null_texture(textureMetallic)) {
+            gBuffer.metalRoughAoIOR.r = textureMetallic.sample(samplerFragment, VerOut.textureCoordinate).r;
+        }
+    }
+    
+    //Emission
+    if (!is_null_texture(textureEmission)) {
+        gBuffer.emission = half4(textureEmission.sample(samplerFragment, VerOut.textureCoordinate));
+    }
+    
+    //Shadow
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
         gBuffer.normalShadow.a = Shadows::getLightness(shadowMap1, lightSpacePosition);
@@ -54,20 +91,21 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
     fc.color = gBuffer.color;
     
     if (!lightData) {
-        fc.color = half4(1, 0, 0, 1);
+        fc.color = half4(0, 0, 0, 1);
         return fc;
     }
     
     float ambientTerm = AmbientOcclusion::getAmbientTerm(gBuffer.normalShadow.xyz,
-                                                         gBuffer.depth);
+                                                         gBuffer.depth,
+                                                         gBuffer.metalRoughAoIOR.b);
     
-    if (gBuffer.metalRoughEmissionIOR.b == 0) {
+    if (gBuffer.emission.a != 1.0) {
         ShaderMaterial sm;
         sm.color = float4(gBuffer.color);
-        sm.metallic = gBuffer.metalRoughEmissionIOR.r;
-        sm.roughness = gBuffer.metalRoughEmissionIOR.g;
-        sm.emission = gBuffer.metalRoughEmissionIOR.b;
-        sm.ior = gBuffer.metalRoughEmissionIOR.a;
+        sm.metallic = gBuffer.metalRoughAoIOR.r;
+        sm.roughness = gBuffer.metalRoughAoIOR.g;
+        sm.emission = float4(gBuffer.emission);
+        sm.ior = gBuffer.metalRoughAoIOR.a;
         
         half3 lighting = half3(PhongShading::getPhongLight(gBuffer.position.xyz,
                                                            normalize(gBuffer.normalShadow.xyz),
@@ -78,6 +116,8 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                                            gBuffer.normalShadow.a,
                                                            ambientTerm));
         fc.color *= half4(lighting, 1);
+    } else {
+        fc.color += gBuffer.emission;
     }
     
     float density = fragmentSceneConstant.fogDensity;

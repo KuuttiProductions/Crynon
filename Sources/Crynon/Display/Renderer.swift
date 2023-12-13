@@ -62,6 +62,9 @@ public class Renderer: NSObject {
         
         let colorTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         colorTexture?.label = "GBufferColor"
+        
+        let emissionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        emissionTexture?.label = "GBufferEmission"
 
         bufferTextureDescriptor.pixelFormat = Preferences.floatPixelFormat
         let positionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
@@ -87,6 +90,7 @@ public class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[3].texture = normalShadowTexture
         deferredRenderPassDescriptor.colorAttachments[4].texture = depthTexture
         deferredRenderPassDescriptor.colorAttachments[5].texture = metalRoughEmissionIOR
+        deferredRenderPassDescriptor.colorAttachments[6].texture = emissionTexture
         
         let loadAction = Preferences.useSkySphere == true ? MTLLoadAction.dontCare : MTLLoadAction.clear
         deferredRenderPassDescriptor.colorAttachments[0].loadAction = loadAction
@@ -94,7 +98,7 @@ public class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[2].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[3].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[4].loadAction = loadAction
-        deferredRenderPassDescriptor.colorAttachments[5].loadAction = loadAction
+        deferredRenderPassDescriptor.colorAttachments[6].loadAction = loadAction
         
         deferredRenderPassDescriptor.colorAttachments[0].storeAction = .store
         deferredRenderPassDescriptor.colorAttachments[1].storeAction = .dontCare
@@ -102,12 +106,14 @@ public class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[3].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[4].storeAction = .dontCare
         deferredRenderPassDescriptor.colorAttachments[5].storeAction = .dontCare
+        deferredRenderPassDescriptor.colorAttachments[6].storeAction = .dontCare
         
         //Sets the depth value to 1, so that default depth is infinity
         deferredRenderPassDescriptor.colorAttachments[4].clearColor = MTLClearColor(red: 1.0, green: 0, blue: 0, alpha: 0)
         
         //Sets the emissive value to 1, so that the sky won't be shaded.
-        deferredRenderPassDescriptor.colorAttachments[5].clearColor = MTLClearColor(red: 0, green: 0, blue: 1, alpha: 0)
+        deferredRenderPassDescriptor.colorAttachments[6].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
+        
         deferredRenderPassDescriptor.tileWidth = optimalTileSize.width
         deferredRenderPassDescriptor.tileHeight = optimalTileSize.height
         deferredRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.InitTransparency].imageblockSampleLength

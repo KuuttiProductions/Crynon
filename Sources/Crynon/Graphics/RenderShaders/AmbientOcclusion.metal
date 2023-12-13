@@ -5,7 +5,8 @@ using namespace metal;
 class AmbientOcclusion {
 public:
     static float getAmbientTerm(float3 normal,
-                                half depth) {
-        return 0.03;
+                                half depth,
+                                float aoBaked) {
+        return 0.03 * aoBaked;
     }
 };

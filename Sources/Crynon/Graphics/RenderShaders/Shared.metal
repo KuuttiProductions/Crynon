@@ -8,7 +8,8 @@ struct GBuffer {
     float4 position [[ color(2), raster_order_group(1) ]];
     float4 normalShadow [[ color(3), raster_order_group(1) ]];
     float depth [[ color(4), raster_order_group(1) ]];
-    half4 metalRoughEmissionIOR [[ color(5), raster_order_group(1) ]];
+    half4 metalRoughAoIOR [[ color(5), raster_order_group(1) ]];
+    half4 emission [[ color(6), raster_order_group(1) ]];
 };
 
 struct VertexIn {
@@ -54,8 +55,8 @@ struct LightData {
 
 struct ShaderMaterial {
     float4 color;
-    float metallic;
+    float4 emission;
     float roughness;
-    float emission;
+    float metallic;
     float ior;
 };

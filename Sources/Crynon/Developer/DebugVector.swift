@@ -11,7 +11,7 @@ public class Debug_Vector {
         var modelConstant = ModelConstant()
         
         material.shaderMaterial.color = color
-        material.shaderMaterial.emission = emissive ? 1.0 : 0.0
+        material.shaderMaterial.emission = emissive ? simd_float4(color.rgb, 1) : simd_float4(0, 0, 0, 0)
         
         let scale = simd_float3(1, length(vector), 1)
 
@@ -48,7 +48,7 @@ public class Debug_Vector {
         var modelConstant = ModelConstant()
         
         material.shaderMaterial.color = color
-        material.shaderMaterial.emission = emissive ? 1.0 : 0.0
+        material.shaderMaterial.emission = emissive ? simd_float4(color.rgb, 1) : simd_float4(0, 0, 0, 0)
         
         let scale = simd_float3(1, length, 1)
         

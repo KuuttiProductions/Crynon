@@ -71,8 +71,8 @@ public struct LightData: sizeable {
 
 public struct ShaderMaterial: sizeable {
     public var color: simd_float4 = simd_float4(1,1,1,1)
-    public var metallic: Float = 0.0
+    public var emission: simd_float4 = simd_float4(0, 0, 0, 0)
     public var roughness: Float = 0.5
-    public var emission: Float = 0.0
+    public var metallic: Float = 0.0
     public var ior: Float = 1.45
 }

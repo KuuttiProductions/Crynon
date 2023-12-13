@@ -1,6 +1,5 @@
 
 #include <metal_stdlib>
-#import "Random/rng_header.metal"
 using namespace metal;
 
 constexpr sampler sampler2d (mag_filter::linear,

@@ -1,15 +1,24 @@
 
 import simd
 
-extension simd_float3 {
-    public static var AxisX: simd_float3 {
+public extension simd_float3 {
+    static var AxisX: simd_float3 {
         return simd_float3(1,0,0)
     }
-    public static var AxisY: simd_float3 {
+    static var AxisY: simd_float3 {
         return simd_float3(0,1,0)
     }
-    public static var AxisZ: simd_float3 {
+    static var AxisZ: simd_float3 {
         return simd_float3(0,0,1)
+    }
+}
+
+public extension simd_float4 {
+    var rgb: simd_float3 {
+        return simd_float3(self.x, self.y, self.z)
+    }
+    var xyz: simd_float3 {
+        return simd_float3(self.x, self.y, self.z)
     }
 }
 

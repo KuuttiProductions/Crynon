@@ -55,6 +55,7 @@ func addColorAttachments(descriptor: MTLRenderPipelineDescriptor) {
     descriptor.colorAttachments[3].pixelFormat = Preferences.signedPixelFormat
     descriptor.colorAttachments[4].pixelFormat = .r32Float
     descriptor.colorAttachments[5].pixelFormat = Preferences.pixelFormat
+    descriptor.colorAttachments[6].pixelFormat = Preferences.pixelFormat
 }
 
 // Deprecated
@@ -165,6 +166,7 @@ class InitTransparency: RenderPipelineState {
         tileDescriptor.colorAttachments[3].pixelFormat = Preferences.signedPixelFormat
         tileDescriptor.colorAttachments[4].pixelFormat = .r32Float
         tileDescriptor.colorAttachments[5].pixelFormat = Preferences.pixelFormat
+        tileDescriptor.colorAttachments[6].pixelFormat = Preferences.pixelFormat
         tileDescriptor.tileFunction = Core.defaultLibrary.makeFunction(name: "initTransparentFragmentStore")!
         tileDescriptor.threadgroupSizeMatchesTileSize = true
         tileDescriptor.label = "Init Transparency RenderPipelineState"
