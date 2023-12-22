@@ -43,7 +43,13 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     
     //Normal
     if (!is_null_texture(textureNormal)) {
-        gBuffer.normalShadow.xyz = textureNormal.sample(samplerFragment, VerOut.textureCoordinate).xyz;
+        float3 sampleNormal = textureNormal.sample(samplerFragment, VerOut.textureCoordinate).xyz;
+        sampleNormal = sampleNormal * 2.0f - 1.0f;
+        float3x3 TBN = float3x3(); 
+        TBN.columns[0] = VerOut.tangent;
+        TBN.columns[1] = VerOut.bitangent;
+        TBN.columns[2] = VerOut.normal;
+        gBuffer.normalShadow.xyz = TBN * sampleNormal;
     } else {
         gBuffer.normalShadow.xyz = VerOut.normal;
     }
@@ -116,6 +122,11 @@ fragment finalColor lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                                            gBuffer.normalShadow.a,
                                                            ambientTerm));
         fc.color *= half4(lighting, 1);
+        
+        float diffuse = dot(-lightData[0].direction, gBuffer.normalShadow.xyz);
+        //fc.color.rgb = half3(gBuffer.normalShadow.xyz);
+        //fc.color *= diffuse;
+        
     } else {
         fc.color += gBuffer.emission;
     }

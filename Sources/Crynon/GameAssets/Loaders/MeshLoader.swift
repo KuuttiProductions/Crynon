@@ -10,6 +10,7 @@ class MeshLoader {
         (descriptor.attributes[1] as! MDLVertexAttribute).name = MDLVertexAttributeColor
         (descriptor.attributes[2] as! MDLVertexAttribute).name = MDLVertexAttributeTextureCoordinate
         (descriptor.attributes[3] as! MDLVertexAttribute).name = MDLVertexAttributeNormal
+        (descriptor.attributes[4] as! MDLVertexAttribute).name = MDLVertexAttributeTangent
         
         var url: URL!
         if engineContent {
@@ -30,6 +31,9 @@ class MeshLoader {
         var submeshes: [Submesh] = []
         do {
             mdlMesh = try MTKMesh.newMeshes(asset: asset, device: Core.device).modelIOMeshes[0]
+            mdlMesh.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate,
+                                    tangentAttributeNamed: MDLVertexAttributeTangent,
+                                    bitangentAttributeNamed: MDLVertexAttributeBitangent)
             mtkMesh = try MTKMesh.init(mesh: mdlMesh, device: Core.device)
         } catch let error as NSError {
             print(error)

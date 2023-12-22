@@ -7,8 +7,7 @@ vertex VertexOut final_vertex(VertexIn VerIn [[ stage_in ]],
                               constant VertexSceneConstant &sceneConstant) {
     VertexOut VerOut;
     VerOut.position = float4(VerIn.position, 1);
-    VerOut.textureCoordinate = VerIn.textureCoordinate;
-    
+    VerOut.textureCoordinate = VerIn.textureCoordinate; 
     return VerOut;
 }
 

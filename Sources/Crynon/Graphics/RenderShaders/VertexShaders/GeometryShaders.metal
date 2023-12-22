@@ -13,10 +13,20 @@ vertex VertexOut default_vertex(VertexIn VerIn [[ stage_in ]],
     VerOut.position = sceneConstant.projectionMatrix * sceneConstant.viewMatrix * worldPosition;
     
     VerOut.color = VerIn.color;
-    VerOut.normal = (modelConstant.modelMatrix * float4(VerIn.normal, 0)).xyz;
-    VerOut.worldPosition = worldPosition.xyz;
     VerOut.textureCoordinate = VerIn.textureCoordinate;
-    VerOut.lightSpacePosition = depthViewMatrix * worldPosition;
+    VerOut.worldPosition = worldPosition.xyz;
+    
+    float3 normal = (modelConstant.modelMatrix * float4(VerIn.normal, 0)).xyz;
+    float3 tangent = (modelConstant.modelMatrix * float4(VerIn.tangent, 0)).xyz;
+    float3 bitangent = cross(normal, tangent);
+    
+    VerOut.tangent = tangent;
+    VerOut.bitangent = bitangent;
+    VerOut.normal = normal;
+    float3x3 TBN = float3x3(tangent, bitangent, normal);
+    TBN = transpose(TBN);
+    
+    VerOut.lightSpacePosition = (depthViewMatrix * worldPosition);
     
     return VerOut;
 }

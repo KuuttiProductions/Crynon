@@ -17,6 +17,7 @@ struct VertexIn {
     float4 color [[ attribute(1) ]];
     float2 textureCoordinate [[ attribute(2) ]];
     float3 normal [[ attribute(3) ]];
+    float3 tangent [[ attribute(4) ]];
 };
 
 struct VertexOut {
@@ -24,6 +25,8 @@ struct VertexOut {
     float4 color;
     float2 textureCoordinate;
     float3 normal;
+    float3 tangent;
+    float3 bitangent;
     float3 worldPosition;
     float4 lightSpacePosition;
     float pointSize [[ point_size ]];
