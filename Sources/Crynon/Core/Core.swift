@@ -18,6 +18,8 @@ open class Core: ObservableObject {
         Core._commandQueue = Core.device.makeCommandQueue()
         Core._defaultLibrary = try! Core.device.makeDefaultLibrary(bundle: .module)
         
+        Preferences.initialize()
+        
         GPLibrary.initialize()
         AssetLibrary.initialize()
         
@@ -26,5 +28,6 @@ open class Core: ObservableObject {
         SceneManager.initialize()
         
         Debug.initialize()
+        
     }
 }

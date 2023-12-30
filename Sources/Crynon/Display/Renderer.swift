@@ -38,7 +38,7 @@ public class Renderer: NSObject {
     }
     
     func createShadowRenderPassDescriptor() {
-        let depthTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.depthFormat,
+        let depthTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.metal.depthFormat,
                                                                               width: 1024,
                                                                               height: 1024,
                                                                               mipmapped: false)
@@ -53,7 +53,7 @@ public class Renderer: NSObject {
     }
     
     func createGBuffer() {
-        let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.pixelFormat,
+        let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.metal.pixelFormat,
                                                                               width: Int(Renderer.screenWidth),
                                                                               height: Int(Renderer.screenHeight),
                                                                               mipmapped: false)
@@ -66,11 +66,11 @@ public class Renderer: NSObject {
         let emissionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         emissionTexture?.label = "GBufferEmission"
 
-        bufferTextureDescriptor.pixelFormat = Preferences.floatPixelFormat
+        bufferTextureDescriptor.pixelFormat = Preferences.metal.floatPixelFormat
         let positionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         positionTexture?.label = "GBufferPosition"
         
-        bufferTextureDescriptor.pixelFormat = Preferences.signedPixelFormat
+        bufferTextureDescriptor.pixelFormat = Preferences.metal.signedPixelFormat
         let normalShadowTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         normalShadowTexture?.label = "GBufferNormalShadow"
         
@@ -78,12 +78,12 @@ public class Renderer: NSObject {
         let depthTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         depthTexture?.label = "GBufferDepth"
         
-        bufferTextureDescriptor.pixelFormat = Preferences.pixelFormat
+        bufferTextureDescriptor.pixelFormat = Preferences.metal.pixelFormat
         let metalRoughEmissionIOR = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         metalRoughEmissionIOR?.label = "GBufferMetalRoughEmissionIOR"
         
-        deferredRenderPassDescriptor.colorAttachments[0].clearColor = Preferences.clearColor
-        deferredRenderPassDescriptor.colorAttachments[1].clearColor = Preferences.clearColor
+        deferredRenderPassDescriptor.colorAttachments[0].clearColor = Preferences.graphics.clearColor
+        deferredRenderPassDescriptor.colorAttachments[1].clearColor = Preferences.graphics.clearColor
         
         deferredRenderPassDescriptor.colorAttachments[1].texture = colorTexture
         deferredRenderPassDescriptor.colorAttachments[2].texture = positionTexture
@@ -92,7 +92,7 @@ public class Renderer: NSObject {
         deferredRenderPassDescriptor.colorAttachments[5].texture = metalRoughEmissionIOR
         deferredRenderPassDescriptor.colorAttachments[6].texture = emissionTexture
         
-        let loadAction = Preferences.useSkySphere == true ? MTLLoadAction.dontCare : MTLLoadAction.clear
+        let loadAction = Preferences.graphics.useSkySphere == true ? MTLLoadAction.dontCare : MTLLoadAction.clear
         deferredRenderPassDescriptor.colorAttachments[0].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[1].loadAction = loadAction
         deferredRenderPassDescriptor.colorAttachments[2].loadAction = loadAction
@@ -141,7 +141,7 @@ extension Renderer: MTKViewDelegate {
         if Core.paused {
             return
         }
-        if let fps =  Preferences.preferredFPS {
+        if let fps =  Preferences.core.defaultFPS {
             view.preferredFramesPerSecond = fps
         }
 

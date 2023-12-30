@@ -44,12 +44,11 @@ fragment GBuffer deferred_fragment(VertexOut VerOut [[ stage_in ]],
     //Normal
     if (!is_null_texture(textureNormal)) {
         float3 sampleNormal = textureNormal.sample(samplerFragment, VerOut.textureCoordinate).xyz;
-        sampleNormal = sampleNormal * 2.0f - 1.0f;
-        float3x3 TBN = float3x3(); 
+        float3x3 TBN = float3x3();
         TBN.columns[0] = VerOut.tangent;
         TBN.columns[1] = VerOut.bitangent;
         TBN.columns[2] = VerOut.normal;
-        gBuffer.normalShadow.xyz = TBN * sampleNormal;
+        gBuffer.normalShadow.xyz = TBN * (sampleNormal * 2.0f - 1.0f);
     } else {
         gBuffer.normalShadow.xyz = VerOut.normal;
     }

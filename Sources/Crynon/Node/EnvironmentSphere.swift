@@ -13,7 +13,7 @@ open class EnvironmentSphere: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if Preferences.useSkySphere == true && Renderer.currentBlendMode == .Opaque {
+        if Preferences.graphics.useSkySphere == true && Renderer.currentBlendMode == .Opaque {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Sky])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteLess])

@@ -30,10 +30,10 @@ public struct GameView: NSViewRepresentable {
         
         mtkView.delegate = context.coordinator
         
-        mtkView.colorPixelFormat = Preferences.pixelFormat
-        mtkView.depthStencilPixelFormat = Preferences.depthFormat
+        mtkView.colorPixelFormat = Preferences.metal.pixelFormat
+        mtkView.depthStencilPixelFormat = Preferences.metal.depthFormat
         
-        if let fps = Preferences.preferredFPS {
+        if let fps = Preferences.core.defaultFPS {
             mtkView.preferredFramesPerSecond = fps
         }
 
