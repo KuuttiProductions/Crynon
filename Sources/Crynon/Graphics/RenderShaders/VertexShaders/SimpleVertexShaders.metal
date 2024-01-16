@@ -22,3 +22,11 @@ vertex VertexOut simple_vertex(SimpleVertexIn VerIn [[ stage_in ]],
     
     return VerOut;
 }
+
+vertex VertexOut quad_vertex(VertexIn VerIn [[ stage_in ]],
+                              constant VertexSceneConstant &sceneConstant) {
+    VertexOut VerOut;
+    VerOut.position = float4(VerIn.position, 1);
+    VerOut.textureCoordinate = VerIn.textureCoordinate;
+    return VerOut;
+}

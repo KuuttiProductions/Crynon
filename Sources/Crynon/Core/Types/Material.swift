@@ -13,7 +13,7 @@ public struct Material {
     public var textureMetallic: String = ""
     public var textureRoughness: String = ""
     public var textureAoRoughMetal: String = ""
-    public var shader: RenderPipelineStateType = .Geometry
+    public var shader: RenderPipelineStateType = .gBuffer
     public var blendMode: BlendMode = .Opaque
     public var visible: Bool = true
 }

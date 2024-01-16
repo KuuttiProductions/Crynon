@@ -2,10 +2,8 @@
 import MetalKit
 
 enum FragmentShaderType {
-    case Forward
-    case Deferred
+    case GBuffer
     case Lighting
-    case Final
     case Shadow
     case PointAndLine
     case Transparent
@@ -17,10 +15,8 @@ class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
     private var _library: [FragmentShaderType : FragmentShader] = [:]
     
     override func fillLibrary() {
-        _library.updateValue(FragmentShader("forward_fragment", "Basic Fragment Function"), forKey: .Forward)
-        _library.updateValue(FragmentShader("deferred_fragment", "Deferred Fragment Function"), forKey: .Deferred)
+        _library.updateValue(FragmentShader("gBuffer_fragment", "GBuffer Fragment Function"), forKey: .GBuffer)
         _library.updateValue(FragmentShader("lighting_fragment", "Lighting Fragment Function"), forKey: .Lighting)
-        _library.updateValue(FragmentShader("final_fragment", "Final Fragment Function"), forKey: .Final)
         _library.updateValue(FragmentShader("shadow_fragment", "Shadow Fragment Function"), forKey: .Shadow)
         _library.updateValue(FragmentShader("pointAndLine_fragment", "Point and Line Fragment Function"), forKey: .PointAndLine)
         _library.updateValue(FragmentShader("transparent_fragment", "Transparent Fragment Function"), forKey: .Transparent)

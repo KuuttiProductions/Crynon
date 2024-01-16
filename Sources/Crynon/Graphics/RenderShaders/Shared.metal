@@ -3,13 +3,13 @@
 using namespace metal;
 
 struct GBuffer {
-    half4 final [[ color(0), raster_order_group(0) ]];
-    half4 color [[ color(1), raster_order_group(1) ]];
-    float4 position [[ color(2), raster_order_group(1) ]];
-    float4 normalShadow [[ color(3), raster_order_group(1) ]];
-    float depth [[ color(4), raster_order_group(1) ]];
-    half4 metalRoughAoIOR [[ color(5), raster_order_group(1) ]];
-    half4 emission [[ color(6), raster_order_group(1) ]];
+    half4 final [[ color(0) ]];
+    half4 color [[ color(1) ]];
+    float4 position [[ color(2) ]];
+    float4 normalShadow [[ color(3) ]];
+    float depth [[ color(4) ]];
+    half4 metalRoughAoIOR [[ color(5) ]];
+    half4 emission [[ color(6) ]];
 };
 
 struct VertexIn {
