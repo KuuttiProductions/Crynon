@@ -3,8 +3,7 @@
 using namespace metal;
 
 struct GBuffer {
-    half4 final [[ color(0) ]];
-    half4 color [[ color(1) ]];
+    half4 color [[ color(1), raster_order_group(0) ]];
     float4 position [[ color(2) ]];
     float4 normalShadow [[ color(3) ]];
     float depth [[ color(4) ]];

@@ -78,6 +78,7 @@ class Lighting_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
+        descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Quad]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Lighting]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
