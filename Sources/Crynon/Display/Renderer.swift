@@ -212,16 +212,16 @@ extension Renderer: MTKViewDelegate {
         SceneManager.render(gBufferCommandEncoder)
         gBufferCommandEncoder?.popDebugGroup()
         
-        gBufferCommandEncoder?.pushDebugGroup("Alpha fill")
-        Renderer.currentBlendMode = .Alpha
-        SceneManager.render(gBufferCommandEncoder)
-        gBufferCommandEncoder?.popDebugGroup()
-        gBufferCommandEncoder?.popDebugGroup()
-        
-        gBufferCommandEncoder?.pushDebugGroup("Blending Transparency")
-        gBufferCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
-        gBufferCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        AssetLibrary.meshes["Quad"].draw(gBufferCommandEncoder)
+//        gBufferCommandEncoder?.pushDebugGroup("Alpha fill")
+//        Renderer.currentBlendMode = .Alpha
+//        SceneManager.render(gBufferCommandEncoder)
+//        gBufferCommandEncoder?.popDebugGroup()
+//        gBufferCommandEncoder?.popDebugGroup()
+//        
+//        gBufferCommandEncoder?.pushDebugGroup("Blending Transparency")
+//        gBufferCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
+//        gBufferCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
+//        AssetLibrary.meshes["Quad"].draw(gBufferCommandEncoder)
         gBufferCommandEncoder?.popDebugGroup()
         
         gBufferCommandEncoder?.endEncoding()
@@ -239,6 +239,7 @@ extension Renderer: MTKViewDelegate {
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 3)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBMetalRoughAoIOR], index: 4)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBEmission], index: 5)
+        SceneManager.lightingPass(lightingCommandEncoder)
         AssetLibrary.meshes["Quad"].draw(lightingCommandEncoder)
         lightingCommandEncoder?.popDebugGroup()
         lightingCommandEncoder?.endEncoding()

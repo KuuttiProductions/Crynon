@@ -61,11 +61,14 @@ open class Scene: Node {
         renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["ShadowMap1"], index: 0)
         renderCommandEncoder.setFragmentSamplerState(GPLibrary.samplerStates[.Linear], index: 0)
         renderCommandEncoder.setVertexBytes(&viewMatrix, length: float4x4.stride, index: 4)
-        
-        lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
         
         super.render(renderCommandEncoder)
+    }
+    
+    func lightingPass(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        renderCommandEncoder.setFragmentBytes(&fragmentSceneConstant, length: FragmentSceneConstant.stride, index: 2)
+        lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
     }
     
     override func castShadow(_ renderCommandEncoder: MTLRenderCommandEncoder!) {

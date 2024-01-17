@@ -19,45 +19,51 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                  texture2d<float> gBufferMetalRoughAoIOR [[ texture(4) ]],
                                  texture2d<float> gBufferEmission [[ texture(5) ]]) {
 
-    half4 color;
-    color = half4(gBufferColor.sample(samplerFragment, VerOut.textureCoordinate));
+    float4 gBColor = gBufferColor.sample(samplerFragment, VerOut.textureCoordinate);
+    float4 gBPosition = gBufferPosition.sample(samplerFragment, VerOut.textureCoordinate);
+    half4 gBEmission = half4(gBufferEmission.sample(samplerFragment, VerOut.textureCoordinate));
+    float4 gBNormalShadow = gBufferNormalShadow.sample(samplerFragment, VerOut.textureCoordinate);
+    float4 gBMetalRoughAoIOR = gBufferMetalRoughAoIOR.sample(samplerFragment, VerOut.textureCoordinate);
+    float gBDepth = gBufferDepth.sample(samplerFragment, VerOut.textureCoordinate).r;
     
-//    if (!lightData) {
-//        color = half4(0, 0, 0, 1);
-//        return color;
-//    }
-//    
-//    float ambientTerm = AmbientOcclusion::getAmbientTerm(gBufferNormalShadow.xyz,
-//                                                         gBufferDepth,
-//                                                         gBufferMetalRoughAoIOR.b);
-//    
-//    if (gBuffer.emission.a != 1.0) {
-//        ShaderMaterial sm;
-//        sm.color = float4(gBuffer.color);
-//        sm.metallic = gBuffer.metalRoughAoIOR.r;
-//        sm.roughness = gBuffer.metalRoughAoIOR.g;
-//        sm.emission = float4(gBuffer.emission);
-//        sm.ior = gBuffer.metalRoughAoIOR.a;
-//        
-//        half3 lighting = half3(PhongShading::getPhongLight(gBufferPosition.xyz,
-//                                                           normalize(gBufferNormalShadow.xyz),
-//                                                           lightData,
-//                                                           lightCount,
-//                                                           sm,
-//                                                           fragmentSceneConstant.cameraPosition,
-//                                                           gBufferNormalShadow.a,
-//                                                           ambientTerm));
-//        fc.color *= half4(lighting, 1);
-//        
-//        float diffuse = dot(-lightData[0].direction, gBufferNormalShadow.xyz);
-//        
-//    } else {
-//        fc.color += gBuffer.emission;
-//    }
-//    
-//    float density = fragmentSceneConstant.fogDensity;
-//    float gradient = 100;
-//    fc.color *= density == 0 ? 1.0 : clamp(exp(-pow(gBuffer.depth*density, gradient)), 0.0, 1.0);
+    half4 color = half4(gBColor);
+    
+    if (!lightData) {
+        color = half4(0, 0, 0, 1);
+        return color;
+    }
+    
+    float ambientTerm = AmbientOcclusion::getAmbientTerm(gBNormalShadow.xyz,
+                                                         gBDepth,
+                                                         gBMetalRoughAoIOR.b);
+    
+    if (gBEmission.a != 1.0) {
+        ShaderMaterial sm;
+        sm.color = gBColor;
+        sm.metallic = gBMetalRoughAoIOR.r;
+        sm.roughness = gBMetalRoughAoIOR.g;
+        sm.emission = float4(gBEmission);
+        sm.ior = gBMetalRoughAoIOR.a;
+        
+        half3 lighting = half3(PhongShading::getPhongLight(gBPosition.xyz,
+                                                           normalize(gBNormalShadow.xyz),
+                                                           lightData,
+                                                           lightCount,
+                                                           sm,
+                                                           fragmentSceneConstant.cameraPosition,
+                                                           gBNormalShadow.a,
+                                                           ambientTerm));
+        color *= half4(lighting, 1);
+        
+        float diffuse = dot(-lightData[0].direction, gBNormalShadow.xyz);
+        
+    } else {
+        color += gBEmission;
+    }
+    
+    float density = fragmentSceneConstant.fogDensity;
+    float gradient = 100;
+    color *= density == 0 ? 1.0 : clamp(exp(-pow(gBDepth*density, gradient)), 0.0, 1.0);
     
     return color;
 }

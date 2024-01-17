@@ -34,9 +34,6 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
     //Color
     if (!is_null_texture(textureColor)) {
         gBuffer.color = half4(textureColor.sample(samplerFragment, VerOut.textureCoordinate));
-        if (gBuffer.color.a == 0) {
-            discard_fragment();
-        }
     }
     
     //Normal

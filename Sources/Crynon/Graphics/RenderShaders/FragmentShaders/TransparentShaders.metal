@@ -66,6 +66,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
 
 struct TransparencyOut {
     half4 color [[ color(1), raster_order_group(0) ]];
+    half4 normalShadow [[ color(6), raster_order_group(0) ]];
 };
 
 fragment TransparencyOut blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
