@@ -1,6 +1,7 @@
 
 #include <metal_stdlib>
 #import "../Shared.metal"
+#import "../PhongShading.metal"
 using namespace metal;
 
 static constexpr constant short tLayersCount = 4; //Number of transparent layers stored in tile memory
@@ -46,6 +47,17 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     
     color.rgb *= color.a;
     
+    float3 lighting = PhongShading::getPhongLight(VerOut.worldPosition,
+                                                  VerOut.normal,
+                                                  lightData,
+                                                  lightCount,
+                                                  material,
+                                                  fragmentSceneConstant.cameraPosition,
+                                                  1.0f,
+                                                  1.0f);
+    
+    //color *= half4(half3(lighting), 1);
+    
     half depth = VerOut.position.z / VerOut.position.w;
     
     for (short i = 0; i < tLayersCount; i++) {
@@ -64,26 +76,16 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     return out;
 }
 
-struct TransparencyOut {
-    half4 color [[ color(1), raster_order_group(0) ]];
-    half4 normalShadow [[ color(6), raster_order_group(0) ]];
-};
-
-fragment TransparencyOut blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]],
-                                                   half4 opaqueColors [[ color(1), raster_order_group(0) ]],
-                                                   half4 opaqueDepth [[ color(2), raster_order_group(1) ]]) {
-    TransparencyOut to;
-    half4 color;
-    color.rgb = opaqueColors.rgb;
+fragment half4 blendTransparent_fragment(TransparentFragmentValues fragmentValues [[ imageblock_data ]]) {
+    
+    half4 color = half4(0, 0, 0, 0);
     
     for (short i = tLayersCount -1; i >= 0; i--) {
         half4 layerColor = fragmentValues.colors[i];
         color.rgb = layerColor.rgb + (1.0h - layerColor.a) * color.rgb;
+        color.a = max(color.a, layerColor.a);
     }
     
-    color.a = 1.0;
-    to.color = color;
-    
-    return to;
+    return color;
 }
 

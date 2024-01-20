@@ -22,6 +22,7 @@ class TextureLoader {
         let loader = MTKTextureLoader(device: Core.device)
         let origin = origin == .bottomLeft ? MTKTextureLoader.Origin.bottomLeft : MTKTextureLoader.Origin.topLeft
         let options: [ MTKTextureLoader.Option : Any ] = [MTKTextureLoader.Option.generateMipmaps : mipMaps,
+                                                          MTKTextureLoader.Option.textureStorageMode : MTLStorageMode.shared.rawValue,
                                                           MTKTextureLoader.Option.origin : origin]
         var texture: MTLTexture!
         

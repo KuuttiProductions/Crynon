@@ -61,7 +61,9 @@ open class Scene: Node {
         renderCommandEncoder.setFragmentTexture(AssetLibrary.textures["ShadowMap1"], index: 0)
         renderCommandEncoder.setFragmentSamplerState(GPLibrary.samplerStates[.Linear], index: 0)
         renderCommandEncoder.setVertexBytes(&viewMatrix, length: float4x4.stride, index: 4)
+        
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
+        lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
         
         super.render(renderCommandEncoder)
     }

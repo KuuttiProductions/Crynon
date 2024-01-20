@@ -50,6 +50,7 @@ class RenderPipelineState {
 }
 
 func addColorAttachments(descriptor: MTLRenderPipelineDescriptor) {
+    descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
     descriptor.colorAttachments[1].pixelFormat = Preferences.metal.pixelFormat
     descriptor.colorAttachments[2].pixelFormat = Preferences.metal.floatPixelFormat
     descriptor.colorAttachments[3].pixelFormat = Preferences.metal.signedPixelFormat
@@ -120,6 +121,7 @@ class InitTransparency: RenderPipelineState {
     var tileDescriptor: MTLTileRenderPipelineDescriptor = MTLTileRenderPipelineDescriptor()
     override init() {
         super.init()
+        tileDescriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
         tileDescriptor.colorAttachments[1].pixelFormat = Preferences.metal.pixelFormat
         tileDescriptor.colorAttachments[2].pixelFormat = Preferences.metal.floatPixelFormat
         tileDescriptor.colorAttachments[3].pixelFormat = Preferences.metal.signedPixelFormat

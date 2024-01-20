@@ -1,6 +1,7 @@
 
 import MetalKit
 
+var gBTransparency: String = "CRYNON_RENDERER_GBUFFER_TRANSPARENCY"
 var gBColor: String = "CRYNON_RENDERER_GBUFFER_COLOR"
 var gBPosition: String = "CRYNON_RENDERER_GBUFFER_POSITION"
 var gBNormalShadow: String = "CRYNON_RENDERER_GBUFFER_NORMALSHADOW"
@@ -68,6 +69,9 @@ public class Renderer: NSObject {
         bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
         bufferTextureDescriptor.storageMode = .shared
         
+        let TransparencyTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        TransparencyTexture?.label = "GBufferTransparency"
+        
         let colorTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         colorTexture?.label = "GBufferColor"
         
@@ -92,6 +96,7 @@ public class Renderer: NSObject {
         
         gBufferRenderPassDescriptor.colorAttachments[1].clearColor = Preferences.graphics.clearColor
         
+        gBufferRenderPassDescriptor.colorAttachments[0].texture = TransparencyTexture
         gBufferRenderPassDescriptor.colorAttachments[1].texture = colorTexture
         gBufferRenderPassDescriptor.colorAttachments[2].texture = positionTexture
         gBufferRenderPassDescriptor.colorAttachments[3].texture = normalShadowTexture
@@ -115,6 +120,7 @@ public class Renderer: NSObject {
         gBufferRenderPassDescriptor.colorAttachments[5].storeAction = .store
         gBufferRenderPassDescriptor.colorAttachments[6].storeAction = .store
         
+        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[0].texture, key: gBTransparency)
         AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[1].texture, key: gBColor)
         AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[2].texture, key: gBPosition)
         AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[3].texture, key: gBNormalShadow)
@@ -212,16 +218,16 @@ extension Renderer: MTKViewDelegate {
         SceneManager.render(gBufferCommandEncoder)
         gBufferCommandEncoder?.popDebugGroup()
         
-//        gBufferCommandEncoder?.pushDebugGroup("Alpha fill")
-//        Renderer.currentBlendMode = .Alpha
-//        SceneManager.render(gBufferCommandEncoder)
-//        gBufferCommandEncoder?.popDebugGroup()
-//        gBufferCommandEncoder?.popDebugGroup()
-//        
-//        gBufferCommandEncoder?.pushDebugGroup("Blending Transparency")
-//        gBufferCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
-//        gBufferCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-//        AssetLibrary.meshes["Quad"].draw(gBufferCommandEncoder)
+        gBufferCommandEncoder?.pushDebugGroup("Alpha rendering")
+        Renderer.currentBlendMode = .Alpha
+        SceneManager.render(gBufferCommandEncoder)
+        gBufferCommandEncoder?.popDebugGroup()
+        gBufferCommandEncoder?.popDebugGroup()
+        
+        gBufferCommandEncoder?.pushDebugGroup("Blending Transparency")
+        gBufferCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
+        gBufferCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
+        AssetLibrary.meshes["Quad"].draw(gBufferCommandEncoder)
         gBufferCommandEncoder?.popDebugGroup()
         
         gBufferCommandEncoder?.endEncoding()
@@ -233,12 +239,13 @@ extension Renderer: MTKViewDelegate {
         lightingCommandEncoder?.pushDebugGroup("Lighting")
         lightingCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Lighting])
         lightingCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBColor], index: 0)
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBPosition], index: 1)
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 2)
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 3)
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBMetalRoughAoIOR], index: 4)
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBEmission], index: 5)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBTransparency], index: 0)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBColor], index: 1)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBPosition], index: 2)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 3)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 4)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBMetalRoughAoIOR], index: 5)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBEmission], index: 6)
         SceneManager.lightingPass(lightingCommandEncoder)
         AssetLibrary.meshes["Quad"].draw(lightingCommandEncoder)
         lightingCommandEncoder?.popDebugGroup()
