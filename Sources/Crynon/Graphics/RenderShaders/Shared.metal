@@ -61,4 +61,5 @@ struct ShaderMaterial {
     float roughness;
     float metallic;
     float ior;
+    bool backfaceNormals;
 };

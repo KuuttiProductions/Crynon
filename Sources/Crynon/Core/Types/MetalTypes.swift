@@ -76,4 +76,5 @@ public struct ShaderMaterial: sizeable {
     public var roughness: Float = 0.5
     public var metallic: Float = 0.0
     public var ior: Float = 1.45
+    public var backfaceNormals: Bool = false
 }

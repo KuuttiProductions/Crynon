@@ -35,10 +35,12 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
         return color;
     }
     
+    // Get ambient term with effect from AO textures and SSAO
     float ambientTerm = AmbientOcclusion::getAmbientTerm(gBNormalShadow.xyz,
                                                          gBDepth,
                                                          gBMetalRoughAoIOR.b);
     
+    // Add Phong Shading
     if (gBEmission.a != 1.0) {
         ShaderMaterial sMat;
         sMat.color = float4(gBColor);
@@ -60,6 +62,7 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
         float diffuse = dot(-lightData[0].direction, gBNormalShadow.xyz);
     }
     
+    // Blend Transparency on top of the opaque image
     color.rgb = gBTransparency.rgb + (1.0h - gBTransparency.a) * color.rgb;
     
 //    FOG DISABLED FOR NOW

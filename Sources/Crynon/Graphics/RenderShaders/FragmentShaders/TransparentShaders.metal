@@ -47,16 +47,16 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     
     color.rgb *= color.a;
     
-    float3 lighting = PhongShading::getPhongLight(VerOut.worldPosition,
-                                                  VerOut.normal,
-                                                  lightData,
-                                                  lightCount,
-                                                  material,
-                                                  fragmentSceneConstant.cameraPosition,
-                                                  1.0f,
-                                                  1.0f);
+    half3 lighting = PhongShading::getSpecularLight(VerOut.worldPosition,
+                                                     VerOut.normal,
+                                                     lightData,
+                                                     lightCount,
+                                                     material,
+                                                     fragmentSceneConstant.cameraPosition);
     
-    //color *= half4(half3(lighting), 1);
+    if (color.a != 0.0) {
+        color.rgb += lighting;
+    }
     
     half depth = VerOut.position.z / VerOut.position.w;
     
