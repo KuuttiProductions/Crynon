@@ -8,6 +8,7 @@ var gBNormalShadow: String = "CRYNON_RENDERER_GBUFFER_NORMALSHADOW"
 var gBDepth: String = "CRYNON_RENDERER_GBUFFER_DEPTH"
 var gBMetalRoughAoIOR: String = "CRYNON_RENDERER_GBUFFER_METALROUGHAOIOR"
 var gBEmission: String = "CRYNON_RENDERER_GBUFFER_EMISSION"
+var gBSSAO: String = "CRYNON_RENDERER_GBUFFER_SSAO"
 
 public class Renderer: NSObject {
     
@@ -24,7 +25,7 @@ public class Renderer: NSObject {
 
     var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
     var gBufferRenderPassDescriptor = MTLRenderPassDescriptor()
-    var ssaoRenderPassDescriptor = MTLRenderPassDescriptor()
+    var SSAORenderPassDescriptor = MTLRenderPassDescriptor()
     
     override init() {
         super.init()
@@ -61,11 +62,11 @@ public class Renderer: NSObject {
         shadowRenderPassDescriptor.depthAttachment.storeAction = .store
     }
     
-    func createGBuffer() {
+    func createGBufferRenderPassDescriptor() {
         let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.metal.pixelFormat,
-                                                                              width: Int(Renderer.screenWidth),
-                                                                              height: Int(Renderer.screenHeight),
-                                                                              mipmapped: false)
+                                                                               width: Int(Renderer.screenWidth),
+                                                                               height: Int(Renderer.screenHeight),
+                                                                               mipmapped: false)
         bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
         bufferTextureDescriptor.storageMode = .shared
         
@@ -139,11 +140,26 @@ public class Renderer: NSObject {
         gBufferRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.InitTransparency].imageblockSampleLength
     }
     
+    func createSSAORenderPassDescriptor() {
+        let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float,
+                                                                               width: Int(Renderer.screenWidth),
+                                                                               height: Int(Renderer.screenHeight),
+                                                                               mipmapped: false)
+        bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
+        bufferTextureDescriptor.storageMode = .shared
+        let ssaoTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        ssaoTexture?.label = "gBufferSSAO"
+        SSAORenderPassDescriptor.colorAttachments[0].texture = ssaoTexture
+        SSAORenderPassDescriptor.colorAttachments[0].storeAction = .store
+        AssetLibrary.textures.addTexture(SSAORenderPassDescriptor.colorAttachments[0].texture, key: gBSSAO)
+    }
+    
     func updateScreenSize(view: MTKView) {
         Renderer.screenWidth = Float((view.bounds.width))*2
         Renderer.screenHeight = Float((view.bounds.height))*2
         if Renderer.screenWidth > 0 && Renderer.screenHeight > 0 {
-            createGBuffer()
+            createGBufferRenderPassDescriptor()
+            createSSAORenderPassDescriptor()
         }
     }
 }
@@ -188,6 +204,9 @@ extension Renderer: MTKViewDelegate {
             //Render GBuffer
             gBufferRenderPass(commandBuffer: commandBuffer)
             
+            //Render Screen Space Ambient Occlusion
+            SSAORenderPass(commandBuffer: commandBuffer)
+            
             //Composite shaded image
             lightingRenderPass(commandBuffer: commandBuffer, view: view)
         }
@@ -205,7 +224,7 @@ extension Renderer: MTKViewDelegate {
     
     func gBufferRenderPass(commandBuffer: MTLCommandBuffer!) {
         let gBufferCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: gBufferRenderPassDescriptor)
-        gBufferCommandEncoder?.label = "Deferred RenderCommandEncoder"
+        gBufferCommandEncoder?.label = "GBuffer RenderCommandEncoder"
         
         gBufferCommandEncoder?.pushDebugGroup("Init imageblocks for transparency")
         gBufferCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
@@ -233,6 +252,18 @@ extension Renderer: MTKViewDelegate {
         gBufferCommandEncoder?.endEncoding()
     }
     
+    func SSAORenderPass(commandBuffer: MTLCommandBuffer!) {
+        let SSAOCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: SSAORenderPassDescriptor)
+        SSAOCommandEncoder?.label = "SSAO RenderCommandEncoder"
+        SSAOCommandEncoder?.pushDebugGroup("Rendering SSAO")
+        SSAOCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.SSAO])
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 0)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 1)
+        AssetLibrary.meshes["Quad"].draw(SSAOCommandEncoder)
+        SSAOCommandEncoder?.popDebugGroup()
+        SSAOCommandEncoder?.endEncoding()
+    }
+    
     func lightingRenderPass(commandBuffer: MTLCommandBuffer!, view: MTKView) {
         let lightingCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: view.currentRenderPassDescriptor!)
         lightingCommandEncoder?.label = "Final RenderCommandEncoder"
@@ -246,6 +277,7 @@ extension Renderer: MTKViewDelegate {
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 4)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBMetalRoughAoIOR], index: 5)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBEmission], index: 6)
+        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBSSAO], index: 7)
         SceneManager.lightingPass(lightingCommandEncoder)
         AssetLibrary.meshes["Quad"].draw(lightingCommandEncoder)
         lightingCommandEncoder?.popDebugGroup()

@@ -7,6 +7,7 @@ public enum RenderPipelineStateType {
     case Lighting
     case Final
     case Shadow
+    case SSAO
     case PointAndLine
     case InitTransparency
     case Transparent
@@ -24,6 +25,7 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
         _library.updateValue(Lighting_RenderPipelineState(), forKey: .Lighting)
         _library.updateValue(Lighting_RenderPipelineState(), forKey: .Lighting)
         _library.updateValue(Shadow_RenderPipelineState(), forKey: .Shadow)
+        _library.updateValue(SSAO_RenderPipelineState(), forKey: .SSAO)
         _library.updateValue(PointAndLine_RenderPipelineState(), forKey: .PointAndLine)
         _library.updateValue(InitTransparency(), forKey: .InitTransparency)
         _library.updateValue(Transparent_RenderPipelineState(), forKey: .Transparent)
@@ -97,6 +99,19 @@ class Shadow_RenderPipelineState: RenderPipelineState {
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Shadow]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
         descriptor.label = "Shadow RenderPipelineState"
+        create()
+    }
+}
+
+class SSAO_RenderPipelineState: RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].pixelFormat = .r32Float
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Quad]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.SSAO]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "SSAO RenderPipelineState"
         create()
     }
 }

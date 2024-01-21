@@ -4,9 +4,6 @@
 #import "../Shadows.metal"
 using namespace metal;
 
-constexpr static sampler samplerFragment (min_filter::linear,
-                                          mag_filter::linear);
-
 fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
                                   constant ShaderMaterial &mat [[ buffer(1) ]],
                                   depth2d<float> shadowMap1 [[ texture(0) ]],

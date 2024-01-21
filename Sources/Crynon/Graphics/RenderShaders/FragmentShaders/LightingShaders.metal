@@ -2,11 +2,7 @@
 #include <metal_stdlib>
 #import "../Shared.metal"
 #import "../PhongShading.metal"
-#import "../AmbientOcclusion.metal"
 using namespace metal;
-
-constexpr static sampler samplerFragment (min_filter::linear,
-                                          mag_filter::linear);
 
 fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                  constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
@@ -18,7 +14,8 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                  texture2d<float> gBufferNormalShadow [[ texture(3) ]],
                                  texture2d<float> gBufferDepth [[ texture(4) ]],
                                  texture2d<float> gBufferMetalRoughAoIOR [[ texture(5) ]],
-                                 texture2d<half> gBufferEmission [[ texture(6) ]]) {
+                                 texture2d<half> gBufferEmission [[ texture(6) ]],
+                                 texture2d<half> gBufferSSAO [[ texture(7) ]]) {
 
     half4 gBTransparency = gBufferTransparency.sample(samplerFragment, VerOut.textureCoordinate);
     half4 gBColor = gBufferColor.sample(samplerFragment, VerOut.textureCoordinate);
@@ -26,7 +23,7 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
     half4 gBEmission = gBufferEmission.sample(samplerFragment, VerOut.textureCoordinate);
     float4 gBNormalShadow = gBufferNormalShadow.sample(samplerFragment, VerOut.textureCoordinate);
     float4 gBMetalRoughAoIOR = gBufferMetalRoughAoIOR.sample(samplerFragment, VerOut.textureCoordinate);
-    float gBDepth = gBufferDepth.sample(samplerFragment, VerOut.textureCoordinate).r;
+    float gBSSAO = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate).r;
     
     half4 color = gBColor;
     
@@ -35,10 +32,8 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
         return color;
     }
     
-    // Get ambient term with effect from AO textures and SSAO
-    float ambientTerm = AmbientOcclusion::getAmbientTerm(gBNormalShadow.xyz,
-                                                         gBDepth,
-                                                         gBMetalRoughAoIOR.b);
+    // Get ambient term with effect from AO textures and SSAO buffer
+    float ambientTerm = max(gBSSAO - gBMetalRoughAoIOR.b, 0.0f);
     
     // Add Phong Shading
     if (gBEmission.a != 1.0) {

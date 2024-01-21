@@ -5,6 +5,7 @@ enum FragmentShaderType {
     case GBuffer
     case Lighting
     case Shadow
+    case SSAO
     case PointAndLine
     case Transparent
     case TransparentBlending
@@ -18,6 +19,7 @@ class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
         _library.updateValue(FragmentShader("gBuffer_fragment", "GBuffer Fragment Function"), forKey: .GBuffer)
         _library.updateValue(FragmentShader("lighting_fragment", "Lighting Fragment Function"), forKey: .Lighting)
         _library.updateValue(FragmentShader("shadow_fragment", "Shadow Fragment Function"), forKey: .Shadow)
+        _library.updateValue(FragmentShader("ssao_fragment", "SSAO Fragment Function"), forKey: .SSAO)
         _library.updateValue(FragmentShader("pointAndLine_fragment", "Point and Line Fragment Function"), forKey: .PointAndLine)
         _library.updateValue(FragmentShader("transparent_fragment", "Transparent Fragment Function"), forKey: .Transparent)
         _library.updateValue(FragmentShader("blendTransparent_fragment", "Transparency Blending Fragment Functino"), forKey: .TransparentBlending)
