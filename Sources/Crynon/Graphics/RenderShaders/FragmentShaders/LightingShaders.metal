@@ -53,8 +53,6 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                                            gBNormalShadow.a,
                                                            ambientTerm));
         color *= half4(lighting, 1);
-        
-        float diffuse = dot(-lightData[0].direction, gBNormalShadow.xyz);
     }
     
     // Blend Transparency on top of the opaque image

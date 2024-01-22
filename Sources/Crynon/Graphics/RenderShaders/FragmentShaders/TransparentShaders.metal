@@ -25,9 +25,6 @@ kernel void initTransparentFragmentStore(imageblock<TransparentFragmentValues, i
     }
 }
 
-constexpr sampler sampler2d = sampler(min_filter::linear,
-                                      mag_filter::linear);
-
 fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage_in ]],
                                                        constant ShaderMaterial &material [[ buffer(1) ]],
                                                        constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
@@ -42,7 +39,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     float2 texCoord = VerOut.textureCoordinate;
     
     if (!is_null_texture(textureColor)) {
-        color = half4(textureColor.sample(sampler2d, texCoord));
+        color = half4(textureColor.sample(samplerFragment, texCoord));
     }
     
     color.rgb *= color.a;
@@ -54,7 +51,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
                                                      material,
                                                      fragmentSceneConstant.cameraPosition);
     
-    if (color.a != 0.0) {
+    if (color.a != 0.0) {
         color.rgb += lighting;
     }
     

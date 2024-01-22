@@ -15,7 +15,7 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
                                   texture2d<float> textureEmission [[ texture(5) ]],
                                   texture2d<float> textureRoughness [[ texture(6) ]],
                                   texture2d<float> textureMetallic [[ texture(7) ]],
-                                  texture2d<float> textureAoRoughMetal [[ texture(8) ]]) {
+                                  texture2d<float> textureAoRoughMetal [[ texture(8) ]]) {
     GBuffer gBuffer;
     
     gBuffer.color = half4(mat.color);

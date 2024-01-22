@@ -13,10 +13,18 @@ open class Core: ObservableObject {
     public static var device: MTLDevice { _device }
     public static var paused: Bool = false
     
-    public init() {
+    public init(development: Bool = false) {
         Core._device = MTLCreateSystemDefaultDevice()
         Core._commandQueue = Core.device.makeCommandQueue()
-        Core._defaultLibrary = try! Core.device.makeDefaultLibrary(bundle: .module)
+        
+        if development {
+            compileShaderSources()
+        } else {
+            do {
+                Core._defaultLibrary = try Core.device.makeDefaultLibrary(bundle: .module)
+                Core._defaultLibrary.label = "Runtime Library"
+            } catch let error as NSError { print(error) }
+        }
         
         Preferences.initialize()
         
@@ -29,5 +37,26 @@ open class Core: ObservableObject {
         
         Debug.initialize()
         
+    }
+    
+    func compileShaderSources() {
+        let libraryURL = Bundle.module.url(forResource: "ShaderLib", withExtension: "metallib", subdirectory: "CompiledShaders")
+    
+        guard let libraryURL else {
+            print("Error locating precompiled shader library")
+            return
+        }
+        
+        let preLibrary: MTLLibrary!
+        do {
+            preLibrary = try Core.device.makeLibrary(URL: libraryURL)
+            preLibrary.label = "Precompiled Library"
+        } catch {
+            print(error)
+            return
+        }
+
+        Core._defaultLibrary = preLibrary
+        print("Using precompiled library")
     }
 }

@@ -15,7 +15,7 @@ let package = Package(
     targets: [
         .target(
             name: "Crynon",
-            resources: [.process("DefaultAssets")]),
+            resources: [.process("DefaultAssets"), .copy("Graphics/RenderShaders/CompiledShaders/")]),
         .testTarget(
             name: "CrynonTests",
             dependencies: ["Crynon"])
