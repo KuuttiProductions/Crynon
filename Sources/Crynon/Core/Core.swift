@@ -57,6 +57,5 @@ open class Core: ObservableObject {
         }
 
         Core._defaultLibrary = preLibrary
-        print("Using precompiled library")
     }
 }

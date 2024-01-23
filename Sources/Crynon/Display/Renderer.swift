@@ -10,6 +10,10 @@ var gBMetalRoughAoIOR: String = "CRYNON_RENDERER_GBUFFER_METALROUGHAOIOR"
 var gBEmission: String = "CRYNON_RENDERER_GBUFFER_EMISSION"
 var gBSSAO: String = "CRYNON_RENDERER_GBUFFER_SSAO"
 
+func lerp(a: Float, b: Float, c: Float)-> Float {
+    return a + c * (b - a)
+}
+
 public class Renderer: NSObject {
     
     static var screenWidth: Float!
@@ -27,19 +31,36 @@ public class Renderer: NSObject {
     var gBufferRenderPassDescriptor = MTLRenderPassDescriptor()
     var SSAORenderPassDescriptor = MTLRenderPassDescriptor()
     
+    var SSAOSampleKernel: MTLBuffer!
+    
     override init() {
         super.init()
         createShadowRenderPassDescriptor()
         createJitterTexture()
+        createSSAOSampleKernel()
+    }
+    
+    func createSSAOSampleKernel() {
+        var samples: [simd_float3] = []
+        for i in 0..<64 {
+            var sample = simd_float3(Float.random(in: -1.0...1.0),
+                                     Float.random(in: -1.0...1.0),
+                                     Float.random(in: 0.0...1.0))
+            sample = normalize(sample)
+            var scale = Float(i) / 64.0
+            scale = lerp(a: 0.1, b: 1.0, c: scale * scale)
+            sample *= scale
+            samples.append(sample)
+        }
+        SSAOSampleKernel = Core.device.makeBuffer(bytes: samples, length: simd_float3.stride(count: 64))!
     }
     
     func createJitterTexture() {
         let jitterTextureDescriptor = MTLTextureDescriptor()
-        jitterTextureDescriptor.textureType = .type3D
-        jitterTextureDescriptor.pixelFormat = .rg8Unorm
+        jitterTextureDescriptor.textureType = .type2D
+        jitterTextureDescriptor.pixelFormat = .rg8Snorm
         jitterTextureDescriptor.width = 64
-        jitterTextureDescriptor.height = 512
-        jitterTextureDescriptor.depth = 1
+        jitterTextureDescriptor.height = 64
         jitterTextureDescriptor.usage = [ .shaderWrite, .shaderRead ]
     
         let jitterTexture = Core.device.makeTexture(descriptor: jitterTextureDescriptor)
@@ -257,8 +278,10 @@ extension Renderer: MTKViewDelegate {
         SSAOCommandEncoder?.label = "SSAO RenderCommandEncoder"
         SSAOCommandEncoder?.pushDebugGroup("Rendering SSAO")
         SSAOCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.SSAO])
+        SSAOCommandEncoder?.setFragmentBuffer(SSAOSampleKernel, offset: simd_float3.stride, index: 0)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 0)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 1)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 2)
         AssetLibrary.meshes["Quad"].draw(SSAOCommandEncoder)
         SSAOCommandEncoder?.popDebugGroup()
         SSAOCommandEncoder?.endEncoding()
@@ -287,7 +310,6 @@ extension Renderer: MTKViewDelegate {
     func computePass(commandBuffer: MTLCommandBuffer!) {
         let computeCommandEncoder = commandBuffer?.makeComputeCommandEncoder()
         computeCommandEncoder?.label = "Main ComputeCommandEncoder"
-        
         computeCommandEncoder?.setTexture(AssetLibrary.textures["JitterTexture"], index: 0)
         let texture = AssetLibrary.textures["JitterTexture"]!
         computeCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.Jitter])
