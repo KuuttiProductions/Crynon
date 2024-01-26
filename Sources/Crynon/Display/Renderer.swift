@@ -58,7 +58,7 @@ public class Renderer: NSObject {
     func createJitterTexture() {
         let jitterTextureDescriptor = MTLTextureDescriptor()
         jitterTextureDescriptor.textureType = .type2D
-        jitterTextureDescriptor.pixelFormat = .rg8Snorm
+        jitterTextureDescriptor.pixelFormat = .rg8Unorm
         jitterTextureDescriptor.width = 64
         jitterTextureDescriptor.height = 64
         jitterTextureDescriptor.usage = [ .shaderWrite, .shaderRead ]
@@ -279,9 +279,8 @@ extension Renderer: MTKViewDelegate {
         SSAOCommandEncoder?.pushDebugGroup("Rendering SSAO")
         SSAOCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.SSAO])
         SSAOCommandEncoder?.setFragmentBuffer(SSAOSampleKernel, offset: simd_float3.stride, index: 0)
-        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 0)
-        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 1)
-        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 2)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 0)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 1)
         AssetLibrary.meshes["Quad"].draw(SSAOCommandEncoder)
         SSAOCommandEncoder?.popDebugGroup()
         SSAOCommandEncoder?.endEncoding()

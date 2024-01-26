@@ -33,7 +33,8 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
     }
     
     // Get ambient term with effect from AO textures and SSAO buffer
-    float ambientTerm = max(gBSSAO - gBMetalRoughAoIOR.b, 0.0f);
+    float ambientTerm = min(gBSSAO - gBMetalRoughAoIOR.b, 0.0f);
+    ambientTerm = gBSSAO;
     
     // Add Phong Shading
     if (gBEmission.a != 1.0) {
@@ -62,6 +63,8 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
 //    float density = fragmentSceneConstant.fogDensity;
 //    float gradient = 100;
 //    color *= density == 0 ? 1.0 : clamp(exp(-pow(gBDepth*density, gradient)), 0.0, 1.0);
+    
+    color.rgb = ambientTerm;
     
     return color;
 }

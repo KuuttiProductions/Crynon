@@ -69,8 +69,6 @@ public:
                 totalSpecularColor *= lightness;
             }
         }
-        totalAmbientColor = float3(ambientTerm);
-        return totalAmbientColor;
         
         return totalAmbientColor + totalDiffuseColor + totalSpecularColor;
     }
