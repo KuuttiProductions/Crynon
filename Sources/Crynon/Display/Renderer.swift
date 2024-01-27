@@ -32,6 +32,7 @@ public class Renderer: NSObject {
     var SSAORenderPassDescriptor = MTLRenderPassDescriptor()
     
     var SSAOSampleKernel: MTLBuffer!
+    static var projectionMatrix: simd_float4x4!
     
     override init() {
         super.init()
@@ -42,7 +43,7 @@ public class Renderer: NSObject {
     
     func createSSAOSampleKernel() {
         var samples: [simd_float3] = []
-        for i in 0..<64 {
+        for i in 0..<64 {
             var sample = simd_float3(Float.random(in: -1.0...1.0),
                                      Float.random(in: -1.0...1.0),
                                      Float.random(in: 0.0...1.0))
@@ -58,7 +59,7 @@ public class Renderer: NSObject {
     func createJitterTexture() {
         let jitterTextureDescriptor = MTLTextureDescriptor()
         jitterTextureDescriptor.textureType = .type2D
-        jitterTextureDescriptor.pixelFormat = .rg8Unorm
+        jitterTextureDescriptor.pixelFormat = .rg8Snorm
         jitterTextureDescriptor.width = 64
         jitterTextureDescriptor.height = 64
         jitterTextureDescriptor.usage = [ .shaderWrite, .shaderRead ]
@@ -275,12 +276,16 @@ extension Renderer: MTKViewDelegate {
     
     func SSAORenderPass(commandBuffer: MTLCommandBuffer!) {
         let SSAOCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: SSAORenderPassDescriptor)
+        var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
         SSAOCommandEncoder?.label = "SSAO RenderCommandEncoder"
         SSAOCommandEncoder?.pushDebugGroup("Rendering SSAO")
         SSAOCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.SSAO])
         SSAOCommandEncoder?.setFragmentBuffer(SSAOSampleKernel, offset: simd_float3.stride, index: 0)
-        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 0)
-        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 1)
+        SSAOCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 1)
+        SSAOCommandEncoder?.setFragmentBytes(&Renderer.projectionMatrix, length: simd_float4x4.stride, index: 2)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 0)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBPosition], index: 1)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 2)
         AssetLibrary.meshes["Quad"].draw(SSAOCommandEncoder)
         SSAOCommandEncoder?.popDebugGroup()
         SSAOCommandEncoder?.endEncoding()
@@ -301,6 +306,8 @@ extension Renderer: MTKViewDelegate {
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBEmission], index: 6)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBSSAO], index: 7)
         SceneManager.lightingPass(lightingCommandEncoder)
+        var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
+        lightingCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)
         AssetLibrary.meshes["Quad"].draw(lightingCommandEncoder)
         lightingCommandEncoder?.popDebugGroup()
         lightingCommandEncoder?.endEncoding()

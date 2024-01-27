@@ -63,6 +63,3 @@ struct ShaderMaterial {
     float ior;
     bool backfaceNormals;
 };
-
-constexpr sampler samplerFragment (min_filter::linear,
-                                   mag_filter::linear);

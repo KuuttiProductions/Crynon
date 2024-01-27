@@ -10,7 +10,7 @@ kernel void jitter(texture2d<half, access::write> jitterTexture [[ texture(0) ]]
     
     half randomX = rng.rand() * 2.0f - 1.0f;
     half randomY = rng.rand() * 2.0f - 1.0f;
-    half randomZ = rng.rand();
+    half randomZ = rng.rand() * 2.0f - 1.0f;
     jitterTexture.write(half4(randomX, randomY, randomZ, 1.0h),
                         ushort2(posInGrid.x, posInGrid.y));
 }

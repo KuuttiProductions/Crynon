@@ -16,6 +16,9 @@ struct TransparentFragmentStore {
     
 };
 
+constexpr sampler samplerFragment (min_filter::linear,
+                                   mag_filter::linear);
+
 kernel void initTransparentFragmentStore(imageblock<TransparentFragmentValues, imageblock_layout_explicit> blockData,
                                          ushort2 posInThreadGroup [[ thread_position_in_threadgroup ]]) {
     threadgroup_imageblock TransparentFragmentValues* fragmentValues = blockData.data(posInThreadGroup);

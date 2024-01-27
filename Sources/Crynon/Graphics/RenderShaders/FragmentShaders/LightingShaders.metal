@@ -4,10 +4,14 @@
 #import "../PhongShading.metal"
 using namespace metal;
 
+constexpr sampler samplerFragment (min_filter::linear,
+                                   mag_filter::linear);
+
 fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                  constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                                  constant LightData *lightData [[ buffer(3) ]],
                                  constant int &lightCount [[ buffer(4) ]],
+                                 constant float2 &screenSize [[ buffer(5) ]],
                                  texture2d<half> gBufferTransparency [[ texture(0) ]],
                                  texture2d<half> gBufferColor [[ texture(1) ]],
                                  texture2d<float> gBufferPosition [[ texture(2) ]],
@@ -16,14 +20,13 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                  texture2d<float> gBufferMetalRoughAoIOR [[ texture(5) ]],
                                  texture2d<half> gBufferEmission [[ texture(6) ]],
                                  texture2d<half> gBufferSSAO [[ texture(7) ]]) {
-
+    
     half4 gBTransparency = gBufferTransparency.sample(samplerFragment, VerOut.textureCoordinate);
     half4 gBColor = gBufferColor.sample(samplerFragment, VerOut.textureCoordinate);
     float4 gBPosition = gBufferPosition.sample(samplerFragment, VerOut.textureCoordinate);
     half4 gBEmission = gBufferEmission.sample(samplerFragment, VerOut.textureCoordinate);
     float4 gBNormalShadow = gBufferNormalShadow.sample(samplerFragment, VerOut.textureCoordinate);
     float4 gBMetalRoughAoIOR = gBufferMetalRoughAoIOR.sample(samplerFragment, VerOut.textureCoordinate);
-    float gBSSAO = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate).r;
     
     half4 color = gBColor;
     
@@ -32,9 +35,17 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
         return color;
     }
     
+    float offsetX = 1.0f / screenSize.x;
+    float offsetY = 1.0f / screenSize.y;
+    float gBSSAO0 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate).r;
+    float gBSSAO1 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(-offsetX, offsetY)).r;
+    float gBSSAO2 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(-offsetX, -offsetY)).r;
+    float gBSSAO3 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(offsetX, offsetY)).r;
+    float gBSSAO4 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(offsetX, -offsetY)).r;
+    float SSAO = (gBSSAO0 + gBSSAO1 + gBSSAO2 + gBSSAO3 + gBSSAO4) / 5.0f;
+    
     // Get ambient term with effect from AO textures and SSAO buffer
-    float ambientTerm = min(gBSSAO - gBMetalRoughAoIOR.b, 0.0f);
-    ambientTerm = gBSSAO;
+    float ambientTerm = min(SSAO, gBMetalRoughAoIOR.b) * 0.1f;
     
     // Add Phong Shading
     if (gBEmission.a != 1.0) {
@@ -63,8 +74,6 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
 //    float density = fragmentSceneConstant.fogDensity;
 //    float gradient = 100;
 //    color *= density == 0 ? 1.0 : clamp(exp(-pow(gBDepth*density, gradient)), 0.0, 1.0);
-    
-    color.rgb = ambientTerm;
     
     return color;
 }

@@ -22,5 +22,7 @@ vertex VertexOut default_vertex(VertexIn VerIn [[ stage_in ]],
     
     VerOut.lightSpacePosition = (depthViewMatrix * worldPosition);
     
+    VerOut.color = sceneConstant.viewMatrix * worldPosition;
+    
     return VerOut;
 }

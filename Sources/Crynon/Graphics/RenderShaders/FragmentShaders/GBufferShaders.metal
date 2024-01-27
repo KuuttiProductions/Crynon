@@ -4,6 +4,9 @@
 #import "../Shadows.metal"
 using namespace metal;
 
+constexpr sampler samplerFragment (min_filter::linear,
+                                   mag_filter::linear);
+
 fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
                                   constant ShaderMaterial &mat [[ buffer(1) ]],
                                   depth2d<float> shadowMap1 [[ texture(0) ]],
@@ -22,6 +25,7 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
     gBuffer.depth = VerOut.position.z;
     gBuffer.position.xyz = VerOut.worldPosition;
     gBuffer.position.w = VerOut.position.w;
+    gBuffer.position = VerOut.color;
     gBuffer.metalRoughAoIOR.r = mat.metallic;
     gBuffer.metalRoughAoIOR.g = mat.roughness;
     gBuffer.metalRoughAoIOR.b = 1.0;
@@ -42,7 +46,7 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
         TBN.columns[2] = VerOut.normal;
         gBuffer.normalShadow.xyz = TBN * (sampleNormal * 2.0f - 1.0f);
     } else {
-        gBuffer.normalShadow.xyz = VerOut.normal;
+        gBuffer.normalShadow.xyz = normalize(VerOut.normal);
     }
     
     //Roughness and Metallic
