@@ -22,7 +22,7 @@ fragment float ssao_fragment(VertexOut VerOut [[ stage_in ]],
     float bias = 0.01;
     int kernelSize = 16;
     
-    float2 texelSize = float2(screenSize.x / 64.0f, screenSize.y / 64.0f);
+    float2 texelSize = float2(screenSize.x / 4.0f, screenSize.y / 4.0f);
     float2 tCoord = VerOut.textureCoordinate;
     
     float3 fragPos = positionTex.sample(samplerFragment, tCoord).xyz;
@@ -49,7 +49,8 @@ fragment float ssao_fragment(VertexOut VerOut [[ stage_in ]],
 
         float sampleDepth = positionTex.sample(samplerFragment, offset.xy).z;
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
-        occlusion += (sampleDepth >= fragPos.z + bias) ? 1.0 : 0.0 * rangeCheck;
+        float depthDifference = sampleDepth - (fragPos.z + bias);
+        occlusion += (depthDifference > 0.0 ? 1.0 : 0.0) * rangeCheck;
     }
     
     return 1.0f - (occlusion / float(kernelSize));

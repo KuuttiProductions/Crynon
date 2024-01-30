@@ -54,14 +54,15 @@ public class Renderer: NSObject {
             samples.append(sample)
         }
         SSAOSampleKernel = Core.device.makeBuffer(bytes: samples, length: simd_float3.stride(count: 64))!
+        SSAOSampleKernel.label = "SSAO Sample Kernel Buffer"
     }
     
     func createJitterTexture() {
         let jitterTextureDescriptor = MTLTextureDescriptor()
         jitterTextureDescriptor.textureType = .type2D
         jitterTextureDescriptor.pixelFormat = .rg8Snorm
-        jitterTextureDescriptor.width = 64
-        jitterTextureDescriptor.height = 64
+        jitterTextureDescriptor.width = 4
+        jitterTextureDescriptor.height = 4
         jitterTextureDescriptor.usage = [ .shaderWrite, .shaderRead ]
     
         let jitterTexture = Core.device.makeTexture(descriptor: jitterTextureDescriptor)
@@ -317,6 +318,7 @@ extension Renderer: MTKViewDelegate {
         let computeCommandEncoder = commandBuffer?.makeComputeCommandEncoder()
         computeCommandEncoder?.label = "Main ComputeCommandEncoder"
         computeCommandEncoder?.setTexture(AssetLibrary.textures["JitterTexture"], index: 0)
+        computeCommandEncoder?.setBytes(&Renderer.time, length: Float.stride, index: 0)
         let texture = AssetLibrary.textures["JitterTexture"]!
         computeCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.Jitter])
         let groupsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: texture.depth)

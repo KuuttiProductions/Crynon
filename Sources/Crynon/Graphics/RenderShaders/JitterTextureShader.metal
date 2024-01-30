@@ -4,9 +4,10 @@
 using namespace metal;
 
 kernel void jitter(texture2d<half, access::write> jitterTexture [[ texture(0) ]],
+                   constant float &time [[ buffer(0) ]],
                    const uint2 posInGrid [[ thread_position_in_grid ]]) {
     
-    Rng rng = Rng(posInGrid.x, posInGrid.y);
+    Rng rng = Rng(posInGrid.x, posInGrid.y, 500*time);
     
     half randomX = rng.rand() * 2.0f - 1.0f;
     half randomY = rng.rand() * 2.0f - 1.0f;

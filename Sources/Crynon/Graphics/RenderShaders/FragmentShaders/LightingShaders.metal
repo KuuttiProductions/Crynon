@@ -75,5 +75,7 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
 //    float gradient = 100;
 //    color *= density == 0 ? 1.0 : clamp(exp(-pow(gBDepth*density, gradient)), 0.0, 1.0);
     
+    //color.rgb = SSAO;
+    
     return color;
 }
