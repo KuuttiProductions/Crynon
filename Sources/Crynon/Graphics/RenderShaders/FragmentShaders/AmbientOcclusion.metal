@@ -15,6 +15,7 @@ fragment float ssao_fragment(VertexOut VerOut [[ stage_in ]],
                              constant float3 *sampleKernel [[ buffer(0) ]],
                              constant float2 &screenSize [[ buffer(1) ]],
                              constant float4x4 &projMat [[ buffer(2) ]],
+                             constant float4x4 &viewMat [[ buffer(3) ]],
                              texture2d<float> normalTex [[ texture(0) ]],
                              texture2d<float> positionTex [[ texture(1) ]],
                              texture2d<float> jitterTex [[ texture(2) ]]) {
@@ -25,8 +26,8 @@ fragment float ssao_fragment(VertexOut VerOut [[ stage_in ]],
     float2 texelSize = float2(screenSize.x / 4.0f, screenSize.y / 4.0f);
     float2 tCoord = VerOut.textureCoordinate;
     
-    float3 fragPos = positionTex.sample(samplerFragment, tCoord).xyz;
-    float3 normal = normalTex.sample(samplerFragment, tCoord).xyz;
+    float4 fragPos = viewMat * positionTex.sample(samplerFragment, tCoord);
+    float3 normal = (viewMat * float4(normalTex.sample(samplerFragment, tCoord).xyz, 0.0f)).xyz;
     float3 randomVec = float3(jitterTex.sample(samplerTiling, tCoord * texelSize).xy, 0.0f);
     
     float3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
@@ -39,7 +40,7 @@ fragment float ssao_fragment(VertexOut VerOut [[ stage_in ]],
     float occlusion = 0.0f;
     for (int i = 0; i < kernelSize; i++) {
         float3 samplePos = TBN * sampleKernel[i];
-        samplePos = fragPos + samplePos * radius;
+        samplePos = fragPos.xyz + samplePos * radius;
         
         float4 offset = float4(samplePos, 1.0f);
         offset = projMat * offset;
@@ -47,7 +48,7 @@ fragment float ssao_fragment(VertexOut VerOut [[ stage_in ]],
         offset.xz = offset.xz * 0.5f + 0.5f;
         offset.y = offset.y * -0.5f + 0.5f;
 
-        float sampleDepth = positionTex.sample(samplerFragment, offset.xy).z;
+        float sampleDepth = float3(viewMat * positionTex.sample(samplerFragment, offset.xy)).z;
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
         float depthDifference = sampleDepth - (fragPos.z + bias);
         occlusion += (depthDifference > 0.0 ? 1.0 : 0.0) * rangeCheck;

@@ -65,6 +65,7 @@ open class Scene: Node {
         lightManager.passShadowLight(renderCommandEncoder: renderCommandEncoder)
         lightManager.passLightData(renderCommandEncoder: renderCommandEncoder)
         
+        Renderer.viewMatrix = vertexSceneConstant.viewMatrix
         Renderer.projectionMatrix = vertexSceneConstant.projectionMatrix
         
         super.render(renderCommandEncoder)

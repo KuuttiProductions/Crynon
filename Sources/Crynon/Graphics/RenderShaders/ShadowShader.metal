@@ -9,7 +9,7 @@ vertex VertexOut shadow_vertex(VertexIn VerIn [[ stage_in ]],
     VertexOut VerOut;
     float4 worldPosition = modelConstant.modelMatrix * float4(VerIn.position, 1);
     VerOut.position = viewMatrix * worldPosition;
-    VerOut.worldPosition = worldPosition.xyz;
+    VerOut.worldPosition = worldPosition;
     VerOut.textureCoordinate = VerIn.textureCoordinate;
     
     return VerOut;

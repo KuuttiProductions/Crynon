@@ -16,7 +16,7 @@ vertex VertexOut simple_vertex(SimpleVertexIn VerIn [[ stage_in ]],
     float4 worldPosition = modelConstant.modelMatrix * float4(VerIn.position, 1);
     VerOut.position = sceneConstant.projectionMatrix * sceneConstant.viewMatrix * worldPosition;
 
-    VerOut.worldPosition = worldPosition.xyz;
+    VerOut.worldPosition = worldPosition;
     VerOut.normal = normalize(VerIn.position);
     VerOut.lightSpacePosition = depthViewMatrix * worldPosition;
     

@@ -47,7 +47,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     
     color.rgb *= color.a;
     
-    half3 lighting = PhongShading::getSpecularLight(VerOut.worldPosition,
+    half3 lighting = PhongShading::getSpecularLight(VerOut.worldPosition.xyz,
                                                      VerOut.normal,
                                                      lightData,
                                                      lightCount,

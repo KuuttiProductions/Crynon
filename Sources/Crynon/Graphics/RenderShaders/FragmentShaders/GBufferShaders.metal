@@ -23,9 +23,7 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
     
     gBuffer.color = half4(mat.color);
     gBuffer.depth = VerOut.position.z;
-    gBuffer.position.xyz = VerOut.worldPosition;
-    gBuffer.position.w = VerOut.position.w;
-    gBuffer.position = VerOut.color;
+    gBuffer.position = VerOut.worldPosition;
     gBuffer.metalRoughAoIOR.r = mat.metallic;
     gBuffer.metalRoughAoIOR.g = mat.roughness;
     gBuffer.metalRoughAoIOR.b = 1.0;

@@ -32,6 +32,7 @@ public class Renderer: NSObject {
     var SSAORenderPassDescriptor = MTLRenderPassDescriptor()
     
     var SSAOSampleKernel: MTLBuffer!
+    static var viewMatrix: simd_float4x4!
     static var projectionMatrix: simd_float4x4!
     
     override init() {
@@ -227,9 +228,11 @@ extension Renderer: MTKViewDelegate {
             //Render GBuffer
             gBufferRenderPass(commandBuffer: commandBuffer)
             
-            //Render Screen Space Ambient Occlusion
-            SSAORenderPass(commandBuffer: commandBuffer)
-            
+            if Preferences.graphics.useSSAO {
+                //Render Screen Space Ambient Occlusion
+                SSAORenderPass(commandBuffer: commandBuffer)
+            }
+
             //Composite shaded image
             lightingRenderPass(commandBuffer: commandBuffer, view: view)
         }
@@ -284,6 +287,7 @@ extension Renderer: MTKViewDelegate {
         SSAOCommandEncoder?.setFragmentBuffer(SSAOSampleKernel, offset: simd_float3.stride, index: 0)
         SSAOCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 1)
         SSAOCommandEncoder?.setFragmentBytes(&Renderer.projectionMatrix, length: simd_float4x4.stride, index: 2)
+        SSAOCommandEncoder?.setFragmentBytes(&Renderer.viewMatrix, length: simd_float4x4.stride, index: 3)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 0)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBPosition], index: 1)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 2)
@@ -305,7 +309,7 @@ extension Renderer: MTKViewDelegate {
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 4)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBMetalRoughAoIOR], index: 5)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBEmission], index: 6)
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBSSAO], index: 7)
+        if Preferences.graphics.useSSAO { lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBSSAO], index: 7) }
         SceneManager.lightingPass(lightingCommandEncoder)
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
         lightingCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)

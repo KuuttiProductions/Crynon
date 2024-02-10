@@ -35,17 +35,20 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
         return color;
     }
     
-    float offsetX = 1.0f / screenSize.x;
-    float offsetY = 1.0f / screenSize.y;
-    float gBSSAO0 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate).r;
-    float gBSSAO1 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(-offsetX, offsetY)).r;
-    float gBSSAO2 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(-offsetX, -offsetY)).r;
-    float gBSSAO3 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(offsetX, offsetY)).r;
-    float gBSSAO4 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(offsetX, -offsetY)).r;
-    float SSAO = (gBSSAO0 + gBSSAO1 + gBSSAO2 + gBSSAO3 + gBSSAO4) / 5.0f;
-    
-    // Get ambient term with effect from AO textures and SSAO buffer
-    float ambientTerm = min(SSAO, gBMetalRoughAoIOR.b) * 0.1f;
+    float ambientTerm = 0.3;
+    if (!is_null_texture(gBufferSSAO)) {
+        float offsetX = 1.0f / screenSize.x;
+        float offsetY = 1.0f / screenSize.y;
+        float gBSSAO0 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate).r;
+        float gBSSAO1 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(-offsetX, offsetY)).r;
+        float gBSSAO2 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(-offsetX, -offsetY)).r;
+        float gBSSAO3 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(offsetX, offsetY)).r;
+        float gBSSAO4 = gBufferSSAO.sample(samplerFragment, VerOut.textureCoordinate + float2(offsetX, -offsetY)).r;
+        float SSAO = (gBSSAO0 + gBSSAO1 + gBSSAO2 + gBSSAO3 + gBSSAO4) / 5.0f;
+        
+        // Get ambient term with effect from AO textures and SSAO buffer
+        ambientTerm = min(SSAO, gBMetalRoughAoIOR.b) * 0.3;
+    }
     
     // Add Phong Shading
     if (gBEmission.a != 1.0) {
@@ -75,7 +78,7 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
 //    float gradient = 100;
 //    color *= density == 0 ? 1.0 : clamp(exp(-pow(gBDepth*density, gradient)), 0.0, 1.0);
     
-    //color.rgb = SSAO;
+    //color.rgb = ambientTerm;
     
     return color;
 }

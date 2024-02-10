@@ -14,15 +14,13 @@ vertex VertexOut default_vertex(VertexIn VerIn [[ stage_in ]],
     
     VerOut.color = VerIn.color;
     VerOut.textureCoordinate = VerIn.textureCoordinate;
-    VerOut.worldPosition = worldPosition.xyz;
+    VerOut.worldPosition = worldPosition;
 
     VerOut.normal = (modelConstant.modelMatrix * float4(VerIn.normal, 0)).xyz;
     VerOut.tangent = (modelConstant.modelMatrix * float4(VerIn.tangent, 0)).xyz;
     VerOut.bitangent = cross(VerOut.normal, VerOut.tangent);
     
-    VerOut.lightSpacePosition = (depthViewMatrix * worldPosition);
-    
-    VerOut.color = sceneConstant.viewMatrix * worldPosition;
+    VerOut.lightSpacePosition = depthViewMatrix * worldPosition;
     
     return VerOut;
 }

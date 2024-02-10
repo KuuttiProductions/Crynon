@@ -26,7 +26,7 @@ struct VertexOut {
     float3 normal;
     float3 tangent;
     float3 bitangent;
-    float3 worldPosition;
+    float4 worldPosition;
     float4 lightSpacePosition;
     float pointSize [[ point_size ]];
 };
