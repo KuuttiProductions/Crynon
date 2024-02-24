@@ -32,4 +32,8 @@ internal struct CollisionData {
     var contactTangentB: simd_float3!
     
     var depth: Float!
+    
+    var normalImpulseSum: Float!
+    var tangentImpulseSumA: Float!
+    var tangentImpulseSumB: Float!
 }

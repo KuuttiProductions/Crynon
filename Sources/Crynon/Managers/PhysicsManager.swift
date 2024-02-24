@@ -72,8 +72,7 @@ final class PhysicsManager {
                         object2.isColliding = true
                         if interact {
                             let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object2.colliders[0], simplex: gjk.simplex)
-                            object2.addPos(manifold.contactNormal * manifold.depth * 0.5, teleport: false)
-                            object1.addPos(manifold.contactNormal * manifold.depth * -0.5, teleport: false)
+                            resolveCollision(bodyA: object1, bodyB: object2, collisionData: manifold)
                         }
                     } else {
                         if object1.collidingBodies.contains(object2.uuid) {
@@ -424,5 +423,12 @@ extension PhysicsManager {
         contactData.localContactPointB = colliderB.body.globalToLocal(point: contactData.contactPointB)
         
         return contactData
+    }
+    
+    func resolveCollision(bodyA: RigidBody, bodyB: RigidBody, collisionData: CollisionData) {
+        bodyA.addPos(collisionData.contactNormal * collisionData.depth * -0.5, teleport: false)
+        bodyB.addPos(collisionData.contactNormal * collisionData.depth * 0.5, teleport: false)
+        
+        
     }
 }
