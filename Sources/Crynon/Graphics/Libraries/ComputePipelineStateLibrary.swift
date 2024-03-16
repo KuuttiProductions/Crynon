@@ -3,6 +3,8 @@ import MetalKit
 
 enum ComputePipelineStateType {
     case Jitter
+    case BloomDownsample
+    case BloomUpsample
 }
 
 class ComputePipelineStateLibrary: Library<ComputePipelineStateType, MTLComputePipelineState> {
@@ -11,6 +13,8 @@ class ComputePipelineStateLibrary: Library<ComputePipelineStateType, MTLComputeP
     
     override func fillLibrary() {
         _library.updateValue(ComputePipelineState(functionName: "jitter", "Jitter Function"), forKey: .Jitter)
+        _library.updateValue(ComputePipelineState(functionName: "bloomDownsample", "BloomDownsampling Function"), forKey: .BloomDownsample)
+        _library.updateValue(ComputePipelineState(functionName: "bloomUpsample", "BloomUpsampling Function"), forKey: .BloomUpsample)
     }
     
     override subscript(type: ComputePipelineStateType) -> MTLComputePipelineState! {

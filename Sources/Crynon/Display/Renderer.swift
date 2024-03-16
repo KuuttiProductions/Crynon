@@ -10,6 +10,13 @@ var gBMetalRoughAoIOR: String = "CRYNON_RENDERER_GBUFFER_METALROUGHAOIOR"
 var gBEmission: String = "CRYNON_RENDERER_GBUFFER_EMISSION"
 var gBSSAO: String = "CRYNON_RENDERER_GBUFFER_SSAO"
 var jitterTextureStr: String = "CRYNON_RENDERER_JITTER_TEXTURE"
+var bloomTex: String = "CRYNON_RENDERER_BLOOM"
+var shadedImage: String = "CRYNON_RENDERER_SHADED"
+
+var bloomA: String = "CRYNON_RENDERER_BLOOM_BLOCK_A"
+var bloomB: String = "CRYNON_RENDERER_BLOOM_BLOCK_B"
+var bloomC: String = "CRYNON_RENDERER_BLOOM_BLOCK_C"
+var bloomE: String = "CRYNON_RENDERER_BLOOM_BLOCK_E"
 
 func lerp(a: Float, b: Float, c: Float)-> Float {
     return a + c * (b - a)
@@ -31,6 +38,7 @@ public class Renderer: NSObject {
     var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
     var gBufferRenderPassDescriptor = MTLRenderPassDescriptor()
     var SSAORenderPassDescriptor = MTLRenderPassDescriptor()
+    var lightingRenderPassDescriptor = MTLRenderPassDescriptor()
     
     var SSAOSampleKernel: MTLBuffer!
     static var viewMatrix: simd_float4x4!
@@ -179,12 +187,44 @@ public class Renderer: NSObject {
         AssetLibrary.textures.addTexture(SSAORenderPassDescriptor.colorAttachments[0].texture, key: gBSSAO)
     }
     
+    func createLightingRenderPassDescriptor() {
+        let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.metal.pixelFormat,
+                                                                               width: Int(Renderer.screenWidth),
+                                                                               height: Int(Renderer.screenHeight),
+                                                                               mipmapped: false)
+        bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead]
+        bufferTextureDescriptor.storageMode = .shared
+        let lightingTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        lightingRenderPassDescriptor.colorAttachments[0].texture = lightingTexture
+        lightingRenderPassDescriptor.colorAttachments[0].storeAction = .store
+        AssetLibrary.textures.addTexture(lightingRenderPassDescriptor.colorAttachments[0].texture, key: shadedImage)
+    }
+    
+    func createBloomTextures() {
+        let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.metal.pixelFormat,
+                                                                               width: Int(Renderer.screenWidth),
+                                                                               height: Int(Renderer.screenHeight),
+                                                                               mipmapped: false)
+        bufferTextureDescriptor.usage = [ .shaderWrite, .shaderRead ]
+        let bloomTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        bloomTexture?.label = "Bloom texture"
+        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 4
+        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 4
+        let bloomTextureA = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        bloomTextureA?.label = "Bloom block A"
+        
+        AssetLibrary.textures.addTexture(bloomTexture, key: bloomTex)
+        AssetLibrary.textures.addTexture(bloomTextureA, key: bloomA)
+    }
+    
     func updateScreenSize(view: MTKView) {
         Renderer.screenWidth = Float((view.bounds.width))*2
         Renderer.screenHeight = Float((view.bounds.height))*2
         if Renderer.screenWidth > 0 && Renderer.screenHeight > 0 {
             createGBufferRenderPassDescriptor()
             createSSAORenderPassDescriptor()
+            createLightingRenderPassDescriptor()
+            createBloomTextures()
         }
     }
 }
@@ -206,8 +246,8 @@ extension Renderer: MTKViewDelegate {
             view.preferredFramesPerSecond = fps
         }
 
-        guard let drawable = view.currentDrawable, let depthTexture = view.depthStencilTexture else { return }
-        gBufferRenderPassDescriptor.depthAttachment.texture = depthTexture
+        guard let drawable = view.currentDrawable, let depth = view.depthStencilTexture else { return }
+        gBufferRenderPassDescriptor.depthAttachment.texture = depth
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
@@ -225,10 +265,10 @@ extension Renderer: MTKViewDelegate {
             
             computePass(commandBuffer: commandBuffer)
             
-            //Render Shadow Maps
+            // Render Shadow Maps
             shadowRenderPass(commandBuffer: commandBuffer)
             
-            //Render GBuffer
+            // Render GBuffer
             gBufferRenderPass(commandBuffer: commandBuffer)
             
             if Preferences.graphics.useSSAO {
@@ -236,8 +276,15 @@ extension Renderer: MTKViewDelegate {
                 SSAORenderPass(commandBuffer: commandBuffer)
             }
 
-            //Composite shaded image
-            lightingRenderPass(commandBuffer: commandBuffer, view: view)
+            // Composite shaded image
+            lightingRenderPass(commandBuffer: commandBuffer)
+            
+            if Preferences.graphics.useBloom {
+                bloomPass(commandBuffer: commandBuffer)
+            }
+            
+            // Post-processing
+            compositingRenderPass(commandBuffer: commandBuffer!, view: view)
         }
     
         commandBuffer?.present(drawable)
@@ -303,9 +350,9 @@ extension Renderer: MTKViewDelegate {
         SSAOCommandEncoder?.endEncoding()
     }
     
-    func lightingRenderPass(commandBuffer: MTLCommandBuffer!, view: MTKView) {
-        let lightingCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: view.currentRenderPassDescriptor!)
-        lightingCommandEncoder?.label = "Final RenderCommandEncoder"
+    func lightingRenderPass(commandBuffer: MTLCommandBuffer!) {
+        let lightingCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: lightingRenderPassDescriptor)
+        lightingCommandEncoder?.label = "Lighting RenderCommandEncoder"
         lightingCommandEncoder?.pushDebugGroup("Lighting")
         lightingCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Lighting])
         lightingCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
@@ -323,6 +370,34 @@ extension Renderer: MTKViewDelegate {
         AssetLibrary.meshes["Quad"].draw(lightingCommandEncoder)
         lightingCommandEncoder?.popDebugGroup()
         lightingCommandEncoder?.endEncoding()
+    }
+    
+    func bloomPass(commandBuffer: MTLCommandBuffer!) {
+        var bloomCommandEncoder = commandBuffer.makeComputeCommandEncoder()
+        bloomCommandEncoder?.label = "Bloom ComputeCommandEncoder"
+        bloomCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.BloomDownsample])
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[shadedImage], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomTex], index: 1)
+        let shadedImage = AssetLibrary.textures[shadedImage]!
+        var groupsPerGrid = MTLSize(width: shadedImage.width, height: shadedImage.height, depth: 1)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+//        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomTex], index: 0)
+//        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomA], index: 1)
+//        groupsPerGrid = MTLSize(width: shadedImage.width/16, height: shadedImage.height/16, depth: 1)
+//        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+//                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.endEncoding()
+    }
+    
+    func compositingRenderPass(commandBuffer: MTLCommandBuffer, view: MTKView) {
+        let compositingRenderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: view.currentRenderPassDescriptor!)
+        compositingRenderCommandEncoder!.label = "Compositing RenderCommandEncoder"
+        compositingRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Compositing])
+        compositingRenderCommandEncoder!.setFragmentTexture(AssetLibrary.textures[shadedImage], index: 0)
+        compositingRenderCommandEncoder!.setFragmentTexture(AssetLibrary.textures[bloomTex], index: 1)
+        AssetLibrary.meshes["Quad"].draw(compositingRenderCommandEncoder)
+        compositingRenderCommandEncoder!.endEncoding()
     }
     
     func computePass(commandBuffer: MTLCommandBuffer!) {

@@ -9,6 +9,7 @@ enum FragmentShaderType {
     case PointAndLine
     case Transparent
     case TransparentBlending
+    case Compositing
 }
 
 class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
@@ -22,7 +23,8 @@ class FragmentShaderLibrary: Library<FragmentShaderType, MTLFunction> {
         _library.updateValue(FragmentShader("ssao_fragment", "SSAO Fragment Function"), forKey: .SSAO)
         _library.updateValue(FragmentShader("pointAndLine_fragment", "Point and Line Fragment Function"), forKey: .PointAndLine)
         _library.updateValue(FragmentShader("transparent_fragment", "Transparent Fragment Function"), forKey: .Transparent)
-        _library.updateValue(FragmentShader("blendTransparent_fragment", "Transparency Blending Fragment Functino"), forKey: .TransparentBlending)
+        _library.updateValue(FragmentShader("blendTransparent_fragment", "Transparency Blending Fragment Function"), forKey: .TransparentBlending)
+        _library.updateValue(FragmentShader("compositing_fragment", "Compositing Fragment Function"), forKey: .Compositing)
     }
     
     override subscript(type: FragmentShaderType) -> MTLFunction! {

@@ -14,6 +14,7 @@ public enum RenderPipelineStateType {
     case TransparentBlending
     case Sky
     case Simple
+    case Compositing
 }
 
 class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipelineState> {
@@ -32,6 +33,7 @@ class RenderPipelineStateLibrary: Library<RenderPipelineStateType, MTLRenderPipe
         _library.updateValue(TransparentBlending_RenderPipelineState(), forKey: .TransparentBlending)
         _library.updateValue(SkySphere_RenderPipelineState(), forKey: .Sky)
         _library.updateValue(Simple_RenderPipelineState(), forKey: .Simple)
+        _library.updateValue(Compositing_RenderPipelineState(), forKey: .Compositing)
     }
     
     override subscript(type: RenderPipelineStateType) -> MTLRenderPipelineState! {
@@ -81,7 +83,6 @@ class Lighting_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
-        descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Quad]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Lighting]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
@@ -215,6 +216,20 @@ class Simple_RenderPipelineState: RenderPipelineState {
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.GBuffer]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Simple]
         descriptor.label = "Simple RenderPipelineState"
+        create()
+    }
+}
+
+class Compositing_RenderPipelineState: RenderPipelineState {
+    override init() {
+        super.init()
+        descriptor = MTLRenderPipelineDescriptor()
+        descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
+        descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
+        descriptor.vertexFunction = GPLibrary.vertexShaders[.Quad]
+        descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Compositing]
+        descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
+        descriptor.label = "Compositing RenderPipelineState"
         create()
     }
 }

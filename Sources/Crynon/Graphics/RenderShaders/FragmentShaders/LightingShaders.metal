@@ -7,7 +7,7 @@ using namespace metal;
 constexpr sampler samplerFragment (min_filter::linear,
                                    mag_filter::linear);
 
-fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
+fragment float4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                  constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                                  constant LightData *lightData [[ buffer(3) ]],
                                  constant int &lightCount [[ buffer(4) ]],
@@ -28,10 +28,10 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
     float4 gBNormalShadow = gBufferNormalShadow.sample(samplerFragment, VerOut.textureCoordinate);
     float4 gBMetalRoughAoIOR = gBufferMetalRoughAoIOR.sample(samplerFragment, VerOut.textureCoordinate);
     
-    half4 color = gBColor;
+    float4 color = float4(gBColor);
     
     if (!lightData) {
-        color = half4(0, 0, 0, 1);
+        color = float4(0, 0, 0, 1);
         return color;
     }
     
@@ -51,7 +51,7 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
     }
     
     // Add Phong Shading
-    if (gBEmission.a != 1.0) {
+    if (gBEmission.a < 1.0) {
         ShaderMaterial sMat;
         sMat.color = float4(gBColor);
         sMat.metallic = gBMetalRoughAoIOR.r;
@@ -59,19 +59,22 @@ fragment half4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
         sMat.emission = float4(gBEmission);
         sMat.ior = gBMetalRoughAoIOR.a;
         
-        half3 lighting = half3(PhongShading::getPhongLight(gBPosition.xyz,
-                                                           normalize(gBNormalShadow.xyz),
-                                                           lightData,
-                                                           lightCount,
-                                                           sMat,
-                                                           fragmentSceneConstant.cameraPosition,
-                                                           gBNormalShadow.a,
-                                                           ambientTerm));
-        color *= half4(lighting, 1);
+        float3 lighting = PhongShading::getPhongLight(gBPosition.xyz,
+                                                      normalize(gBNormalShadow.xyz),
+                                                      lightData,
+                                                      lightCount,
+                                                      sMat,
+                                                      fragmentSceneConstant.cameraPosition,
+                                                      gBNormalShadow.a,
+                                                      ambientTerm);
+        color *= float4(lighting, 1.0f);
     }
     
+    // Add Emission on top of diffuse color
+    color.rgb += float3(gBEmission.rgb);
+    
     // Blend Transparency on top of the opaque image
-    color.rgb = gBTransparency.rgb + (1.0h - gBTransparency.a) * color.rgb;
+    color.rgb = float3(gBTransparency.rgb) + (1.0h - gBTransparency.a) * color.rgb;
     
 //    FOG DISABLED FOR NOW
 //    float density = fragmentSceneConstant.fogDensity;
