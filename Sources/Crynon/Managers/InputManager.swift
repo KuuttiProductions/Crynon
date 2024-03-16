@@ -104,15 +104,11 @@ final public class InputManager {
     public static var isMouseCaptured: Bool { mouseCaptured }
     
     public static func getMouseDeltaX()-> Float {
-        let deltaX = mouseDeltaX
-        mouseDeltaX = 0.0
-        return deltaX
+        return mouseDeltaX
     }
     
     public static func getMouseDeltaY()-> Float {
-        let deltaY = mouseDeltaY
-        mouseDeltaY = 0.0
-        return deltaY
+        return mouseDeltaY
     }
     
     public static func getScrollDeltaX()-> Float {
@@ -153,6 +149,11 @@ final public class InputManager {
         createController()
         createKeyboard()
         createMouse()
+    }
+    
+    static func update() {
+        mouseDeltaX = 0.0
+        mouseDeltaY = 0.0
     }
     
     private static func createController() {

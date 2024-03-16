@@ -5,9 +5,8 @@ final class PhysicsManager {
     
     private var _physicsObjects: [RigidBody] = []
     private var _colliders: [Collider] = []
+    private var _constraints: [Constraint] = []
     var toBeRemoved: [String] = []
-    
-    private var gravity: simd_float3 = simd_float3(0, -9.81, 0)
     
     func addPhysicsObject(object: RigidBody) {
         _physicsObjects.append(object)
@@ -26,9 +25,12 @@ final class PhysicsManager {
     }
     
     func step(deltaTime: Float) {
+        
+        //Motion dynamics
         for object in _physicsObjects {
             if object.isActive {
                 object.isColliding = false
+                let gravity = simd_float3(0, Preferences.physics.gravity, 0)
                 object.forceAccumulator += object.mass * (gravity * object.gravityScalar)
                 
                 object.linearVelocity += object.invMass * (object.forceAccumulator * deltaTime)
@@ -50,6 +52,7 @@ final class PhysicsManager {
             }
         }
         
+        //Update Constraints list
         for i in 0..<_physicsObjects.count {
             for u in i+1..<_physicsObjects.count {
                 let object1 = _physicsObjects[i]
@@ -72,7 +75,7 @@ final class PhysicsManager {
                         object2.isColliding = true
                         if interact {
                             let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object2.colliders[0], simplex: gjk.simplex)
-                            resolveCollision(bodyA: object1, bodyB: object2, collisionData: manifold)
+                            
                         }
                     } else {
                         if object1.collidingBodies.contains(object2.uuid) {
@@ -89,6 +92,20 @@ final class PhysicsManager {
                 }
             }
         }
+        
+        //Solve constraints
+        for _ in 0..<8 {
+            for _constraint in _constraints {
+                if _constraint.manifold != nil {
+                    solveConstraint(constraint: _constraint, deltaTime: deltaTime)
+                }
+            }
+        }
+
+        for _constraint in _constraints {
+            _constraint.reset()
+        }
+        
         removePhysicsObjects()
     }
     
@@ -425,10 +442,7 @@ extension PhysicsManager {
         return contactData
     }
     
-    func resolveCollision(bodyA: RigidBody, bodyB: RigidBody, collisionData: CollisionData) {
-        bodyA.addPos(collisionData.contactNormal * collisionData.depth * -0.5, teleport: false)
-        bodyB.addPos(collisionData.contactNormal * collisionData.depth * 0.5, teleport: false)
-        
+    func solveConstraint(constraint: Constraint, deltaTime: Float) {
         
     }
 }

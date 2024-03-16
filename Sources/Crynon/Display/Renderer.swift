@@ -9,6 +9,7 @@ var gBDepth: String = "CRYNON_RENDERER_GBUFFER_DEPTH"
 var gBMetalRoughAoIOR: String = "CRYNON_RENDERER_GBUFFER_METALROUGHAOIOR"
 var gBEmission: String = "CRYNON_RENDERER_GBUFFER_EMISSION"
 var gBSSAO: String = "CRYNON_RENDERER_GBUFFER_SSAO"
+var jitterTextureStr: String = "CRYNON_RENDERER_JITTER_TEXTURE"
 
 func lerp(a: Float, b: Float, c: Float)-> Float {
     return a + c * (b - a)
@@ -68,7 +69,7 @@ public class Renderer: NSObject {
     
         let jitterTexture = Core.device.makeTexture(descriptor: jitterTextureDescriptor)
         jitterTexture?.label = "JitterTexture"
-        AssetLibrary.textures.addTexture(jitterTexture, key: "JitterTexture")
+        AssetLibrary.textures.addTexture(jitterTexture, key: jitterTextureStr)
     }
     
     func createShadowRenderPassDescriptor() {
@@ -220,6 +221,8 @@ extension Renderer: MTKViewDelegate {
             
             SceneManager.physicsTick(Renderer.currentDeltaTime)
             
+            InputManager.update()
+            
             computePass(commandBuffer: commandBuffer)
             
             //Render Shadow Maps
@@ -258,6 +261,10 @@ extension Renderer: MTKViewDelegate {
         gBufferCommandEncoder?.popDebugGroup()
 
         gBufferCommandEncoder?.pushDebugGroup("GBuffer fill")
+        var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
+        gBufferCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 2)
+        gBufferCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 9)
+        
         gBufferCommandEncoder?.pushDebugGroup("Opaque fill")
         Renderer.currentBlendMode = .Opaque
         SceneManager.render(gBufferCommandEncoder)
@@ -290,7 +297,7 @@ extension Renderer: MTKViewDelegate {
         SSAOCommandEncoder?.setFragmentBytes(&Renderer.viewMatrix, length: simd_float4x4.stride, index: 3)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 0)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBPosition], index: 1)
-        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures["JitterTexture"], index: 2)
+        SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 2)
         AssetLibrary.meshes["Quad"].draw(SSAOCommandEncoder)
         SSAOCommandEncoder?.popDebugGroup()
         SSAOCommandEncoder?.endEncoding()
@@ -321,9 +328,9 @@ extension Renderer: MTKViewDelegate {
     func computePass(commandBuffer: MTLCommandBuffer!) {
         let computeCommandEncoder = commandBuffer?.makeComputeCommandEncoder()
         computeCommandEncoder?.label = "Main ComputeCommandEncoder"
-        computeCommandEncoder?.setTexture(AssetLibrary.textures["JitterTexture"], index: 0)
+        computeCommandEncoder?.setTexture(AssetLibrary.textures[jitterTextureStr], index: 0)
         computeCommandEncoder?.setBytes(&Renderer.time, length: Float.stride, index: 0)
-        let texture = AssetLibrary.textures["JitterTexture"]!
+        let texture = AssetLibrary.textures[jitterTextureStr]!
         computeCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.Jitter])
         let groupsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: texture.depth)
         let threadsPerThreadGroup = MTLSize(width: GPLibrary.computePipelineStates[.Jitter].threadExecutionWidth, height: 1, depth: 1)
