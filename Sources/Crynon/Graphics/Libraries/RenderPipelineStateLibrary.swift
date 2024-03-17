@@ -53,23 +53,20 @@ class RenderPipelineState {
     }
 }
 
-func addColorAttachments(descriptor: MTLRenderPipelineDescriptor) {
-    descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
+func addAttachments(descriptor: MTLRenderPipelineDescriptor) {
     descriptor.colorAttachments[1].pixelFormat = Preferences.metal.pixelFormat
     descriptor.colorAttachments[2].pixelFormat = Preferences.metal.floatPixelFormat
     descriptor.colorAttachments[3].pixelFormat = Preferences.metal.signedPixelFormat
     descriptor.colorAttachments[4].pixelFormat = .r32Float
     descriptor.colorAttachments[5].pixelFormat = Preferences.metal.pixelFormat
-    descriptor.colorAttachments[6].pixelFormat = Preferences.metal.pixelFormat
+    descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
 }
 
 class gBuffer_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
-        descriptor.colorAttachments[0].writeMask = []
-        addColorAttachments(descriptor: descriptor)
-        descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
+        addAttachments(descriptor: descriptor)
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Default]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.GBuffer]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
@@ -121,9 +118,11 @@ class PointAndLine_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
-        descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
-        descriptor.colorAttachments[0].writeMask = []
-        addColorAttachments(descriptor: descriptor)
+        descriptor.colorAttachments[1].pixelFormat = Preferences.metal.pixelFormat
+        descriptor.colorAttachments[2].pixelFormat = Preferences.metal.floatPixelFormat
+        descriptor.colorAttachments[3].pixelFormat = Preferences.metal.signedPixelFormat
+        descriptor.colorAttachments[4].pixelFormat = .r32Float
+        descriptor.colorAttachments[5].pixelFormat = Preferences.metal.pixelFormat
         descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.PointAndLine]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.PointAndLine]
@@ -138,12 +137,6 @@ class InitTransparency: RenderPipelineState {
     override init() {
         super.init()
         tileDescriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
-        tileDescriptor.colorAttachments[1].pixelFormat = Preferences.metal.pixelFormat
-        tileDescriptor.colorAttachments[2].pixelFormat = Preferences.metal.floatPixelFormat
-        tileDescriptor.colorAttachments[3].pixelFormat = Preferences.metal.signedPixelFormat
-        tileDescriptor.colorAttachments[4].pixelFormat = .r32Float
-        tileDescriptor.colorAttachments[5].pixelFormat = Preferences.metal.pixelFormat
-        tileDescriptor.colorAttachments[6].pixelFormat = Preferences.metal.pixelFormat
         tileDescriptor.tileFunction = Core.defaultLibrary.makeFunction(name: "initTransparentFragmentStore")!
         tileDescriptor.threadgroupSizeMatchesTileSize = true
         tileDescriptor.label = "Init Transparency RenderPipelineState"
@@ -165,7 +158,7 @@ class Transparent_RenderPipelineState: RenderPipelineState {
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].isBlendingEnabled = false
         descriptor.colorAttachments[0].writeMask = []
-        addColorAttachments(descriptor: descriptor)
+        descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
         descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Default]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Transparent]
@@ -180,7 +173,7 @@ class TransparentBlending_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].isBlendingEnabled = false
-        addColorAttachments(descriptor: descriptor)
+        descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
         descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Quad]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.TransparentBlending]
@@ -195,8 +188,7 @@ class SkySphere_RenderPipelineState : RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].writeMask = []
-        addColorAttachments(descriptor: descriptor)
-        descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
+        addAttachments(descriptor: descriptor)
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Sky]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.GBuffer]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Basic]
@@ -210,8 +202,7 @@ class Simple_RenderPipelineState: RenderPipelineState {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
         descriptor.colorAttachments[0].writeMask = []
-        addColorAttachments(descriptor: descriptor)
-        descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
+        addAttachments(descriptor: descriptor)
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Simple]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.GBuffer]
         descriptor.vertexDescriptor = GPLibrary.vertexDescriptors[.Simple]
@@ -224,7 +215,7 @@ class Compositing_RenderPipelineState: RenderPipelineState {
     override init() {
         super.init()
         descriptor = MTLRenderPipelineDescriptor()
-        descriptor.colorAttachments[0].pixelFormat = Preferences.metal.pixelFormat
+        descriptor.colorAttachments[0].pixelFormat = Preferences.metal.outputPixelFormat
         descriptor.depthAttachmentPixelFormat = Preferences.metal.depthFormat
         descriptor.vertexFunction = GPLibrary.vertexShaders[.Quad]
         descriptor.fragmentFunction = GPLibrary.fragmentShaders[.Compositing]

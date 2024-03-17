@@ -19,7 +19,7 @@ open class EnvironmentSphere: Node {
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteLess])
             renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
             renderCommandEncoder.setFragmentBytes(&material, length: ShaderMaterial.stride, index: 1)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[texture], index: 3)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[texture], index: 5)
             AssetLibrary.meshes["Sphere"].draw(renderCommandEncoder)
             super.render(renderCommandEncoder)
         }

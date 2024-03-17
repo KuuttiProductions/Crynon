@@ -26,10 +26,11 @@ extension Float: sizeable {}
 extension Int: sizeable {}
 extension UInt: sizeable {}
 extension UInt32: sizeable {}
-extension simd_float2: sizeable {}
-extension simd_float3: sizeable {}
-extension simd_float4: sizeable {}
+extension SIMD2: sizeable {}
+extension SIMD3: sizeable {}
+extension SIMD4: sizeable {}
 extension matrix_float4x4: sizeable {}
+
 
 //===== Types that are used with Metal =====
 

@@ -7,16 +7,17 @@ var gBPosition: String = "CRYNON_RENDERER_GBUFFER_POSITION"
 var gBNormalShadow: String = "CRYNON_RENDERER_GBUFFER_NORMALSHADOW"
 var gBDepth: String = "CRYNON_RENDERER_GBUFFER_DEPTH"
 var gBMetalRoughAoIOR: String = "CRYNON_RENDERER_GBUFFER_METALROUGHAOIOR"
-var gBEmission: String = "CRYNON_RENDERER_GBUFFER_EMISSION"
 var gBSSAO: String = "CRYNON_RENDERER_GBUFFER_SSAO"
 var jitterTextureStr: String = "CRYNON_RENDERER_JITTER_TEXTURE"
-var bloomTex: String = "CRYNON_RENDERER_BLOOM"
 var shadedImage: String = "CRYNON_RENDERER_SHADED"
 
+var bloomThreshold: String = "CRYNON_RENDERER_BLOOM_THRESHOLD"
 var bloomA: String = "CRYNON_RENDERER_BLOOM_BLOCK_A"
 var bloomB: String = "CRYNON_RENDERER_BLOOM_BLOCK_B"
 var bloomC: String = "CRYNON_RENDERER_BLOOM_BLOCK_C"
+var bloomD: String = "CRYNON_RENDERER_BLOOM_BLOCK_D"
 var bloomE: String = "CRYNON_RENDERER_BLOOM_BLOCK_E"
+var bloomF: String = "CRYNON_RENDERER_BLOOM_BLOCK_F"
 
 func lerp(a: Float, b: Float, c: Float)-> Float {
     return a + c * (b - a)
@@ -33,10 +34,11 @@ public class Renderer: NSObject {
     
     static var time: Float = 0.0
     
-    private var optimalTileSize: MTLSize = MTLSizeMake(32, 16, 1)
+    private var optimalTileSize: MTLSize = MTLSizeMake(16, 16, 1)
 
     var shadowRenderPassDescriptor = MTLRenderPassDescriptor()
-    var gBufferRenderPassDescriptor = MTLRenderPassDescriptor()
+    var opaqueRenderPassDescriptor = MTLRenderPassDescriptor()
+    var transparencyRenderPassDescriptor = MTLRenderPassDescriptor()
     var SSAORenderPassDescriptor = MTLRenderPassDescriptor()
     var lightingRenderPassDescriptor = MTLRenderPassDescriptor()
     
@@ -95,7 +97,7 @@ public class Renderer: NSObject {
         shadowRenderPassDescriptor.depthAttachment.storeAction = .store
     }
     
-    func createGBufferRenderPassDescriptor() {
+    func createOpaqueRenderPassDescriptor() {
         let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.metal.pixelFormat,
                                                                                width: Int(Renderer.screenWidth),
                                                                                height: Int(Renderer.screenHeight),
@@ -103,14 +105,8 @@ public class Renderer: NSObject {
         bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
         bufferTextureDescriptor.storageMode = .shared
         
-        let TransparencyTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
-        TransparencyTexture?.label = "GBufferTransparency"
-        
         let colorTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         colorTexture?.label = "GBufferColor"
-        
-        let emissionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
-        emissionTexture?.label = "GBufferEmission"
 
         bufferTextureDescriptor.pixelFormat = Preferences.metal.floatPixelFormat
         let positionTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
@@ -128,49 +124,62 @@ public class Renderer: NSObject {
         let metalRoughAoIOR = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         metalRoughAoIOR?.label = "GBufferMetalRoughAoIOR"
         
-        gBufferRenderPassDescriptor.colorAttachments[1].clearColor = Preferences.graphics.clearColor
+        opaqueRenderPassDescriptor.colorAttachments[1].clearColor = Preferences.graphics.clearColor
         
-        gBufferRenderPassDescriptor.colorAttachments[0].texture = TransparencyTexture
-        gBufferRenderPassDescriptor.colorAttachments[1].texture = colorTexture
-        gBufferRenderPassDescriptor.colorAttachments[2].texture = positionTexture
-        gBufferRenderPassDescriptor.colorAttachments[3].texture = normalShadowTexture
-        gBufferRenderPassDescriptor.colorAttachments[4].texture = depthTexture
-        gBufferRenderPassDescriptor.colorAttachments[5].texture = metalRoughAoIOR
-        gBufferRenderPassDescriptor.colorAttachments[6].texture = emissionTexture
+        opaqueRenderPassDescriptor.colorAttachments[1].texture = colorTexture
+        opaqueRenderPassDescriptor.colorAttachments[2].texture = positionTexture
+        opaqueRenderPassDescriptor.colorAttachments[3].texture = normalShadowTexture
+        opaqueRenderPassDescriptor.colorAttachments[4].texture = depthTexture
+        opaqueRenderPassDescriptor.colorAttachments[5].texture = metalRoughAoIOR
         
         let loadAction = Preferences.graphics.useSkySphere == true ? MTLLoadAction.dontCare : MTLLoadAction.clear
-        gBufferRenderPassDescriptor.colorAttachments[0].loadAction = loadAction
-        gBufferRenderPassDescriptor.colorAttachments[1].loadAction = loadAction
-        gBufferRenderPassDescriptor.colorAttachments[2].loadAction = loadAction
-        gBufferRenderPassDescriptor.colorAttachments[3].loadAction = loadAction
-        gBufferRenderPassDescriptor.colorAttachments[4].loadAction = loadAction
-        gBufferRenderPassDescriptor.colorAttachments[6].loadAction = loadAction
+        opaqueRenderPassDescriptor.colorAttachments[1].loadAction = loadAction
+        opaqueRenderPassDescriptor.colorAttachments[2].loadAction = loadAction
+        opaqueRenderPassDescriptor.colorAttachments[3].loadAction = loadAction
+        opaqueRenderPassDescriptor.colorAttachments[4].loadAction = loadAction
         
-        gBufferRenderPassDescriptor.colorAttachments[0].storeAction = .store
-        gBufferRenderPassDescriptor.colorAttachments[1].storeAction = .store
-        gBufferRenderPassDescriptor.colorAttachments[2].storeAction = .store
-        gBufferRenderPassDescriptor.colorAttachments[3].storeAction = .store
-        gBufferRenderPassDescriptor.colorAttachments[4].storeAction = .store
-        gBufferRenderPassDescriptor.colorAttachments[5].storeAction = .store
-        gBufferRenderPassDescriptor.colorAttachments[6].storeAction = .store
+        opaqueRenderPassDescriptor.colorAttachments[0].storeAction = .store
+        opaqueRenderPassDescriptor.colorAttachments[1].storeAction = .store
+        opaqueRenderPassDescriptor.colorAttachments[2].storeAction = .store
+        opaqueRenderPassDescriptor.colorAttachments[3].storeAction = .store
+        opaqueRenderPassDescriptor.colorAttachments[4].storeAction = .store
+        opaqueRenderPassDescriptor.colorAttachments[5].storeAction = .store
+        opaqueRenderPassDescriptor.depthAttachment.storeAction = .store
         
-        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[0].texture, key: gBTransparency)
-        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[1].texture, key: gBColor)
-        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[2].texture, key: gBPosition)
-        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[3].texture, key: gBNormalShadow)
-        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[4].texture, key: gBDepth)
-        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[5].texture, key: gBMetalRoughAoIOR)
-        AssetLibrary.textures.addTexture(gBufferRenderPassDescriptor.colorAttachments[6].texture, key: gBEmission)
+        AssetLibrary.textures.addTexture(opaqueRenderPassDescriptor.colorAttachments[1].texture, key: gBColor)
+        AssetLibrary.textures.addTexture(opaqueRenderPassDescriptor.colorAttachments[2].texture, key: gBPosition)
+        AssetLibrary.textures.addTexture(opaqueRenderPassDescriptor.colorAttachments[3].texture, key: gBNormalShadow)
+        AssetLibrary.textures.addTexture(opaqueRenderPassDescriptor.colorAttachments[4].texture, key: gBDepth)
+        AssetLibrary.textures.addTexture(opaqueRenderPassDescriptor.colorAttachments[5].texture, key: gBMetalRoughAoIOR)
         
         //Sets the depth value to 1, so that default depth is infinity
-        gBufferRenderPassDescriptor.colorAttachments[4].clearColor = MTLClearColor(red: 1.0, green: 0, blue: 0, alpha: 0)
+        opaqueRenderPassDescriptor.colorAttachments[4].clearColor = MTLClearColor(red: 1.0, green: 0, blue: 0, alpha: 0)
         
         //Sets the emissive value to 1, so that the sky won't be shaded.
-        gBufferRenderPassDescriptor.colorAttachments[6].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
+        opaqueRenderPassDescriptor.colorAttachments[1].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+    }
+    
+    func createTransparencyRenderPassDescriptor() {
+        let bufferTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: Preferences.metal.pixelFormat,
+                                                                               width: Int(Renderer.screenWidth),
+                                                                               height: Int(Renderer.screenHeight),
+                                                                               mipmapped: false)
+        bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead ]
+        bufferTextureDescriptor.storageMode = .shared
         
-        gBufferRenderPassDescriptor.tileWidth = optimalTileSize.width
-        gBufferRenderPassDescriptor.tileHeight = optimalTileSize.height
-        gBufferRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.InitTransparency].imageblockSampleLength
+        let TransparencyTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        TransparencyTexture?.label = "GBufferTransparency"
+        
+        let loadAction = Preferences.graphics.useSkySphere == true ? MTLLoadAction.dontCare : MTLLoadAction.clear
+        transparencyRenderPassDescriptor.colorAttachments[0].texture = TransparencyTexture
+        transparencyRenderPassDescriptor.colorAttachments[0].loadAction = loadAction
+        transparencyRenderPassDescriptor.colorAttachments[0].storeAction = .store
+        transparencyRenderPassDescriptor.depthAttachment.loadAction = .load
+        AssetLibrary.textures.addTexture(transparencyRenderPassDescriptor.colorAttachments[0].texture, key: gBTransparency)
+        
+        transparencyRenderPassDescriptor.tileWidth = optimalTileSize.width
+        transparencyRenderPassDescriptor.tileHeight = optimalTileSize.height
+        transparencyRenderPassDescriptor.imageblockSampleLength = GPLibrary.renderPipelineStates[.InitTransparency].imageblockSampleLength
     }
     
     func createSSAORenderPassDescriptor() {
@@ -195,6 +204,8 @@ public class Renderer: NSObject {
         bufferTextureDescriptor.usage = [ .renderTarget, .shaderRead]
         bufferTextureDescriptor.storageMode = .shared
         let lightingTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        lightingTexture?.label = "Lighting texture"
+        
         lightingRenderPassDescriptor.colorAttachments[0].texture = lightingTexture
         lightingRenderPassDescriptor.colorAttachments[0].storeAction = .store
         AssetLibrary.textures.addTexture(lightingRenderPassDescriptor.colorAttachments[0].texture, key: shadedImage)
@@ -206,22 +217,55 @@ public class Renderer: NSObject {
                                                                                height: Int(Renderer.screenHeight),
                                                                                mipmapped: false)
         bufferTextureDescriptor.usage = [ .shaderWrite, .shaderRead ]
+        
         let bloomTexture = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
-        bloomTexture?.label = "Bloom texture"
-        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 4
-        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 4
+        bloomTexture?.label = "Bloom threshold texture"
+        
+        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 2
+        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 2
         let bloomTextureA = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
         bloomTextureA?.label = "Bloom block A"
         
-        AssetLibrary.textures.addTexture(bloomTexture, key: bloomTex)
+        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 4
+        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 4
+        let bloomTextureB = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        bloomTextureB?.label = "Bloom block B"
+
+        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 8
+        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 8
+        let bloomTextureC = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        bloomTextureC?.label = "Bloom block C"
+        
+        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 16
+        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 16
+        let bloomTextureD = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        bloomTextureD?.label = "Bloom block D"
+        
+        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 32
+        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 32
+        let bloomTextureE = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        bloomTextureE?.label = "Bloom block E"
+        
+        bufferTextureDescriptor.width = Int(Renderer.screenWidth) / 64
+        bufferTextureDescriptor.height = Int(Renderer.screenHeight) / 64
+        let bloomTextureF = Core.device.makeTexture(descriptor: bufferTextureDescriptor)
+        bloomTextureF?.label = "Bloom block F"
+        
+        AssetLibrary.textures.addTexture(bloomTexture, key: bloomThreshold)
         AssetLibrary.textures.addTexture(bloomTextureA, key: bloomA)
+        AssetLibrary.textures.addTexture(bloomTextureB, key: bloomB)
+        AssetLibrary.textures.addTexture(bloomTextureC, key: bloomC)
+        AssetLibrary.textures.addTexture(bloomTextureD, key: bloomD)
+        AssetLibrary.textures.addTexture(bloomTextureE, key: bloomE)
+        AssetLibrary.textures.addTexture(bloomTextureF, key: bloomF)
     }
     
     func updateScreenSize(view: MTKView) {
         Renderer.screenWidth = Float((view.bounds.width))*2
         Renderer.screenHeight = Float((view.bounds.height))*2
         if Renderer.screenWidth > 0 && Renderer.screenHeight > 0 {
-            createGBufferRenderPassDescriptor()
+            createOpaqueRenderPassDescriptor()
+            createTransparencyRenderPassDescriptor()
             createSSAORenderPassDescriptor()
             createLightingRenderPassDescriptor()
             createBloomTextures()
@@ -247,7 +291,8 @@ extension Renderer: MTKViewDelegate {
         }
 
         guard let drawable = view.currentDrawable, let depth = view.depthStencilTexture else { return }
-        gBufferRenderPassDescriptor.depthAttachment.texture = depth
+        opaqueRenderPassDescriptor.depthAttachment.texture = depth
+        transparencyRenderPassDescriptor.depthAttachment.texture = depth
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
@@ -269,7 +314,8 @@ extension Renderer: MTKViewDelegate {
             shadowRenderPass(commandBuffer: commandBuffer)
             
             // Render GBuffer
-            gBufferRenderPass(commandBuffer: commandBuffer)
+            opaqueRenderPass(commandBuffer: commandBuffer)
+            transparentRenderPass(commandBuffer: commandBuffer)
             
             if Preferences.graphics.useSSAO {
                 //Render Screen Space Ambient Occlusion
@@ -298,38 +344,41 @@ extension Renderer: MTKViewDelegate {
         shadowRenderCommandEncoder?.endEncoding()
     }
     
-    func gBufferRenderPass(commandBuffer: MTLCommandBuffer!) {
-        let gBufferCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: gBufferRenderPassDescriptor)
-        gBufferCommandEncoder?.label = "GBuffer RenderCommandEncoder"
-        
-        gBufferCommandEncoder?.pushDebugGroup("Init imageblocks for transparency")
-        gBufferCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
-        gBufferCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
-        gBufferCommandEncoder?.popDebugGroup()
+    func opaqueRenderPass(commandBuffer: MTLCommandBuffer!) {
+        let opaqueCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: opaqueRenderPassDescriptor)
+        opaqueCommandEncoder?.label = "Opaque RenderCommandEncoder"
 
-        gBufferCommandEncoder?.pushDebugGroup("GBuffer fill")
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
-        gBufferCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 2)
-        gBufferCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 9)
+        opaqueCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 2)
+        opaqueCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 9)
         
-        gBufferCommandEncoder?.pushDebugGroup("Opaque fill")
+        opaqueCommandEncoder?.pushDebugGroup("Opaque fill")
         Renderer.currentBlendMode = .Opaque
-        SceneManager.render(gBufferCommandEncoder)
-        gBufferCommandEncoder?.popDebugGroup()
+        SceneManager.render(opaqueCommandEncoder)
+        opaqueCommandEncoder?.popDebugGroup()
+        opaqueCommandEncoder?.endEncoding()
+    }
+    
+    func transparentRenderPass(commandBuffer: MTLCommandBuffer!) {
+        let TransparencyCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: transparencyRenderPassDescriptor)
+        TransparencyCommandEncoder?.label = "Transparency RenderCommandEncoder"
         
-        gBufferCommandEncoder?.pushDebugGroup("Alpha rendering")
+        TransparencyCommandEncoder?.pushDebugGroup("Init imageblocks for transparency")
+        TransparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
+        TransparencyCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
+        TransparencyCommandEncoder?.popDebugGroup()
+        
+        TransparencyCommandEncoder?.pushDebugGroup("Alpha rendering")
         Renderer.currentBlendMode = .Alpha
-        SceneManager.render(gBufferCommandEncoder)
-        gBufferCommandEncoder?.popDebugGroup()
-        gBufferCommandEncoder?.popDebugGroup()
+        SceneManager.render(TransparencyCommandEncoder)
+        TransparencyCommandEncoder?.popDebugGroup()
         
-        gBufferCommandEncoder?.pushDebugGroup("Blending Transparency")
-        gBufferCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
-        gBufferCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        AssetLibrary.meshes["Quad"].draw(gBufferCommandEncoder)
-        gBufferCommandEncoder?.popDebugGroup()
-        
-        gBufferCommandEncoder?.endEncoding()
+        TransparencyCommandEncoder?.pushDebugGroup("Blending Transparency")
+        TransparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
+        TransparencyCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
+        AssetLibrary.meshes["Quad"].draw(TransparencyCommandEncoder)
+        TransparencyCommandEncoder?.popDebugGroup()
+        TransparencyCommandEncoder?.endEncoding()
     }
     
     func SSAORenderPass(commandBuffer: MTLCommandBuffer!) {
@@ -362,8 +411,7 @@ extension Renderer: MTKViewDelegate {
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 3)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBDepth], index: 4)
         lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBMetalRoughAoIOR], index: 5)
-        lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBEmission], index: 6)
-        if Preferences.graphics.useSSAO { lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBSSAO], index: 7) }
+        if Preferences.graphics.useSSAO { lightingCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBSSAO], index: 6) }
         SceneManager.lightingPass(lightingCommandEncoder)
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
         lightingCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)
@@ -375,18 +423,134 @@ extension Renderer: MTKViewDelegate {
     func bloomPass(commandBuffer: MTLCommandBuffer!) {
         var bloomCommandEncoder = commandBuffer.makeComputeCommandEncoder()
         bloomCommandEncoder?.label = "Bloom ComputeCommandEncoder"
-        bloomCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.BloomDownsample])
-        bloomCommandEncoder?.setTexture(AssetLibrary.textures[shadedImage], index: 0)
-        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomTex], index: 1)
         let shadedImage = AssetLibrary.textures[shadedImage]!
+
+        // Bloom threshold
+        bloomCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.BloomThreshold])
+        bloomCommandEncoder?.pushDebugGroup("Adding Bloom threshold")
+        bloomCommandEncoder?.setTexture(shadedImage, index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomThreshold], index: 1)
+        bloomCommandEncoder?.setBytes(&Preferences.graphics.bloomThreshold, length: Float.stride, index: 0)
         var groupsPerGrid = MTLSize(width: shadedImage.width, height: shadedImage.height, depth: 1)
         bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
                                                   threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
-//        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomTex], index: 0)
-//        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomA], index: 1)
-//        groupsPerGrid = MTLSize(width: shadedImage.width/16, height: shadedImage.height/16, depth: 1)
-//        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
-//                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        
+        // Downsampling A
+        bloomCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.BloomDownsample])
+        bloomCommandEncoder?.pushDebugGroup("Downsampling to Bloom Block A")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomThreshold], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomA], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 2, height: shadedImage.height / 2, depth: 1)
+        var screenSize = simd_uint2(simd_float2(Float(shadedImage.width / 2), Float(shadedImage.height / 2)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        // Downsampling B
+        bloomCommandEncoder?.pushDebugGroup("Downsampling to Bloom Block B")
+        screenSize = screenSize / 2
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomA], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomB], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 4, height: shadedImage.height / 4, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(shadedImage.width / 4), Float(shadedImage.height / 4)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        // Downsampling C
+        bloomCommandEncoder?.pushDebugGroup("Downsampling to Bloom Block C")
+        screenSize = screenSize / 2
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomB], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomC], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 8, height: shadedImage.height / 8, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(shadedImage.width / 8), Float(shadedImage.height / 8)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        // Downsampling D
+        bloomCommandEncoder?.pushDebugGroup("Downsampling to Bloom Block D")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomC], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomD], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 16, height: shadedImage.height / 16, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(shadedImage.width / 16), Float(shadedImage.height / 16)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        // Downsampling E
+        bloomCommandEncoder?.pushDebugGroup("Downsampling to Bloom Block E")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomD], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomE], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 32, height: shadedImage.height / 32, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(shadedImage.width / 32), Float(shadedImage.height / 32)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        // Downsampling F
+        bloomCommandEncoder?.pushDebugGroup("Downsampling to Bloom Block F")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomE], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomF], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 64, height: shadedImage.height / 64, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(shadedImage.width / 64), Float(shadedImage.height / 64)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        // Upsampling and blurring
+        var blockF = AssetLibrary.textures[bloomF]!
+        bloomCommandEncoder?.setComputePipelineState(GPLibrary.computePipelineStates[.BloomUpsample])
+        bloomCommandEncoder?.pushDebugGroup("Upsampling to Bloom Block E")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomF], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomE], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 32, height: shadedImage.height / 32, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(blockF.width * 2), Float(blockF.height * 2)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        bloomCommandEncoder?.pushDebugGroup("Upsampling to Bloom Block D")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomE], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomD], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 16, height: shadedImage.height / 16, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(blockF.width * 4), Float(blockF.height * 4)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        bloomCommandEncoder?.pushDebugGroup("Upsampling to Bloom Block C")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomD], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomC], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 8, height: shadedImage.height / 8, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(blockF.width * 8), Float(blockF.height * 8)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        bloomCommandEncoder?.pushDebugGroup("Upsampling to Bloom Block B")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomC], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomB], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 4, height: shadedImage.height / 4, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(blockF.width * 16), Float(blockF.height * 16)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+        bloomCommandEncoder?.pushDebugGroup("Upsampling to Bloom Block A")
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomB], index: 0)
+        bloomCommandEncoder?.setTexture(AssetLibrary.textures[bloomA], index: 1)
+        groupsPerGrid = MTLSize(width: shadedImage.width / 2, height: shadedImage.height / 2, depth: 1)
+        screenSize = simd_uint2(simd_float2(Float(blockF.width * 32), Float(blockF.height * 32)))
+        bloomCommandEncoder?.setBytes(&screenSize, length: simd_uint2.stride, index: 0)
+        bloomCommandEncoder?.dispatchThreadgroups(groupsPerGrid,
+                                                  threadsPerThreadgroup: MTLSize(width: 1, height: 1, depth: 1))
+        bloomCommandEncoder?.popDebugGroup()
+
+        bloomCommandEncoder?.popDebugGroup()
         bloomCommandEncoder?.endEncoding()
     }
     
@@ -395,7 +559,7 @@ extension Renderer: MTKViewDelegate {
         compositingRenderCommandEncoder!.label = "Compositing RenderCommandEncoder"
         compositingRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Compositing])
         compositingRenderCommandEncoder!.setFragmentTexture(AssetLibrary.textures[shadedImage], index: 0)
-        compositingRenderCommandEncoder!.setFragmentTexture(AssetLibrary.textures[bloomTex], index: 1)
+        compositingRenderCommandEncoder!.setFragmentTexture(AssetLibrary.textures[bloomA], index: 1)
         AssetLibrary.meshes["Quad"].draw(compositingRenderCommandEncoder)
         compositingRenderCommandEncoder!.endEncoding()
     }

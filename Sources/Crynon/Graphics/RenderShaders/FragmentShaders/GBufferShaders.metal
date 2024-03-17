@@ -23,18 +23,17 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
                                   texture2d<float> textureAoRoughMetal [[ texture(8) ]]) {
     GBuffer gBuffer;
     
-    gBuffer.color = half4(mat.color);
+    gBuffer.color = float4(mat.color.rgb, mat.emission.a);
     gBuffer.depth = VerOut.position.z;
     gBuffer.position = VerOut.worldPosition;
     gBuffer.metalRoughAoIOR.r = mat.metallic;
     gBuffer.metalRoughAoIOR.g = mat.roughness;
     gBuffer.metalRoughAoIOR.b = 1.0;
     gBuffer.metalRoughAoIOR.a = mat.ior;
-    gBuffer.emission = half4(mat.emission);
     
     //Color
     if (!is_null_texture(textureColor)) {
-        gBuffer.color = half4(textureColor.sample(samplerFragment, VerOut.textureCoordinate));
+        gBuffer.color.rgb = textureColor.sample(samplerFragment, VerOut.textureCoordinate).rgb;
     }
     
     //Normal
@@ -65,9 +64,10 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
     }
     
     //Emission
-    if (!is_null_texture(textureEmission)) {
-        gBuffer.emission = half4(textureEmission.sample(samplerFragment, VerOut.textureCoordinate));
-    }
+    float4 emission = mat.emission;
+    if (!is_null_texture(textureEmission)) { emission = textureEmission.sample(samplerFragment, VerOut.textureCoordinate); }
+    gBuffer.color.rgb = emission.rgb * clamp(emission.a, 0.0f, 1.0f) + (1.0f - clamp(emission.a, 0.0f, 1.0f)) * gBuffer.color.rgb;
+    gBuffer.color.a = clamp(emission.a, 0.0f, 1.0f);
     
     //Shadow
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;

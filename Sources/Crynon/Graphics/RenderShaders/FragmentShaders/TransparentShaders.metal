@@ -7,7 +7,7 @@ using namespace metal;
 static constexpr constant short tLayersCount = 4; //Number of transparent layers stored in tile memory
 
 struct TransparentFragmentValues {
-    rgba8unorm<half4> colors [[ raster_order_group(1) ]] [tLayersCount];
+    half4 colors [[ raster_order_group(1) ]] [tLayersCount];
     float depths [[ raster_order_group(1) ]] [tLayersCount];
 };
 
@@ -47,7 +47,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     
     color.rgb *= color.a;
     
-    half3 lighting = PhongShading::getSpecularLight(VerOut.worldPosition.xyz,
+    float3 lighting = PhongShading::getSpecularLight(VerOut.worldPosition.xyz,
                                                      VerOut.normal,
                                                      lightData,
                                                      lightCount,
@@ -55,14 +55,14 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
                                                      fragmentSceneConstant.cameraPosition);
     
     if (color.a != 0.0) {
-        color.rgb += lighting;
+        color.rgb += half3(lighting);
     }
     
-    half depth = VerOut.position.z / VerOut.position.w;
+    float depth = VerOut.position.z / VerOut.position.w;
     
     for (short i = 0; i < tLayersCount; i++) {
         half4 layerColor = fragmentValues.colors[i];
-        half layerDepth = fragmentValues.depths[i];
+        float layerDepth = fragmentValues.depths[i];
         
         bool insert = (depth <= layerDepth) ? true : false;
         fragmentValues.colors[i] = insert ? color : layerColor;

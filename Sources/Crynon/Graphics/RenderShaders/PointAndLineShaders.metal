@@ -29,9 +29,8 @@ fragment GBuffer pointAndLine_fragment(PointOut PointOut [[ stage_in]],
     
     GBuffer gBuffer;
     
-    gBuffer.color = half4(color);
+    gBuffer.color = color;
     gBuffer.depth = PointOut.position.z;
-    gBuffer.emission = half4(color);
     
     return gBuffer;
 }

@@ -37,7 +37,6 @@ open class Scene: Node {
             viewMatrix[3][1] = 0
             viewMatrix = cameraManager._currentCamera.projectionMatrix * viewMatrix
         }
-        fragmentSceneConstant.fogDensity = Preferences.graphics.fogAmount
     }
     
     public override func getScene() -> Scene {

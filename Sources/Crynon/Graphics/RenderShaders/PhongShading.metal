@@ -56,7 +56,7 @@ public:
                 determinant = dot(-unitNormal, data.useDirection ? lightDirection : toLightVector);
             }
             
-            float3 diffuseColor = determinant * diffuseness * attenuation * brightness * data.color.rgb * (mt.emission + 1).a;
+            float3 diffuseColor = determinant * diffuseness * attenuation * brightness * data.color.rgb;
             totalDiffuseColor += clamp(diffuseColor, 0.0f, 1.0f);
             if (data.useDirection == true) {
                 totalDiffuseColor *= lightness;
@@ -73,14 +73,14 @@ public:
         return totalAmbientColor + totalDiffuseColor + totalSpecularColor;
     }
     
-    static half3 getSpecularLight(float3 worldPosition,
-                                  float3 unitNormal,
-                                  constant LightData *ld,
-                                  int ldc,
-                                  ShaderMaterial mt,
-                                  float3 cameraPos) {
+    static float3 getSpecularLight(float3 worldPosition,
+                                   float3 unitNormal,
+                                   constant LightData *ld,
+                                   int ldc,
+                                   ShaderMaterial mt,
+                                   float3 cameraPos) {
         
-        half3 totalSpecularColor = half3(0.0h, 0.0h, 0.0h);
+        float3 totalSpecularColor = float3(0.0h, 0.0h, 0.0h);
         float specularness = pow(max(((mt.roughness * -1.0 + 1.0) * 3), 1.0f), 10);
         
         for (int i = 0; i < ldc; i++) {
@@ -100,7 +100,7 @@ public:
                     specularDot = clamp(specularDot, 0.0f, 1.0f);
                 }
             }
-            half3 specularColor = half3(pow(specularDot, specularness) * brightness * data.color.rgb);
+            float3 specularColor = pow(specularDot, specularness) * brightness * data.color.rgb;
             totalSpecularColor += clamp(specularColor, 0.0h, 1.0h);
         }
         
