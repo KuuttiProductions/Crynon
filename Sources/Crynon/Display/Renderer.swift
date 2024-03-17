@@ -274,7 +274,6 @@ public class Renderer: NSObject {
 }
 
 extension Renderer: MTKViewDelegate {
-    
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         updateScreenSize(view: view)
         if let fps = view.window?.screen?.maximumFramesPerSecond {
@@ -293,6 +292,7 @@ extension Renderer: MTKViewDelegate {
         guard let drawable = view.currentDrawable, let depth = view.depthStencilTexture else { return }
         opaqueRenderPassDescriptor.depthAttachment.texture = depth
         transparencyRenderPassDescriptor.depthAttachment.texture = depth
+        drawable.layer.wantsExtendedDynamicRangeContent = Preferences.graphics.outputHDR
         
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"

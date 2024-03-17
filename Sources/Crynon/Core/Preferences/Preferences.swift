@@ -23,8 +23,8 @@ public class Preferences {
     
     static func initialize() {
         _corePreferences = CorePreferences()
-        _metalPreferences = MetalPreferences()
         _graphicsPreferences = GraphicsPreferences()
+        _metalPreferences = MetalPreferences()
         _physicsPreferences = PhysicsPreferences()
         _audioPreferences = AudioPreferences()
     }
