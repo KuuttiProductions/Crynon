@@ -28,6 +28,7 @@ public class Renderer: NSObject {
     static var screenWidth: Float!
     static var screenHeight: Float!
     static var aspectRatio: Float { return screenWidth/screenHeight }
+    static var maxBrightness: Float = 1.0
     
     static var currentBlendMode: BlendMode = .Opaque
     static var currentDeltaTime: Float = 0.0
@@ -275,6 +276,7 @@ public class Renderer: NSObject {
 
 extension Renderer: MTKViewDelegate {
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        maxBrightnessValueChecking()
         updateScreenSize(view: view)
         if let fps = view.window?.screen?.maximumFramesPerSecond {
             view.preferredFramesPerSecond = fps
@@ -556,10 +558,11 @@ extension Renderer: MTKViewDelegate {
     
     func compositingRenderPass(commandBuffer: MTLCommandBuffer, view: MTKView) {
         let compositingRenderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: view.currentRenderPassDescriptor!)
-        compositingRenderCommandEncoder!.label = "Compositing RenderCommandEncoder"
+        compositingRenderCommandEncoder?.label = "Compositing RenderCommandEncoder"
         compositingRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Compositing])
-        compositingRenderCommandEncoder!.setFragmentTexture(AssetLibrary.textures[shadedImage], index: 0)
-        compositingRenderCommandEncoder!.setFragmentTexture(AssetLibrary.textures[bloomA], index: 1)
+        compositingRenderCommandEncoder?.setFragmentBytes(&Renderer.maxBrightness, length: Float.stride, index: 0)
+        compositingRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures[shadedImage], index: 0)
+        compositingRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures[bloomA], index: 1)
         AssetLibrary.meshes["Quad"].draw(compositingRenderCommandEncoder)
         compositingRenderCommandEncoder!.endEncoding()
     }
@@ -575,5 +578,19 @@ extension Renderer: MTKViewDelegate {
         let threadsPerThreadGroup = MTLSize(width: GPLibrary.computePipelineStates[.Jitter].threadExecutionWidth, height: 1, depth: 1)
         computeCommandEncoder?.dispatchThreadgroups(groupsPerGrid, threadsPerThreadgroup: threadsPerThreadGroup)
         computeCommandEncoder?.endEncoding()
+    }
+}
+
+extension Renderer {
+    func maxBrightnessValueChecking() {
+        NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification,
+                                               object: nil,
+                                               queue: nil) { info in
+            if Preferences.graphics.outputHDR {
+                Renderer.maxBrightness = Float(NSScreen.main!.maximumExtendedDynamicRangeColorComponentValue)
+            } else {
+                Renderer.maxBrightness = 1.0
+            }
+        }
     }
 }
