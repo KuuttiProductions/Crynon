@@ -16,14 +16,7 @@ open class GameObject: Node {
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteLess : .Less])
             renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureColor], index: 3)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureNormal], index: 4)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureEmission], index: 5)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureRoughness], index: 6)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureMetallic], index: 7)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureAoRoughMetal], index: 8)
-            renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
-            AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
+            AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder, materials: [material])
         }
         super.render(renderCommandEncoder)
     }
@@ -35,7 +28,7 @@ open class GameObject: Node {
         renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureColor], index: 3)
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
         renderCommandEncoder.setCullMode(.back)
-        AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder)
+        AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder, materials: [])
         super.castShadow(renderCommandEncoder)
     }
 }

@@ -3,13 +3,12 @@ import MetalKit
 
 open class EnvironmentSphere: Node {
     
-    public var texture: String!
-    private var material: ShaderMaterial = ShaderMaterial()
+    public var material: Material = Material()
     
     public override init(_ name: String) {
         super.init(name)
         self.setScale(999)
-        self.material.emission = simd_float4(0, 0, 0, 1)
+        self.material.shaderMaterial.emission = simd_float4(0, 0, 0, 1)
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
@@ -18,9 +17,7 @@ open class EnvironmentSphere: Node {
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Sky])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteLess])
             renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
-            renderCommandEncoder.setFragmentBytes(&material, length: ShaderMaterial.stride, index: 1)
-            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[texture], index: 5)
-            AssetLibrary.meshes["Sphere"].draw(renderCommandEncoder)
+            AssetLibrary.meshes["Sphere"].draw(renderCommandEncoder, materials: [material])
             super.render(renderCommandEncoder)
         }
     }

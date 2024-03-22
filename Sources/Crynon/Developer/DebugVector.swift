@@ -33,8 +33,7 @@ public class Debug_Vector {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.gBuffer])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
-        renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
-        AssetLibrary.meshes["Vector"].draw(renderCommandEncoder)
+        AssetLibrary.meshes["Vector"].draw(renderCommandEncoder, materials: [material])
         renderCommandEncoder.popDebugGroup()
     }
     
@@ -67,8 +66,7 @@ public class Debug_Vector {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.gBuffer])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
-        renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
-        AssetLibrary.meshes["Vector"].draw(renderCommandEncoder)
+        AssetLibrary.meshes["Vector"].draw(renderCommandEncoder, materials: [material])
         renderCommandEncoder.popDebugGroup()
     }
 }

@@ -13,13 +13,13 @@ fragment float4 compositing_fragment(VertexIn VerIn [[ stage_in ]],
                                      texture2d<float> shadedImage [[ texture(0) ]],
                                      texture2d<float> bloomTexture [[ texture(1) ]]) {
     float3 finalColor = float3(0, 0, 0);
+    ACES aces = ACES();
     
     float4 shaded = shadedImage.sample(sampler2d, VerIn.textureCoordinate);
     float4 bloom = bloomTexture.sample(sampler2d, VerIn.textureCoordinate);
     
     float4 composite = shaded + bloom;
-    finalColor = ACES::aces_approx(composite.rgb);
-   // finalColor = ACES::RRT(composite);
+    finalColor = aces.ACES_FAST(composite.rgb, 1.0);
     
     return float4(finalColor, 1.0f);
 }
