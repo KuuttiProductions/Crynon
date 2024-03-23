@@ -21,4 +21,15 @@ public class TextureLibrary: Library<String, MTLTexture> {
     func addTexture(_ texture: MTLTexture!, key: String) {
         _library.updateValue(texture, forKey: key)
     }
+    
+    func addTextureMDL(_ texture: MDLTexture!)-> String {
+        let key = UUID().uuidString
+        if let tex = texture {
+            let output = textureLoader.loadTextureFromTexture(mdlTexture: texture,
+                                                              mipMaps: true,
+                                                              origin: .bottomLeft)
+            _library.updateValue(output, forKey: key)
+            return key
+        } else { return "" }
+    }
 }

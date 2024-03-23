@@ -1,7 +1,7 @@
 # Blender 3.5.1 MTL File: 'None'
 # www.blender.org
 
-newmtl ObjectMat
+newmtl MetameshMat
 Ns 810.000000
 Ka 0.500000 0.500000 0.500000
 Kd 0.317517 0.100260 0.800003

@@ -48,16 +48,32 @@ public class Mesh {
         vertexBuffer.label = "Custom MeshBuffer"
     }
     
-    func draw(_ renderCommandEncoder: MTLRenderCommandEncoder!, materials: [Material]! = []) {
+    func plainDraw(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
+        renderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        if submeshes.count > 0 {
+            for submesh in submeshes {
+                renderCommandEncoder.drawIndexedPrimitives(type: submesh.primitiveType,
+                                                           indexCount: submesh.indexCount,
+                                                           indexType: submesh.indexType,
+                                                           indexBuffer: submesh.indexBuffer.buffer,
+                                                           indexBufferOffset: 0,
+                                                           instanceCount: instanceCount)
+            }
+        } else {
+            renderCommandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertices.count)
+        }
+    }
+    
+    func draw(_ renderCommandEncoder: MTLRenderCommandEncoder!, materials: [Material]!) {
         renderCommandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         if submeshes.count > 0 {
             for (i, submesh) in submeshes.enumerated() {
-                if materials.count == 1 {
-                    submesh.materialOverride = materials[0]
-                } else if materials.count > i {
-                    submesh.materialOverride = materials[i]
+                var material: Material!
+                if materials.count > i {
+                    material = materials[i]
                 }
-                submesh.applyMaterial(renderCommandEncoder: renderCommandEncoder)
+                let render = submesh.applyMaterial(renderCommandEncoder: renderCommandEncoder, materialOverride: material)
+                if !render { return }
                 renderCommandEncoder.drawIndexedPrimitives(type: submesh.primitiveType,
                                                            indexCount: submesh.indexCount,
                                                            indexType: submesh.indexType,
@@ -67,17 +83,29 @@ public class Mesh {
             }
         } else {
             var shaderMat = materials.count >= 1 ? materials![0] : nil
+            var render: Bool = true
             if var material = shaderMat {
-                renderCommandEncoder.setFragmentBytes(&material.shaderMaterial, length: ShaderMaterial.stride, index: 1)
-                renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureColor], index: 3)
-                renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureNormal], index: 4)
-                renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureEmission], index: 5)
-                renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureRoughness], index: 6)
-                renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureMetallic], index: 7)
-                renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureAoRoughMetal], index: 8)
+                render = applyMaterial(renderCommandEncoder: renderCommandEncoder, material: material)
             }
+            if !render { return }
             renderCommandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertices.count)
         }
+    }
+    
+    func applyMaterial(renderCommandEncoder: MTLRenderCommandEncoder, material: Material)-> Bool {
+        var mat = material
+        if Renderer.currentRenderState == material.renderState && material.visible {
+            renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
+            renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteLess : .Less])
+            renderCommandEncoder.setFragmentBytes(&mat.shaderMaterial, length: ShaderMaterial.stride, index: 1)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureColor], index: 3)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureNormal], index: 4)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureEmission], index: 5)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureRoughness], index: 6)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureMetallic], index: 7)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[material.textureAoRoughMetal], index: 8)
+            return true
+        } else { return false }
     }
 }
 
@@ -95,32 +123,58 @@ class Submesh {
     private var _indexBuffer: MTKMeshBuffer
     public var indexBuffer: MTKMeshBuffer { return _indexBuffer }
     
-    private var _material: Material
+    private var _material: Material!
     public var material: Material { return _material }
     
-    public var materialOverride: Material!
-    
-    init(_ sub: MTKSubmesh) {
+    init(_ sub: MTKSubmesh, _ subMDL: MDLSubmesh) {
         self._primitiveType = sub.primitiveType
         self._indexCount = sub.indexCount
         self._indexType = sub.indexType
         self._indexBuffer = sub.indexBuffer
-        self._material = Material()
+        addMaterial(subMDL)
     }
     
-    func addMaterial(_ sub: MDLMesh) {
-        
+    func addMaterial(_ sub: MDLSubmesh) {
+        let mdlMat = sub.material!
+        let texLoader = TextureLoader()
+        _material = Material()
+        _material.shaderMaterial.color = mdlMat.property(with: .baseColor)!.float4Value
+        _material.shaderMaterial.emission = mdlMat.property(with: .emission)!.float4Value
+        _material.shaderMaterial.roughness = mdlMat.property(with: .roughness)!.floatValue
+        _material.shaderMaterial.metallic = mdlMat.property(with: .metallic)!.floatValue
+        _material.shaderMaterial.ior = mdlMat.property(with: .materialIndexOfRefraction)!.floatValue
+        _material.shaderMaterial.backfaceNormals = true
+        _material.textureColor = loadTexture(semantic: .baseColor, material: mdlMat)
+        _material.textureNormal = loadTexture(semantic: .tangentSpaceNormal, material: mdlMat)
+        _material.textureEmission = loadTexture(semantic: .emission, material: mdlMat)
+        _material.textureMetallic = loadTexture(semantic: .metallic, material: mdlMat)
+        _material.textureRoughness = loadTexture(semantic: .roughness, material: mdlMat)
+        _material.textureAoRoughMetal = loadTexture(semantic: .ambientOcclusion, material: mdlMat)
     }
     
-    func applyMaterial(renderCommandEncoder: MTLRenderCommandEncoder) {
-        var applyMat = materialOverride != nil ? materialOverride! : _material
-        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureColor], index: 3)
-        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureNormal], index: 4)
-        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureEmission], index: 5)
-        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureRoughness], index: 6)
-        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureMetallic], index: 7)
-        renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureAoRoughMetal], index: 8)
-        renderCommandEncoder.setFragmentBytes(&applyMat.shaderMaterial, length: ShaderMaterial.stride, index: 1)
+    private func loadTexture(semantic: MDLMaterialSemantic, material: MDLMaterial)-> String {
+        guard let property = material.property(with: semantic) else { return "" }
+        guard let sourceTexture = property.textureSamplerValue?.texture else { return "" }
+        return AssetLibrary.textures.addTextureMDL(sourceTexture)
+    }
+    
+    func applyMaterial(renderCommandEncoder: MTLRenderCommandEncoder, materialOverride: Material!)-> Bool {
+        var applyMat = materialOverride != nil ? materialOverride! : _material!
+        if applyMat.shader == .Lighting { print(applyMat)}
+        if applyMat.renderState == Renderer.currentRenderState && applyMat.visible {
+            renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[applyMat.shader])
+            renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[applyMat.depthStencil])
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureColor], index: 3)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureNormal], index: 4)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureEmission], index: 5)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureRoughness], index: 6)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureMetallic], index: 7)
+            renderCommandEncoder.setFragmentTexture(AssetLibrary.textures[applyMat.textureAoRoughMetal], index: 8)
+            renderCommandEncoder.setFragmentBytes(&applyMat.shaderMaterial, length: ShaderMaterial.stride, index: 1)
+            return true
+        } else {
+            return false
+        }
     }
 }
 

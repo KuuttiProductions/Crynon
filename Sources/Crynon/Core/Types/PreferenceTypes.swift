@@ -1,5 +1,6 @@
 
-public enum BlendMode {
+public enum RenderState {
     case Opaque
     case Alpha
+    case Shadow
 }

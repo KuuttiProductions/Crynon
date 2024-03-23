@@ -5,7 +5,8 @@
 using namespace metal;
 
 constexpr sampler samplerFragment (min_filter::linear,
-                                   mag_filter::linear);
+                                   mag_filter::linear,
+                                   mip_filter::linear);
 
 fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
                                   constant ShaderMaterial &mat [[ buffer(1) ]],
@@ -67,6 +68,7 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
     float4 emission = mat.emission;
     if (!is_null_texture(textureEmission)) { emission = textureEmission.sample(samplerFragment, VerOut.textureCoordinate); }
     gBuffer.color.rgb = emission.rgb * clamp(emission.a, 0.0f, 1.0f) + (1.0f - clamp(emission.a, 0.0f, 1.0f)) * gBuffer.color.rgb;
+    gBuffer.color.rgb = clamp(gBuffer.color.rgb, 0.0, 32000);
     gBuffer.color.a = clamp(emission.a, 0.0f, 1.0f);
     
     //Shadow

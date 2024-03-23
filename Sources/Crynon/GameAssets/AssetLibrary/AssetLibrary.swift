@@ -8,7 +8,7 @@ public class AssetLibrary {
     public static var textures: TextureLibrary { _textureLibrary }
     
     static func initialize() {
-        _meshLibrary = MeshLibrary()
         _textureLibrary = TextureLibrary()
+        _meshLibrary = MeshLibrary()
     }
 }

@@ -30,7 +30,7 @@ public class Renderer: NSObject {
     static var aspectRatio: Float { return screenWidth/screenHeight }
     static var maxBrightness: Float = 1.0
     
-    static var currentBlendMode: BlendMode = .Opaque
+    static var currentRenderState: RenderState = .Opaque
     static var currentDeltaTime: Float = 0.0
     
     static var time: Float = 0.0
@@ -342,6 +342,7 @@ extension Renderer: MTKViewDelegate {
     func shadowRenderPass(commandBuffer: MTLCommandBuffer!) {
         let shadowRenderCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: shadowRenderPassDescriptor)
         shadowRenderCommandEncoder?.label = "Shadow RenderCommandEncoder"
+        Renderer.currentRenderState = .Shadow
         SceneManager.castShadow(shadowRenderCommandEncoder)
         shadowRenderCommandEncoder?.endEncoding()
     }
@@ -353,9 +354,8 @@ extension Renderer: MTKViewDelegate {
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
         opaqueCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 2)
         opaqueCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 9)
-        
         opaqueCommandEncoder?.pushDebugGroup("Opaque fill")
-        Renderer.currentBlendMode = .Opaque
+        Renderer.currentRenderState = .Opaque
         SceneManager.render(opaqueCommandEncoder)
         opaqueCommandEncoder?.popDebugGroup()
         opaqueCommandEncoder?.endEncoding()
@@ -369,16 +369,15 @@ extension Renderer: MTKViewDelegate {
         TransparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
         TransparencyCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
         TransparencyCommandEncoder?.popDebugGroup()
-        
         TransparencyCommandEncoder?.pushDebugGroup("Alpha rendering")
-        Renderer.currentBlendMode = .Alpha
+        Renderer.currentRenderState = .Alpha
         SceneManager.render(TransparencyCommandEncoder)
         TransparencyCommandEncoder?.popDebugGroup()
         
         TransparencyCommandEncoder?.pushDebugGroup("Blending Transparency")
         TransparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
         TransparencyCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        AssetLibrary.meshes["Quad"].draw(TransparencyCommandEncoder)
+        AssetLibrary.meshes["Quad"].plainDraw(TransparencyCommandEncoder)
         TransparencyCommandEncoder?.popDebugGroup()
         TransparencyCommandEncoder?.endEncoding()
     }
@@ -396,7 +395,7 @@ extension Renderer: MTKViewDelegate {
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBNormalShadow], index: 0)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[gBPosition], index: 1)
         SSAOCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 2)
-        AssetLibrary.meshes["Quad"].draw(SSAOCommandEncoder)
+        AssetLibrary.meshes["Quad"].plainDraw(SSAOCommandEncoder)
         SSAOCommandEncoder?.popDebugGroup()
         SSAOCommandEncoder?.endEncoding()
     }
@@ -417,7 +416,7 @@ extension Renderer: MTKViewDelegate {
         SceneManager.lightingPass(lightingCommandEncoder)
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
         lightingCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)
-        AssetLibrary.meshes["Quad"].draw(lightingCommandEncoder)
+        AssetLibrary.meshes["Quad"].plainDraw(lightingCommandEncoder)
         lightingCommandEncoder?.popDebugGroup()
         lightingCommandEncoder?.endEncoding()
     }
@@ -563,7 +562,7 @@ extension Renderer: MTKViewDelegate {
         compositingRenderCommandEncoder?.setFragmentBytes(&Renderer.maxBrightness, length: Float.stride, index: 0)
         compositingRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures[shadedImage], index: 0)
         compositingRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures[bloomA], index: 1)
-        AssetLibrary.meshes["Quad"].draw(compositingRenderCommandEncoder)
+        AssetLibrary.meshes["Quad"].plainDraw(compositingRenderCommandEncoder)
         compositingRenderCommandEncoder!.endEncoding()
     }
     

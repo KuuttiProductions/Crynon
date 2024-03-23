@@ -3,7 +3,7 @@ import MetalKit
 
 open class EnvironmentSphere: Node {
     
-    public var material: Material = Material()
+    public var material: Material = Material(.Sky)
     
     public override init(_ name: String) {
         super.init(name)
@@ -12,9 +12,8 @@ open class EnvironmentSphere: Node {
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
-        if Preferences.graphics.useSkySphere == true && Renderer.currentBlendMode == .Opaque {
+        if Preferences.graphics.useSkySphere && Renderer.currentRenderState == .Opaque {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
-            renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Sky])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteLess])
             renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
             AssetLibrary.meshes["Sphere"].draw(renderCommandEncoder, materials: [material])

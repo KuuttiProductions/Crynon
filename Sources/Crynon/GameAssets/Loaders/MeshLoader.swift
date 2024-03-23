@@ -19,12 +19,11 @@ class MeshLoader {
             url = Bundle.main.url(forResource: name, withExtension: `extension`)
         }
         let bufferAllocator = MTKMeshBufferAllocator.init(device: Core.device)
-        var error: NSError?
         let asset = MDLAsset.init(url: url!,
                                   vertexDescriptor: descriptor,
-                                  bufferAllocator: bufferAllocator,
-                                  preserveTopology: true,
-                                  error: &error)
+                                  bufferAllocator: bufferAllocator)
+        
+        asset.loadTextures()
         
         var mdlMesh: MDLMesh!
         var mtkMesh: MTKMesh!
@@ -39,8 +38,8 @@ class MeshLoader {
             print(error)
         }
         
-        for sub in mtkMesh.submeshes {
-            let submesh = Submesh(sub)
+        for (i, sub) in mtkMesh.submeshes.enumerated() {
+            let submesh = Submesh(sub, mdlMesh.submeshes![i] as! MDLSubmesh)
             submeshes.append(submesh)
         }
         

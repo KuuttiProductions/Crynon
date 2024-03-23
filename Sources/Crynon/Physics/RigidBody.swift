@@ -41,7 +41,7 @@ open class RigidBody: Node {
     var debug_contactPoint: simd_float3!
     
     //End of physics variables
-    public var material: Material = Material()
+    public var materials: [Material] = []
     public var mesh: String = "Cube"
     
     private var aabbPoints: [PointVertex] = [PointVertex(),
@@ -259,31 +259,19 @@ open class RigidBody: Node {
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
-        if material.blendMode == Renderer.currentBlendMode && material.visible {
-            if isActive && debug_drawCollisionState {
-                if isColliding {
-                    self.material.shaderMaterial.color = simd_float4(0.8, 0, 0, 1)
-                } else {
-                    self.material.shaderMaterial.color = simd_float4(0, 0.8, 0, 1)
-                }
-            }
-            
-            renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[material.shader])
-            renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[material.shader == .Transparent ? .NoWriteLess : .Less])
-            renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
-            AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder, materials: [material])
-            
-            // Debug drawing
-            if debug_drawAABB {
-                Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
-                Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
-            }
-            
-            if debug_contactPoint != nil {
-                Debug.pointAndLine.drawLine(renderCommandEncoder: renderCommandEncoder,
-                                            position1: simd_float3(0, 0, 0),
-                                            position2: debug_contactPoint, color: simd_float4(1, 0, 1, 1))
-            }
+        renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
+        AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder, materials: materials)
+        
+        // Debug drawing
+        if debug_drawAABB {
+            Debug.pointAndLine.drawPoints(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(1, 0.2, 0, 1))
+            Debug.pointAndLine.drawLineStrip(renderCommandEncoder: renderCommandEncoder, points: aabbPoints, color: simd_float4(0, 1, 0, 1))
+        }
+        
+        if debug_contactPoint != nil {
+            Debug.pointAndLine.drawLine(renderCommandEncoder: renderCommandEncoder,
+                                        position1: simd_float3(0, 0, 0),
+                                        position2: debug_contactPoint, color: simd_float4(1, 0, 1, 1))
         }
         super.render(renderCommandEncoder)
     }
@@ -294,7 +282,7 @@ open class RigidBody: Node {
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
         renderCommandEncoder.setCullMode(.back)
-        AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder, materials: [])
+        AssetLibrary.meshes[self.mesh].plainDraw(renderCommandEncoder)
         
         super.castShadow(renderCommandEncoder)
     }

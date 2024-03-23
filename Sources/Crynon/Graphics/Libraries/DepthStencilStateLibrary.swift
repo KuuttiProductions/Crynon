@@ -1,7 +1,7 @@
 
 import MetalKit
 
-enum DepthStencilType {
+public enum DepthStencilType {
     case Less
     case NoWriteLess
     case NoWriteAlways
