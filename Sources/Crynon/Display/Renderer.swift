@@ -352,7 +352,7 @@ extension Renderer: MTKViewDelegate {
         opaqueCommandEncoder?.label = "Opaque RenderCommandEncoder"
 
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
-        opaqueCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 2)
+        opaqueCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)
         opaqueCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 9)
         opaqueCommandEncoder?.pushDebugGroup("Opaque fill")
         Renderer.currentRenderState = .Opaque
@@ -362,24 +362,26 @@ extension Renderer: MTKViewDelegate {
     }
     
     func transparentRenderPass(commandBuffer: MTLCommandBuffer!) {
-        let TransparencyCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: transparencyRenderPassDescriptor)
-        TransparencyCommandEncoder?.label = "Transparency RenderCommandEncoder"
+        let transparencyCommandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: transparencyRenderPassDescriptor)
+        transparencyCommandEncoder?.label = "Transparency RenderCommandEncoder"
         
-        TransparencyCommandEncoder?.pushDebugGroup("Init imageblocks for transparency")
-        TransparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
-        TransparencyCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
-        TransparencyCommandEncoder?.popDebugGroup()
-        TransparencyCommandEncoder?.pushDebugGroup("Alpha rendering")
+        var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
+        transparencyCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)
+        transparencyCommandEncoder?.pushDebugGroup("Init imageblocks for transparency")
+        transparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
+        transparencyCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)
+        transparencyCommandEncoder?.popDebugGroup()
+        transparencyCommandEncoder?.pushDebugGroup("Alpha rendering")
         Renderer.currentRenderState = .Alpha
-        SceneManager.render(TransparencyCommandEncoder)
-        TransparencyCommandEncoder?.popDebugGroup()
+        SceneManager.render(transparencyCommandEncoder)
+        transparencyCommandEncoder?.popDebugGroup()
         
-        TransparencyCommandEncoder?.pushDebugGroup("Blending Transparency")
-        TransparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
-        TransparencyCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
-        AssetLibrary.meshes["Quad"].plainDraw(TransparencyCommandEncoder)
-        TransparencyCommandEncoder?.popDebugGroup()
-        TransparencyCommandEncoder?.endEncoding()
+        transparencyCommandEncoder?.pushDebugGroup("Blending Transparency")
+        transparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.TransparentBlending])
+        transparencyCommandEncoder?.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteAlways])
+        AssetLibrary.meshes["Quad"].plainDraw(transparencyCommandEncoder)
+        transparencyCommandEncoder?.popDebugGroup()
+        transparencyCommandEncoder?.endEncoding()
     }
     
     func SSAORenderPass(commandBuffer: MTLCommandBuffer!) {

@@ -2,6 +2,7 @@
 #include <metal_stdlib>
 #import "../Shared.metal"
 #import "../PhongShading.metal"
+#import "../Shadows.metal"
 using namespace metal;
 
 static constexpr constant short tLayersCount = 4; //Number of transparent layers stored in tile memory
@@ -33,8 +34,10 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
                                                        constant FragmentSceneConstant &fragmentSceneConstant [[ buffer(2) ]],
                                                        constant LightData *lightData [[ buffer(3) ]],
                                                        constant int &lightCount [[ buffer(4) ]],
+                                                       constant float2 &screenSize [[ buffer(5) ]],
                                                        depth2d<float> shadowMap1 [[ texture(0) ]],
                                                        texture2d<float> textureColor [[ texture(3) ]],
+                                                       texture2d<float> textureJitter [[ texture(9) ]],
                                                        TransparentFragmentValues fragmentValues [[ imageblock_data ]]) {
     TransparentFragmentStore out;
     half4 color = half4(material.color);
@@ -46,17 +49,23 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     }
     
     color.rgb *= color.a;
-    
-    float3 lighting = PhongShading::getSpecularLight(VerOut.worldPosition.xyz,
-                                                     VerOut.normal,
-                                                     lightData,
-                                                     lightCount,
-                                                     material,
-                                                     fragmentSceneConstant.cameraPosition);
-    
-    if (color.a != 0.0) {
-        color.rgb += half3(lighting);
+
+    float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
+    float shadowTerm = 1.0f;
+    if (!is_null_texture(shadowMap1)) {
+        shadowTerm = Shadows::getLightness(shadowMap1, lightSpacePosition, textureJitter, VerOut.position.xy, screenSize);
     }
+    
+    float3 lighting = PhongShading::getPhongLight(VerOut.position.xyz,
+                                                  normalize(VerOut.normal),
+                                                  lightData,
+                                                  lightCount,
+                                                  material,
+                                                  fragmentSceneConstant.cameraPosition,
+                                                  shadowTerm,
+                                                  0.3f);
+    
+    color.rgb *= half3(lighting);
     
     float depth = VerOut.position.z / VerOut.position.w;
     

@@ -27,6 +27,7 @@ public struct Material {
     
     public init(_ shader: RenderPipelineStateType = .gBuffer, _ name: String = "New material") {
         self._shader = shader
+        self.name = name
         switch shader {
         case .gBuffer:
             self._depthStencil = .Less

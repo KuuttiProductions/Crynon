@@ -25,10 +25,10 @@ Here are the current plans for Crynon. Actual roadmap on Trello.
 - [x] Efficient 3D renderer
 - [x] Dynamic Shadows
 - [ ] MetalFX support
-- [ ] HDR 
-- [ ] SSAO
+- [ ] HDR Output
+- [x] SSAO
 - [ ] Post-processing
-    - [ ] Bloom
+    - [x] Bloom
     - [ ] Depth Of Field
     - [ ] Motion Blur
 - [ ] Tessellation

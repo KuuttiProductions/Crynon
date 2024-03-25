@@ -72,38 +72,4 @@ public:
         
         return totalAmbientColor + totalDiffuseColor + totalSpecularColor;
     }
-    
-    static float3 getSpecularLight(float3 worldPosition,
-                                   float3 unitNormal,
-                                   constant LightData *ld,
-                                   int ldc,
-                                   ShaderMaterial mt,
-                                   float3 cameraPos) {
-        
-        float3 totalSpecularColor = float3(0.0h, 0.0h, 0.0h);
-        float specularness = pow(max(((mt.roughness * -1.0 + 1.0) * 3), 1.0f), 10);
-        
-        for (int i = 0; i < ldc; i++) {
-            LightData data = ld[i];
-            float brightness = data.brightness;
-            
-            const float3 lightDirection = normalize(-data.direction);
-            const float3 toLightVector = normalize(data.position - worldPosition);
-            const float3 toCameraVector = normalize(cameraPos - worldPosition);
-            const float3 halfwayVector = normalize(data.useDirection ? lightDirection : toLightVector + toCameraVector);
-            
-            float specularDot = dot(halfwayVector, unitNormal);
-            if (specularDot < 0.0f) {
-                if (mt.backfaceNormals) {
-                    specularDot = dot(halfwayVector, -unitNormal);
-                } else {
-                    specularDot = clamp(specularDot, 0.0f, 1.0f);
-                }
-            }
-            float3 specularColor = pow(specularDot, specularness) * brightness * data.color.rgb;
-            totalSpecularColor += clamp(specularColor, 0.0h, 1.0h);
-        }
-        
-        return totalSpecularColor;
-    }
 };

@@ -73,7 +73,7 @@ public class Mesh {
                     material = materials[i]
                 }
                 let render = submesh.applyMaterial(renderCommandEncoder: renderCommandEncoder, materialOverride: material)
-                if !render { return }
+                if !render { continue }
                 renderCommandEncoder.drawIndexedPrimitives(type: submesh.primitiveType,
                                                            indexCount: submesh.indexCount,
                                                            indexType: submesh.indexType,
@@ -137,19 +137,21 @@ class Submesh {
     func addMaterial(_ sub: MDLSubmesh) {
         let mdlMat = sub.material!
         let texLoader = TextureLoader()
-        _material = Material()
+        if let property = mdlMat.property(with: .opacity)?.floatValue {
+            _material = Material(property > 0.5 ? .gBuffer : .Transparent, mdlMat.name)
+        } else { _material = Material(.gBuffer, mdlMat.name) }
         _material.shaderMaterial.color = mdlMat.property(with: .baseColor)!.float4Value
         _material.shaderMaterial.emission = mdlMat.property(with: .emission)!.float4Value
         _material.shaderMaterial.roughness = mdlMat.property(with: .roughness)!.floatValue
         _material.shaderMaterial.metallic = mdlMat.property(with: .metallic)!.floatValue
         _material.shaderMaterial.ior = mdlMat.property(with: .materialIndexOfRefraction)!.floatValue
-        _material.shaderMaterial.backfaceNormals = true
         _material.textureColor = loadTexture(semantic: .baseColor, material: mdlMat)
         _material.textureNormal = loadTexture(semantic: .tangentSpaceNormal, material: mdlMat)
         _material.textureEmission = loadTexture(semantic: .emission, material: mdlMat)
         _material.textureMetallic = loadTexture(semantic: .metallic, material: mdlMat)
         _material.textureRoughness = loadTexture(semantic: .roughness, material: mdlMat)
         _material.textureAoRoughMetal = loadTexture(semantic: .ambientOcclusion, material: mdlMat)
+        _material.visible = true
     }
     
     private func loadTexture(semantic: MDLMaterialSemantic, material: MDLMaterial)-> String {
@@ -160,7 +162,6 @@ class Submesh {
     
     func applyMaterial(renderCommandEncoder: MTLRenderCommandEncoder, materialOverride: Material!)-> Bool {
         var applyMat = materialOverride != nil ? materialOverride! : _material!
-        if applyMat.shader == .Lighting { print(applyMat)}
         if applyMat.renderState == Renderer.currentRenderState && applyMat.visible {
             renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[applyMat.shader])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[applyMat.depthStencil])
