@@ -43,12 +43,12 @@ public:
             
             float attenuation;
             if (data.useDirection == false) {
-                attenuation = 1.0f / (1.0f + 0.09f * distanceToLight + 0.032f * pow(distanceToLight, 2));
+                attenuation = 1.0f / (1.0f + 0.09f * distanceToLight + 0.064f * pow(distanceToLight, 2));
             } else {
                 attenuation = brightness;
             }
             
-            float3 ambientColor = (float3(1,1,1) * data.color.rgb) * ambientTerm * attenuation * brightness * data.color.rgb;
+            float3 ambientColor = data.ambient * ambientTerm * attenuation * brightness * data.color.rgb;
             totalAmbientColor += clamp(ambientColor, 0.0f, 1.0f);
             
             float determinant = dot(unitNormal, data.useDirection ? lightDirection : toLightVector);
