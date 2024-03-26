@@ -1,7 +1,9 @@
 # Crynon
 
 ## About ##
-Crynon is a game-engine made with Swift and Metal.
+Crynon is a game-engine made with Swift and Metal. It's emphasis is on procedural worlds and physics and features high fidelity graphics.
+
+Expected time of first beta release in 2025
 
 Updates are posted on Youtube: [KudeKube](https://www.youtube.com/channel/UCXDI-MFA_Gp8vXyaJ80Zc5Q)
 View roadmap on [Trello](https://trello.com/b/eskU0MZE/crynon)
@@ -31,7 +33,8 @@ Here are the current plans for Crynon. Actual roadmap on Trello.
     - [x] Bloom
     - [ ] Depth Of Field
     - [ ] Motion Blur
-- [ ] Tessellation
+- [ ] Mesh shading pipeline
+- [ ] PBR Shaders
 - [x] Transparency and translucency
 
 ### Gameloops ###
@@ -44,7 +47,7 @@ Here are the current plans for Crynon. Actual roadmap on Trello.
 ### Physics ###
 - [x] Motion Dynamics
 - [x] Collision Detection
-- [ ] Collision Resolving (Naive solution implemented)
+- [ ] Collision Solving (Simple solution implemented)
 - [x] Ray casting (Only AABBs at the moment)
 - [ ] AABB Broadphase
 - [ ] Stability Improvements
@@ -59,13 +62,11 @@ Here are the current plans for Crynon. Actual roadmap on Trello.
     - [x] Haptic playback
     - [ ] Haptic customization
 
-### User Interface ###
-- [x] SwiftUI for UI
-- [ ] Premade SwiftUI views for fast use in game
-
-### Level Editor ###
-- [ ] Level file definition
-- [ ] Level editor app
+### Terrain Generation ###
+- [ ] Generating detailed terrain
+- [ ] Planets
+- [ ] Terrain physics
     
 ### Audio ###
-- [ ] Audio playback
+- [ ] Sound effects
+- [ ] Music system
