@@ -6,7 +6,8 @@ using namespace metal;
 
 constexpr sampler samplerFragment (min_filter::linear,
                                    mag_filter::linear,
-                                   mip_filter::linear);
+                                   mip_filter::linear,
+                                   address::repeat);
 
 fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
                                   constant ShaderMaterial &mat [[ buffer(1) ]],

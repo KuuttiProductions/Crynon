@@ -282,7 +282,7 @@ open class RigidBody: Node {
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
         renderCommandEncoder.setVertexBytes(&modelConstant, length: ModelConstant.stride, index: 1)
         renderCommandEncoder.setCullMode(.back)
-        AssetLibrary.meshes[self.mesh].plainDraw(renderCommandEncoder)
+        AssetLibrary.meshes[self.mesh].draw(renderCommandEncoder, materials: materials, applyRPState: false)
         
         super.castShadow(renderCommandEncoder)
     }

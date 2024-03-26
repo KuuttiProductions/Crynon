@@ -18,7 +18,8 @@ struct TransparentFragmentStore {
 };
 
 constexpr sampler samplerFragment (min_filter::linear,
-                                   mag_filter::linear);
+                                   mag_filter::linear,
+                                   address::repeat);
 
 kernel void initTransparentFragmentStore(imageblock<TransparentFragmentValues, imageblock_layout_explicit> blockData,
                                          ushort2 posInThreadGroup [[ thread_position_in_threadgroup ]]) {
