@@ -559,9 +559,11 @@ extension Renderer: MTKViewDelegate {
     
     func compositingRenderPass(commandBuffer: MTLCommandBuffer, view: MTKView) {
         let compositingRenderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: view.currentRenderPassDescriptor!)
+        var constants = CompositionConstant()
+        constants.bloomIntensity = Preferences.graphics.bloomIntensity
         compositingRenderCommandEncoder?.label = "Compositing RenderCommandEncoder"
         compositingRenderCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.Compositing])
-        compositingRenderCommandEncoder?.setFragmentBytes(&Renderer.maxBrightness, length: Float.stride, index: 0)
+        compositingRenderCommandEncoder?.setFragmentBytes(&constants, length: CompositionConstant.stride, index: 0)
         compositingRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures[shadedImage], index: 0)
         compositingRenderCommandEncoder?.setFragmentTexture(AssetLibrary.textures[bloomA], index: 1)
         AssetLibrary.meshes["Quad"].plainDraw(compositingRenderCommandEncoder)

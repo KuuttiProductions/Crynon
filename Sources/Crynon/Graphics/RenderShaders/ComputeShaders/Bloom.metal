@@ -63,10 +63,11 @@ kernel void bloomDownsample(texture2d<float, access::read> textureIn [[ texture(
 }
 
 kernel void bloomUpsample(texture2d<float, access::read> textureIn [[ texture(0) ]],
-                          texture2d<float, access::write> textureOut [[ texture(1) ]],
+                          texture2d<float, access::read_write> textureOut [[ texture(1) ]],
                           constant uint2 &screenSize [[ buffer(0) ]],
                           const ushort2 posInGrid [[ thread_position_in_grid() ]]) {
     const short s = 1;
+    float3 sample = textureOut.read(posInGrid).rgb;
     float3 upsample = float3(0, 0, 0);
     
     short minVal = short(0);
@@ -102,6 +103,6 @@ kernel void bloomUpsample(texture2d<float, access::read> textureIn [[ texture(0)
     upsample += e * 4;
     upsample *= 0.0625;
     
-    textureOut.write(float4(upsample, 1), posInGrid);
+    textureOut.write(float4(sample + upsample, 1), posInGrid);
 }
 

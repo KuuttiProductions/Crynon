@@ -61,6 +61,10 @@ struct FragmentSceneConstant: sizeable {
     var fogDensity: Float = 1.0
 }
 
+struct CompositionConstant: sizeable {
+    var bloomIntensity: Float = 1.0
+}
+
 public struct LightData: sizeable {
     public var brightness: Float = 1.0
     public var ambient: Float = 0.5

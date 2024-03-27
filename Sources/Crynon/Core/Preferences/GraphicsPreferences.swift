@@ -7,6 +7,7 @@ public class GraphicsPreferences {
     public var shadowMapResolution: Int = 1024
     public var useSSAO: Bool = false
     public var useBloom: Bool = false
-    public var bloomThreshold: Float = 1.0
+    public var bloomThreshold: Float = 0.8
+    public var bloomIntensity: Float = 1.0
     public var outputHDR: Bool = false
 }
