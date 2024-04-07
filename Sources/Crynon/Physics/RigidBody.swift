@@ -4,33 +4,33 @@ import MetalKit
 open class RigidBody: Node {
     
     //Physics variables
-    var orientation: simd_float3x3 = simd_float3x3()
-    var invOrientation: simd_float3x3 = simd_float3x3()
+    internal var orientation: simd_float3x3 = simd_float3x3()
+    internal var invOrientation: simd_float3x3 = simd_float3x3()
     
-    var localInvInertiaTensor: simd_float3x3 = simd_float3x3()
-    var globalInvInertiaTensor: simd_float3x3 = simd_float3x3()
+    internal var localInvInertiaTensor: simd_float3x3 = simd_float3x3()
+    internal var globalInvInertiaTensor: simd_float3x3 = simd_float3x3()
     
-    public var mass: Float = 1.0
-    var invMass: Float = 1.0
-    var localCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
-    var globalCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
+    public var mass: Float { return _mass }
+    internal var _mass: Float = 1.0
+    internal var invMass: Float = 1.0
+    internal var localCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
+    internal var globalCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
     
     public var gravityScalar: Float = 1.0
     public var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
     public var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
     
-    var forceAccumulator: simd_float3 = simd_float3(0, 0, 0)
-    var torqueAccumulator: simd_float3 = simd_float3(0, 0, 0)
+    internal var forceAccumulator: simd_float3 = simd_float3(0, 0, 0)
+    internal var torqueAccumulator: simd_float3 = simd_float3(0, 0, 0)
     
-    var scaleMatrix: matrix_float3x3 = matrix_identity_float3x3
+    internal var scaleMatrix: matrix_float3x3 = matrix_identity_float3x3
     
     var colliders: [Collider] = []
     
     var aabbSimple: [simd_float3] = []
     var aabbMin: simd_float3 = simd_float3(repeating: 0)
     var aabbMax: simd_float3 = simd_float3(repeating: 0)
-    
-    public var isActive: Bool = true
+
     public var collides: Bool = true
     var isColliding: Bool = false
     internal var collidingBodies: [String] = []
@@ -159,10 +159,10 @@ open class RigidBody: Node {
         collider.body = self
         
         localCenterOfMass = simd_float3()
-        mass = 0
+        _mass = 0
         
         for collider in colliders {
-            mass += collider.mass
+            _mass += collider.mass
             localCenterOfMass += collider.mass * collider.localCenterOfMass
         }
         
@@ -189,6 +189,11 @@ open class RigidBody: Node {
     
     public func addAngularForce(force: simd_float3) {
         torqueAccumulator += force
+    }
+    
+    public func setMass(mass: Float) {
+        self._mass = mass
+        self.invMass = mass != 0.0 ? 1.0 / mass : 0.0
     }
     
     open func onBeginCollide(collidingObject: RigidBody)-> Bool { return true }
@@ -290,7 +295,7 @@ open class RigidBody: Node {
 
 extension RigidBody {
     public func setPos(_ x: Float, _ y: Float, _ z: Float, teleport: Bool) {
-        if self.isActive {
+        if self.mass == .greatestFiniteMagnitude {
             if !teleport {
                 linearVelocity = simd_float3(0, 0, 0)
                 angularVelocity = simd_float3(0, 0, 0)
@@ -300,7 +305,7 @@ extension RigidBody {
         }
     }
     public func setPos(_ position: simd_float3, teleport: Bool) {
-        if self.isActive {
+        if self.mass == .greatestFiniteMagnitude {
             if !teleport {
                 linearVelocity = simd_float3(0, 0, 0)
                 angularVelocity = simd_float3(0, 0, 0)
@@ -311,7 +316,7 @@ extension RigidBody {
     }
     
     public func addPos(_ value: simd_float3, teleport: Bool) {
-        if self.isActive {
+        if self.mass == .greatestFiniteMagnitude {
             if !teleport {
                 linearVelocity = simd_float3(0, 0, 0)
                 angularVelocity = simd_float3(0, 0, 0)

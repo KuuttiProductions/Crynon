@@ -27,7 +27,7 @@ public:
             
             const float3 lightDirection = normalize(-data.direction);
             const float3 toLightVector = normalize(data.position - worldPosition);
-            const float3 toCameraVector = normalize(cameraPos - worldPosition);
+            const float3 toCameraVector = normalize(cameraPos);
             const float3 halfwayVector = normalize(data.useDirection ? lightDirection : toLightVector + toCameraVector);
             const float distanceToLight = length(data.position - worldPosition);
             
@@ -62,7 +62,7 @@ public:
                 totalDiffuseColor *= lightness;
             }
             
-            float specularDot = clamp(dot(halfwayVector, unitNormal), 0.0f, 1.0f);
+            float specularDot = max(dot(halfwayVector, unitNormal), 0.0f);
             float3 specularColor = pow(specularDot, specularness) * attenuation * brightness * data.color.rgb;
             totalSpecularColor += clamp(specularColor, 0.0f, 1.0f);
             if (data.useDirection == true) {
