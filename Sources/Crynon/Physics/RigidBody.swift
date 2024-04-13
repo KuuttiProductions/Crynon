@@ -193,7 +193,11 @@ open class RigidBody: Node {
     
     public func setMass(mass: Float) {
         self._mass = mass
-        self.invMass = mass != 0.0 ? 1.0 / mass : 0.0
+        if mass < .greatestFiniteMagnitude {
+            self.invMass = 1.0 / mass
+        } else {
+            self.invMass = 0.0
+        }
     }
     
     open func onBeginCollide(collidingObject: RigidBody)-> Bool { return true }
@@ -295,34 +299,28 @@ open class RigidBody: Node {
 
 extension RigidBody {
     public func setPos(_ x: Float, _ y: Float, _ z: Float, teleport: Bool) {
-        if self.mass == .greatestFiniteMagnitude {
-            if !teleport {
-                linearVelocity = simd_float3(0, 0, 0)
-                angularVelocity = simd_float3(0, 0, 0)
-            }
-            setPos(x, y, z)
-            updateGlobalCenterOfMassFromPosition()
+        if !teleport {
+            linearVelocity = simd_float3(0, 0, 0)
+            angularVelocity = simd_float3(0, 0, 0)
         }
+        setPos(x, y, z)
+        updateGlobalCenterOfMassFromPosition()
     }
     public func setPos(_ position: simd_float3, teleport: Bool) {
-        if self.mass == .greatestFiniteMagnitude {
-            if !teleport {
-                linearVelocity = simd_float3(0, 0, 0)
-                angularVelocity = simd_float3(0, 0, 0)
-            }
-            setPos(position)
-            updateGlobalCenterOfMassFromPosition()
+        if !teleport {
+            linearVelocity = simd_float3(0, 0, 0)
+            angularVelocity = simd_float3(0, 0, 0)
         }
+        setPos(position)
+        updateGlobalCenterOfMassFromPosition()
     }
     
     public func addPos(_ value: simd_float3, teleport: Bool) {
-        if self.mass == .greatestFiniteMagnitude {
-            if !teleport {
-                linearVelocity = simd_float3(0, 0, 0)
-                angularVelocity = simd_float3(0, 0, 0)
-            }
-            addPos(value)
-            updateGlobalCenterOfMassFromPosition()
+        if !teleport {
+            linearVelocity = simd_float3(0, 0, 0)
+            angularVelocity = simd_float3(0, 0, 0)
         }
+        addPos(value)
+        updateGlobalCenterOfMassFromPosition()
     }
 }

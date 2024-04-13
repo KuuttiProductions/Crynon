@@ -50,7 +50,7 @@ open class Scene: Node {
     
     override func physicsTick(_ deltaTime: Float) {
         super.physicsTick(deltaTime)
-        physicsManager.step(deltaTime: deltaTime)
+        physicsManager.timeStep(deltaTime: deltaTime)
     }
     
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {

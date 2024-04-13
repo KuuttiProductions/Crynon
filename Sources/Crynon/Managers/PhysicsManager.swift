@@ -4,8 +4,7 @@ import MetalKit
 final class PhysicsManager {
     
     private var _physicsObjects: [RigidBody] = []
-    private var _colliders: [Collider] = []
-    private var _constraints: [Constraint] = []
+    private var _arbiters: [ArbiterKey : Arbiter] = [:]
     var toBeRemoved: [String] = []
     
     func addPhysicsObject(object: RigidBody) {
@@ -24,94 +23,72 @@ final class PhysicsManager {
         toBeRemoved = []
     }
     
-    func step(deltaTime: Float) {
+    func timeStep(deltaTime: Float) {
+        //broadphase()
         
-        //Motion dynamics
+        // Update velocities. Gravity + game input
         for object in _physicsObjects {
-            if object.isActive {
-                object.isColliding = false
-                let gravity = simd_float3(0, Preferences.physics.gravity, 0)
-                object.forceAccumulator += object.mass * (gravity * object.gravityScalar)
-                
-                object.linearVelocity += object.invMass * (object.forceAccumulator * deltaTime)
-                object.angularVelocity += object.globalInvInertiaTensor * (object.torqueAccumulator * deltaTime)
-                
-                object.globalCenterOfMass += object.linearVelocity * deltaTime
-                let axis: simd_float3 = normalize(object.angularVelocity).x.isNaN ? object.angularVelocity : normalize(object.angularVelocity)
-                let angle: Float = length(object.angularVelocity) * deltaTime
-                object.orientation = matrix_float3x3.rotation(axis: axis, angle: angle) * object.orientation
-    
-                object.updateOrientation()
-                object.setRot(simd_float3.rotationFromMatrix(object.orientation))
-                object.updatePositionFromGlobalCenterOfMass()
-                
-                object.forceAccumulator = simd_float3(0, 0, 0)
-                object.torqueAccumulator = simd_float3(0, 0, 0)
-                
-                object.updateInvInertiaTensor()
-            }
+            object.isColliding = false
+            let gravity = simd_float3(0, Preferences.physics.gravity, 0)
+            
+            object.linearVelocity += object.invMass * (gravity + object.forceAccumulator) * deltaTime
+            object.angularVelocity += object.globalInvInertiaTensor * (object.torqueAccumulator * deltaTime)
+            
+            object.forceAccumulator = simd_float3(0, 0, 0)
+            object.torqueAccumulator = simd_float3(0, 0, 0)
         }
         
-        //Update Constraints list
-        for i in 0..<_physicsObjects.count {
-            for u in i+1..<_physicsObjects.count {
-                let object1 = _physicsObjects[i]
-                let object2 = _physicsObjects[u]
-                
-                if !object1.collides || !object2.collides { return }
-                if checkForAABBCollision(object1: object1, object2: object2) {
-                    let gjk = GJK(colliderA: object1.colliders[0], colliderB: object2.colliders[0])
-                    if gjk.overlap {
-                        var interact: Bool = true
-                        if !object1.collidingBodies.contains(object2.uuid) {
-                            object1.collidingBodies.append(object2.uuid)
-                            if !object1.onBeginCollide(collidingObject: object2) { interact = false }
-                        }
-                        if !object2.collidingBodies.contains(object1.uuid) {
-                            object2.collidingBodies.append(object1.uuid)
-                            if !object2.onBeginCollide(collidingObject: object1) { interact = false }
-                        }
-                        object1.isColliding = true
-                        object2.isColliding = true
-                        if interact {
-                            let manifold = generateContactData(colliderA: object1.colliders[0], colliderB: object2.colliders[0], simplex: gjk.simplex)
-                            
-                        }
-                    } else {
-                        if object1.collidingBodies.contains(object2.uuid) {
-                            let index = object1.collidingBodies.firstIndex(of: object2.uuid)!
-                            object1.collidingBodies.remove(at: index)
-                            object1.onEndCollide(collidingObject: object2)
-                        }
-                        if object2.collidingBodies.contains(object1.uuid) {
-                            let index = object2.collidingBodies.firstIndex(of: object1.uuid)!
-                            object2.collidingBodies.remove(at: index)
-                            object2.onEndCollide(collidingObject: object1)
-                        }
-                    }
-                }
-            }
+        // Pre-step
+        for arbiter in _arbiters {
+            arbiter.value.preStep(deltaTime: deltaTime)
         }
         
-        //Solve constraints
-        for _ in 0..<8 {
-            for _constraint in _constraints {
-                if _constraint.manifold != nil {
-                    solveConstraint(constraint: _constraint, deltaTime: deltaTime)
-                }
-            }
+        // Solve collisions
+        for arbiter in _arbiters {
+            arbiter.value.applyImpulse()
         }
+        
+        // Update positions
+        for object in _physicsObjects {
+            object.globalCenterOfMass += object.linearVelocity * deltaTime
+            let axis: simd_float3 = normalize(object.angularVelocity).x.isNaN ? object.angularVelocity : normalize(object.angularVelocity)
+            let angle: Float = length(object.angularVelocity) * deltaTime
+            object.orientation = matrix_float3x3.rotation(axis: axis, angle: angle) * object.orientation
 
-        for _constraint in _constraints {
-            _constraint.reset()
+            object.updateOrientation()
+            object.setRot(simd_float3.rotationFromMatrix(object.orientation))
+            object.updatePositionFromGlobalCenterOfMass()
+            
+            object.updateInvInertiaTensor()
         }
+    }
         
-        removePhysicsObjects()
+    func broadphase() {
+        for i in 0..<_physicsObjects.count {
+            for j in i+1..<_physicsObjects.count {
+                let bodyA = _physicsObjects[i]
+                let bodyB = _physicsObjects[j]
+                let key = ArbiterKey(bodyA: bodyA, bodyB: bodyB)
+                
+                if !checkForAABBCollision(object1: bodyA, object2: bodyB) { _arbiters.removeValue(forKey: key) }
+                
+                let newArbiter = Arbiter(a: bodyA, b: bodyB)
+                if newArbiter.manifold.count > 0 {
+                    if let iter = _arbiters[key] {
+                        iter.update(newManifold: newArbiter.manifold, bodyA: bodyA, bodyB: bodyB)
+                    } else {
+                        _arbiters[key] = newArbiter
+                    }
+                } else {
+                    _arbiters.removeValue(forKey: key)
+                }
+            }
+        }
     }
     
-    func csoSupport(direction: simd_float3,
-                    colliderA: Collider,
-                    colliderB: Collider)-> (support: simd_float3,
+    static func csoSupport(direction: simd_float3,
+                           colliderA: Collider,
+                           colliderB: Collider)-> (support: simd_float3,
                                             supportA: simd_float3,
                                             supportB: simd_float3) {
         let bodyA: RigidBody = colliderA.body
@@ -192,7 +169,7 @@ final class PhysicsManager {
 }
 
 extension PhysicsManager {
-    func GJK(colliderA: Collider, colliderB: Collider)-> (overlap: Bool, simplex: [simd_float3]) {
+    static func GJK(colliderA: Collider, colliderB: Collider)-> (overlap: Bool, simplex: [simd_float3]) {
         var simplex: [simd_float3] = []
         var result: Bool = false
         
@@ -249,13 +226,13 @@ extension PhysicsManager {
         }
         
         let initialDirection = colliderB.body.globalCenterOfMass - colliderA.body.globalCenterOfMass
-        let initialPoint = csoSupport(direction: initialDirection, colliderA: colliderA, colliderB: colliderB).support
+        let initialPoint = PhysicsManager.csoSupport(direction: initialDirection, colliderA: colliderA, colliderB: colliderB).support
         simplex.append(initialPoint)
         
         var dir = normalize(-simplex[0])
         
         for _ in 0...99 {
-            let support = csoSupport(direction: dir, colliderA: colliderA, colliderB: colliderB).support
+            let support = PhysicsManager.csoSupport(direction: dir, colliderA: colliderA, colliderB: colliderB).support
             if dot(normalize(support), dir) < 0 {
                 break
             }
@@ -270,8 +247,8 @@ extension PhysicsManager {
         return (result, simplex)
     }
     
-    func generateContactData(colliderA: Collider, colliderB: Collider, simplex: [simd_float3])-> CollisionData {
-        var contactData = CollisionData()
+    static func generateContactData(colliderA: Collider, colliderB: Collider, simplex: [simd_float3])-> Contact {
+        var contactData = Contact()
         
         epa()
         generateTangents()
@@ -440,9 +417,5 @@ extension PhysicsManager {
         contactData.localContactPointB = colliderB.body.globalToLocal(point: contactData.contactPointB)
         
         return contactData
-    }
-    
-    func solveConstraint(constraint: Constraint, deltaTime: Float) {
-        
     }
 }
