@@ -21,6 +21,7 @@ public struct rayCastResult {
 
 //Generated in the collision detection algorithm
 internal struct Contact {
+    var position: simd_float3!
     var contactPointA: simd_float3!
     var contactPointB: simd_float3!
     var localContactPointA: simd_float3!
@@ -39,4 +40,8 @@ internal struct Contact {
     
     var massNormal: Float!
     var massTangent: Float!
+    var bias: Float!
+    
+    var r1: simd_float3!
+    var r2: simd_float3!
 }

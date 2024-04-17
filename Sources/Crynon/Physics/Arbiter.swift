@@ -12,20 +12,18 @@ struct ArbiterKey: Hashable {
 }
 
 class Arbiter {
-    var manifold: [Contact] = []
+    var manifold: [Contact]! = []
     
     var bodyA: RigidBody
     var bodyB: RigidBody
     
-    init(a: RigidBody, b: RigidBody) {
+    init(a: RigidBody, b: RigidBody, simplex: [simd_float3]) {
         self.bodyA = a
         self.bodyB = b
-        
-        let simplex = PhysicsManager.GJK(colliderA: bodyA.colliders[0], colliderB: bodyB.colliders[0])
-        if !simplex.overlap { return }
+    
         let collision = PhysicsManager.generateContactData(colliderA: bodyA.colliders[0],
                                                            colliderB: bodyB.colliders[0],
-                                                           simplex: simplex.simplex)
+                                                           simplex: simplex)
         
         manifold.append(collision)
     }
@@ -39,7 +37,7 @@ class Arbiter {
             var k = -1
             for j in 0..<manifold.count {
                 let cOld = manifold[j]
-                if cOld.contactNormal == cNew.contactNormal { // this line here!!!!!
+                if cOld.contactPointA == cNew.contactPointA {
                     k = j; break
                 }
             }
@@ -62,13 +60,86 @@ class Arbiter {
         }
         
         self.manifold = mergedContacts
+        
     }
     
     func preStep(deltaTime: Float) {
+        let allowedPenetration: Float = 0.01
+        let biasFactor: Float = Preferences.physics.positionCorrection ? 0.2 : 0.0
         
+        for i in 0..<manifold.count{
+            var c = manifold[i]
+            
+            let r1 = c.position - bodyA.position
+            let r2 = c.position - bodyB.position
+            
+            // Precompute normal mass
+            let rn1 = dot(r1, c.contactNormal)
+            let rn2 = dot(r2, c.contactNormal)
+            var kNormal = bodyA.invMass + bodyB.invMass
+            // TODO: Replace 1.0 with invInertiaTensor!
+            kNormal += 1.0 * (dot(r1, r1) - rn1 * rn1)
+            kNormal += 1.0 * (dot(r2, r2) - rn2 * rn2)
+            c.massNormal = 1.0 / kNormal
+            
+            // Precompute tangent mass
+            var tangent = c.contactTangentA!
+            let rt1 = dot(r1, tangent)
+            let rt2 = dot(r2, tangent)
+            var kTangent = bodyA.invMass + bodyB.invMass
+            kNormal += 1.0 * (dot(r1, r1) - rt1 * rt1)
+            kNormal += 1.0 * (dot(r2, r2) - rt2 * rt2)
+            c.massTangent = 1.0 / kTangent
+            
+            // Precompute bias
+            c.bias = -biasFactor * (1.0 / deltaTime) * min(0.0, c.depth + allowedPenetration)
+            
+            manifold[i] = c
+            
+            // TODO: Impulse accumulation
+            if Preferences.physics.accumulateImpulses {
+                
+            }
+        }
     }
     
     func applyImpulse() {
-        
+        for i in 0..<manifold.count {
+            var c = manifold[i]
+            
+            c.r1 = c.position - bodyA.position
+            c.r2 = c.position - bodyB.position
+            
+            // Relative velocity at contact point
+            var dv: simd_float3 = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+            
+            // Compute normal impulse
+            let vn = dot(dv, c.contactNormal) // Velocity along normal
+            
+            var dPn = c.massNormal * (-vn + c.bias) // Normal impulse
+            
+            if Preferences.physics.accumulateImpulses {
+                // Clamp the accumulated impulse
+                let pn0 = c.pn!
+                c.pn = max(pn0 + dPn, 0.0)
+                dPn = c.pn - pn0
+            } else {
+                // Clamp the normal impulse
+                dPn = max(dPn, 0.0)
+            }
+            
+            // Apply normal/contact impulse
+            let pn = dPn * c.contactNormal
+            
+            bodyA.linearVelocity -= bodyA.invMass * pn
+            bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pn)
+            
+            bodyB.linearVelocity += bodyB.invMass * pn
+            bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pn)
+            
+            // TODO: ADD FRICTION IMPULSES
+            
+            manifold[i] = c
+        }
     }
 }

@@ -24,7 +24,7 @@ final class PhysicsManager {
     }
     
     func timeStep(deltaTime: Float) {
-        //broadphase()
+        broadphase()
         
         // Update velocities. Gravity + game input
         for object in _physicsObjects {
@@ -45,7 +45,10 @@ final class PhysicsManager {
         
         // Solve collisions
         for arbiter in _arbiters {
-            arbiter.value.applyImpulse()
+            for _ in 0..<Preferences.physics.iterations {
+                arbiter.value.applyImpulse()
+
+            }
         }
         
         // Update positions
@@ -70,9 +73,11 @@ final class PhysicsManager {
                 let bodyB = _physicsObjects[j]
                 let key = ArbiterKey(bodyA: bodyA, bodyB: bodyB)
                 
-                if !checkForAABBCollision(object1: bodyA, object2: bodyB) { _arbiters.removeValue(forKey: key) }
+                if !checkForAABBCollision(object1: bodyA, object2: bodyB) { _arbiters.removeValue(forKey: key); continue }
+                let simplex = PhysicsManager.GJK(colliderA: bodyA.colliders[0], colliderB: bodyB.colliders[0])
+                if !simplex.overlap { _arbiters.removeValue(forKey: key); continue }
                 
-                let newArbiter = Arbiter(a: bodyA, b: bodyB)
+                let newArbiter = Arbiter(a: bodyA, b: bodyB, simplex: simplex.simplex)
                 if newArbiter.manifold.count > 0 {
                     if let iter = _arbiters[key] {
                         iter.update(newManifold: newArbiter.manifold, bodyA: bodyA, bodyB: bodyB)

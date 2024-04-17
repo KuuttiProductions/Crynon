@@ -5,4 +5,6 @@ public class PhysicsPreferences {
     public var accumulateImpulses: Bool = false
     public var positionCorrection: Bool = true
     public var warmStarting: Bool = true
+    
+    public var iterations: Int = 4
 }
