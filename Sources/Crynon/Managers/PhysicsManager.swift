@@ -5,22 +5,9 @@ final class PhysicsManager {
     
     private var _physicsObjects: [RigidBody] = []
     private var _arbiters: [ArbiterKey : Arbiter] = [:]
-    var toBeRemoved: [String] = []
     
     func addPhysicsObject(object: RigidBody) {
         _physicsObjects.append(object)
-    }
-    
-    func removePhysicsObjects() {
-        for uuid in toBeRemoved {
-            for (i, element) in _physicsObjects.enumerated() {
-                if element.uuid == uuid {
-                    _physicsObjects.remove(at: i)
-                    break
-                }
-            }
-        }
-        toBeRemoved = []
     }
     
     func timeStep(deltaTime: Float) {
@@ -29,10 +16,9 @@ final class PhysicsManager {
         // Update velocities. Gravity + game input
         for object in _physicsObjects {
             object.isColliding = false
-            let gravity = simd_float3(0, Preferences.physics.gravity, 0)
             
-            object.linearVelocity += object.invMass * (gravity + object.forceAccumulator) * deltaTime
-            object.angularVelocity += object.globalInvInertiaTensor * (object.torqueAccumulator * deltaTime)
+            object.linearVelocity += object.invMass * (Prefs.physics.gravity + object.forceAccumulator) * deltaTime
+            object.angularVelocity += object.InvInertiaTensor * (object.torqueAccumulator * deltaTime)
             
             object.forceAccumulator = simd_float3(0, 0, 0)
             object.torqueAccumulator = simd_float3(0, 0, 0)
@@ -41,28 +27,31 @@ final class PhysicsManager {
         // Pre-step
         for arbiter in _arbiters {
             arbiter.value.preStep(deltaTime: deltaTime)
+            for x in arbiter.value.manifold {
+                Debug.pointAndLine.addPointsToDraw(points: [PointVertex(position: x.position)])
+                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactNormal)])
+                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactTangentA)])
+            }
         }
         
         // Solve collisions
         for arbiter in _arbiters {
             for _ in 0..<Preferences.physics.iterations {
                 arbiter.value.applyImpulse()
-
             }
         }
         
         // Update positions
         for object in _physicsObjects {
             object.globalCenterOfMass += object.linearVelocity * deltaTime
-            let axis: simd_float3 = normalize(object.angularVelocity).x.isNaN ? object.angularVelocity : normalize(object.angularVelocity)
-            let angle: Float = length(object.angularVelocity) * deltaTime
-            object.orientation = matrix_float3x3.rotation(axis: axis, angle: angle) * object.orientation
-
-            object.updateOrientation()
-            object.setRot(simd_float3.rotationFromMatrix(object.orientation))
-            object.updatePositionFromGlobalCenterOfMass()
             
-            object.updateInvInertiaTensor()
+            let norm = normalize(object.angularVelocity)
+            let axis: simd_float3 = norm.x.isNaN || norm.y.isNaN || norm.z.isNaN ? object.angularVelocity : norm
+            let angle: Float = length(object.angularVelocity) * deltaTime
+            object.orientation = rotation(axis: axis, angle: angle) * object.orientation
+            
+            object.setRot(rotationFromMatrix(object.orientation))
+            object.updatePositionFromGlobalCenterOfMass()
         }
     }
         
@@ -119,7 +108,6 @@ final class PhysicsManager {
                 }
             }
         }
-        
         return false
     }
     
@@ -416,6 +404,7 @@ extension PhysicsManager {
             contactData.contactPointA = supportA
             contactData.contactPointB = supportB
             contactData.depth = minDistance
+            contactData.position = supportA
         }
         
         contactData.localContactPointA = colliderA.body.globalToLocal(point: contactData.contactPointA)

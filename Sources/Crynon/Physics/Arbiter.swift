@@ -17,6 +17,8 @@ class Arbiter {
     var bodyA: RigidBody
     var bodyB: RigidBody
     
+    var friction: Float
+    
     init(a: RigidBody, b: RigidBody, simplex: [simd_float3]) {
         self.bodyA = a
         self.bodyB = b
@@ -24,7 +26,7 @@ class Arbiter {
         let collision = PhysicsManager.generateContactData(colliderA: bodyA.colliders[0],
                                                            colliderB: bodyB.colliders[0],
                                                            simplex: simplex)
-        
+        friction = sqrtf(bodyA.friction * bodyB.friction)
         manifold.append(collision)
     }
     
@@ -33,7 +35,7 @@ class Arbiter {
         var mergedContacts: [Contact] = .init(repeating: Contact(), count: manifold.count)
         
         for i in 0..<newManifold.count {
-            var cNew = manifold[i]
+            var cNew = newManifold[i]
             var k = -1
             for j in 0..<manifold.count {
                 let cOld = manifold[j]
@@ -72,7 +74,7 @@ class Arbiter {
             
             let r1 = c.position - bodyA.position
             let r2 = c.position - bodyB.position
-            
+
             // Precompute normal mass
             let rn1 = dot(r1, c.contactNormal)
             let rn2 = dot(r2, c.contactNormal)
@@ -87,8 +89,8 @@ class Arbiter {
             let rt1 = dot(r1, tangent)
             let rt2 = dot(r2, tangent)
             var kTangent = bodyA.invMass + bodyB.invMass
-            kNormal += 1.0 * (dot(r1, r1) - rt1 * rt1)
-            kNormal += 1.0 * (dot(r2, r2) - rt2 * rt2)
+            kTangent += 1.0 * (dot(r1, r1) - rt1 * rt1)
+            kTangent += 1.0 * (dot(r2, r2) - rt2 * rt2)
             c.massTangent = 1.0 / kTangent
             
             // Precompute bias
@@ -96,9 +98,14 @@ class Arbiter {
             
             manifold[i] = c
             
-            // TODO: Impulse accumulation
             if Preferences.physics.accumulateImpulses {
+                let p: simd_float3 = c.pn * c.contactNormal * tangent
                 
+                bodyA.linearVelocity -= bodyA.invMass * p
+                bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, p)
+                
+                bodyB.linearVelocity += bodyB.invMass * p
+                bodyB.angularVelocity += bodyB.invMass * cross(c.r2, p)
             }
         }
     }
@@ -112,11 +119,10 @@ class Arbiter {
             
             // Relative velocity at contact point
             var dv: simd_float3 = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+
+            let vn = dot(dv, c.contactNormal) // Relative velocity along normal
             
-            // Compute normal impulse
-            let vn = dot(dv, c.contactNormal) // Velocity along normal
-            
-            var dPn = c.massNormal * (-vn + c.bias) // Normal impulse
+            var dPn: Float = c.massNormal * (-vn + c.bias) // Magnitude of normal impulse
             
             if Preferences.physics.accumulateImpulses {
                 // Clamp the accumulated impulse
@@ -129,15 +135,39 @@ class Arbiter {
             }
             
             // Apply normal/contact impulse
-            let pn = dPn * c.contactNormal
+            let pn = dPn * c.contactNormal // Normal impulse
             
             bodyA.linearVelocity -= bodyA.invMass * pn
-            bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pn)
+            //bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pn)
             
             bodyB.linearVelocity += bodyB.invMass * pn
-            bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pn)
+            //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pn)
             
-            // TODO: ADD FRICTION IMPULSES
+            //TODO: Friction
+//            dv = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+//            
+//            var tangent = c.contactTangentA!
+//            var vt = dot(dv, tangent)
+//            var dPt = c.massTangent * -vt
+//            
+//            if Preferences.physics.accumulateImpulses {
+//                let maxPt = friction * c.pn
+//                
+//                let pt0 = c.pt!
+//                c.pt = simd_clamp(pt0 + dPt, -maxPt, maxPt)
+//                dPt = c.pt - pt0
+//            } else {
+//                let maxPt = friction * dPn
+//                dPt = simd_clamp(dPt, -maxPt, maxPt)
+//            }
+//            
+//            var pt = dPt * tangent
+//            
+//            bodyA.linearVelocity -= bodyA.invMass * pt
+//            bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pt)
+//            
+//            bodyB.linearVelocity += bodyB.invMass * pt
+//            bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pt)
             
             manifold[i] = c
         }

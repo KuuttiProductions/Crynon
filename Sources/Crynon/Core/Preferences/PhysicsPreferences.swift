@@ -1,6 +1,8 @@
 
+import simd
+
 public class PhysicsPreferences {
-    public var gravity: Float = -9.81
+    public var gravity: simd_float3 = simd_float3(0, -9.81, 0)
     
     public var accumulateImpulses: Bool = false
     public var positionCorrection: Bool = true

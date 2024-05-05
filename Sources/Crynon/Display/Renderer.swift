@@ -357,6 +357,7 @@ extension Renderer: MTKViewDelegate {
         opaqueCommandEncoder?.pushDebugGroup("Opaque fill")
         Renderer.currentRenderState = .Opaque
         SceneManager.render(opaqueCommandEncoder)
+        Debug.render(opaqueCommandEncoder!)
         opaqueCommandEncoder?.popDebugGroup()
         opaqueCommandEncoder?.endEncoding()
     }

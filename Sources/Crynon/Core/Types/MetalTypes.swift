@@ -43,8 +43,13 @@ public struct Vertex: sizeable {
 }
 
 public struct PointVertex: sizeable {
-    var position: simd_float3 = simd_float3(0,0,0)
-    var pointSize: Float = 1
+    var position: simd_float3
+    var pointSize: Float
+    
+    public init(position: simd_float3 = simd_float3(0, 0, 0), pointSize: Float = 50) {
+        self.position = position
+        self.pointSize = pointSize
+    }
 }
 
 struct ModelConstant: sizeable {

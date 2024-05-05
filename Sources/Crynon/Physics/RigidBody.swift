@@ -4,11 +4,10 @@ import MetalKit
 open class RigidBody: Node {
     
     //Physics variables
-    internal var orientation: simd_float3x3 = simd_float3x3()
-    internal var invOrientation: simd_float3x3 = simd_float3x3()
+    internal var orientation: simd_float3x3 = matrix_identity_float3x3 // Rotation
+    internal var invOrientation: simd_float3x3 = matrix_identity_float3x3
     
-    internal var localInvInertiaTensor: simd_float3x3 = simd_float3x3()
-    internal var globalInvInertiaTensor: simd_float3x3 = simd_float3x3()
+    internal var InvInertiaTensor: simd_float3x3 = matrix_identity_float3x3
     
     public var mass: Float { return _mass }
     internal var _mass: Float = 1.0
@@ -17,6 +16,7 @@ open class RigidBody: Node {
     internal var globalCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
     
     public var gravityScalar: Float = 1.0
+    public var friction: Float = 1.0
     public var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
     public var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
     
@@ -55,19 +55,6 @@ open class RigidBody: Node {
     
     public override init(_ name: String) {
         super.init(name)
-        
-        self.orientation.columns = (
-            simd_float3(1, 0, 0),
-            simd_float3(0, 1, 0),
-            simd_float3(0, 0, 1)
-        )
-        self.invOrientation = self.orientation.inverse
-        
-        self.globalInvInertiaTensor.columns = (
-            simd_float3(1, 0, 0),
-            simd_float3(0, 1, 0),
-            simd_float3(0, 0, 1)
-        )
         
         let verticePointer = AssetLibrary.meshes[mesh].vertexBuffer.contents()
         var positions: [simd_float3] = []
@@ -143,16 +130,6 @@ open class RigidBody: Node {
     internal func updatePositionFromGlobalCenterOfMass() {
         setPos(orientation * (-localCenterOfMass) + globalCenterOfMass)
     }
-    internal func updateOrientation() {
-        var quat: simd_quatf = simd_quatf(orientation)
-        quat = quat.normalized
-        orientation = matrix_float3x3(quat)
-        
-        invOrientation = orientation.inverse
-    }
-    internal func updateInvInertiaTensor() {
-        globalInvInertiaTensor = orientation * localInvInertiaTensor * invOrientation
-    }
     
     internal func addCollider(_ collider: Collider) {
         colliders.append(collider)
@@ -178,13 +155,11 @@ open class RigidBody: Node {
             
             localInertiaTensor += collider.localInertiaTensor + collider.mass * (rDotR * matrix_identity_float3x3 - rOutR)
         }
-        
-        localInvInertiaTensor = localInertiaTensor.inverse
     }
     
     public  func addForce(force: simd_float3, at: simd_float3) {
         forceAccumulator += force
-        torqueAccumulator += cross((at - localCenterOfMass), force)
+        torqueAccumulator += cross(at - localCenterOfMass, force)
     }
     
     public func addAngularForce(force: simd_float3) {

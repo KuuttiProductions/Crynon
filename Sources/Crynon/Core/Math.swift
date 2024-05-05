@@ -201,67 +201,81 @@ extension matrix_float3x3 {
         
         self = matrix_multiply(self, result)
     }
-    
-    static func rotation(axis: simd_float3, angle: Float)-> matrix_float3x3 {
-        var result = matrix_float3x3()
-        
-        let x = axis.x
-        let y = axis.y
-        let z = axis.z
-        let o = angle
-        
-        let r1c1: Float = cos(o) + pow(x, 2) * (1 - cos(o))
-        let r1c2: Float = x * y * (1 - cos(o)) - z * sin(o)
-        let r1c3: Float = x * z * (1 - cos(o)) + y * sin(o)
-        
-        let r2c1: Float = y * x * (1 - cos(o)) + z * sin(o)
-        let r2c2: Float = cos(o) + pow(y, 2) * (1 - cos(o))
-        let r2c3: Float = y * z * (1 - cos(o)) - x * sin(o)
-        
-        let r3c1: Float = z * x * (1 - cos(o)) - y * sin(o)
-        let r3c2: Float = z * y * (1 - cos(o)) + x * sin(o)
-        let r3c3: Float = cos(o) + pow(z, 2) * (1 - cos(o))
-        
-        result.columns = (
-            simd_float3(r1c1, r1c2, r1c3),
-            simd_float3(r2c1, r2c2, r2c3),
-            simd_float3(r3c1, r3c2, r3c3)
-        )
-        return result
-    }
-    
-    static func rotation(direction: simd_float3, up: simd_float3 = simd_float3(0, 1, 0))-> matrix_float3x3 {
-        var result = matrix_float3x3()
-        
-        let xAxis = normalize(cross(up, direction))
-        let yAxis = normalize(cross(direction, xAxis))
-        
-        result.columns = (
-            simd_float3(    xAxis.x,     xAxis.y,     xAxis.z),
-            simd_float3(    yAxis.x,     yAxis.y,     yAxis.z),
-            simd_float3(direction.x, direction.y, direction.z)
-        )
-    
-        return result
-    }
 }
 
-extension simd_float3 {
-    static func rotationFromMatrix(_ matrix: simd_float3x3)-> simd_float3 {
-        let trace = matrix[0][0] + matrix[1][1] + matrix[2][2]
-        let cosTheta = (trace - 1.0) * 0.5
-        let angle = acos(cosTheta)
-        
-        var axis: simd_float3
-        if abs(angle) < 1e-6 {
-            axis = simd_float3(1.0, 0.0, 0.0)
-        } else {
-            axis = simd_float3(matrix[2][1] - matrix[1][2],
-                               matrix[0][2] - matrix[2][0],
-                               matrix[1][0] - matrix[0][1])
-            axis = normalize(axis)
-        }
-        
-        return axis * angle
+func rotation(axis: simd_float3, angle: Float)-> matrix_float3x3 {
+    var result = matrix_float3x3()
+    
+    let x = axis.x
+    let y = axis.y
+    let z = axis.z
+    let o = angle
+    
+    let r1c1: Float = cos(o) + pow(x, 2) * (1 - cos(o))
+    let r1c2: Float = x * y * (1 - cos(o)) - z * sin(o)
+    let r1c3: Float = x * z * (1 - cos(o)) + y * sin(o)
+    
+    let r2c1: Float = y * x * (1 - cos(o)) + z * sin(o)
+    let r2c2: Float = cos(o) + pow(y, 2) * (1 - cos(o))
+    let r2c3: Float = y * z * (1 - cos(o)) - x * sin(o)
+    
+    let r3c1: Float = z * x * (1 - cos(o)) - y * sin(o)
+    let r3c2: Float = z * y * (1 - cos(o)) + x * sin(o)
+    let r3c3: Float = cos(o) + pow(z, 2) * (1 - cos(o))
+    
+    result.columns = (
+        simd_float3(r1c1, r1c2, r1c3),
+        simd_float3(r2c1, r2c2, r2c3),
+        simd_float3(r3c1, r3c2, r3c3)
+    )
+    return result
+}
+
+func rotation(direction: simd_float3, up: simd_float3 = simd_float3(0, 1, 0))-> matrix_float3x3 {
+    var result = matrix_float3x3()
+    
+    let xAxis = normalize(cross(up, direction))
+    let yAxis = normalize(cross(direction, xAxis))
+    
+    result.columns = (
+        simd_float3(    xAxis.x,     xAxis.y,     xAxis.z),
+        simd_float3(    yAxis.x,     yAxis.y,     yAxis.z),
+        simd_float3(direction.x, direction.y, direction.z)
+    )
+
+    return result
+}
+
+func crossMat(_ value: simd_float3)-> simd_float3x3 {
+    var result = simd_float3x3()
+    
+    let x = value.x
+    let y = value.y
+    let z = value.z
+    
+    result.columns = (
+        simd_float3( 0, -z,  y),
+        simd_float3( z,  0, -x),
+        simd_float3(-y,  x,  0)
+    )
+    
+    return result
+}
+
+func rotationFromMatrix(_ matrix: simd_float3x3)-> simd_float3 {
+    let trace = matrix[0][0] + matrix[1][1] + matrix[2][2]
+    let cosTheta = (trace - 1.0) * 0.5
+    let angle = acos(cosTheta)
+    
+    var axis: simd_float3
+    if abs(angle) < 1e-6 {
+        axis = simd_float3(1.0, 0.0, 0.0)
+    } else {
+        axis = simd_float3(matrix[2][1] - matrix[1][2],
+                           matrix[0][2] - matrix[2][0],
+                           matrix[1][0] - matrix[0][1])
+        axis = normalize(axis)
     }
+    
+    return axis * angle
 }

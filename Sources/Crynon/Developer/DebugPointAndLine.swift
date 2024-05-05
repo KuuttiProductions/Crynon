@@ -2,6 +2,39 @@
 import MetalKit
 
 public class Debug_PointAndLine {
+    
+    var points: [PointVertex] = []
+    var lines: [PointVertex] = []
+    
+    public func addPointsToDraw(points: [PointVertex]) {
+        self.points.append(contentsOf: points)
+    }
+    
+    public func addLinesToDraw(lines: [PointVertex]) {
+        self.lines.append(contentsOf: lines)
+    }
+    
+    internal func render(renderCommandEncoder: MTLRenderCommandEncoder) {
+        var color = simd_float4(0, 1, 0, 1)
+        if points.isEmpty { return }
+        renderCommandEncoder.pushDebugGroup("Rendering \(points.count) points")
+        setDefaults(renderCommandEncoder)
+        renderCommandEncoder.setVertexBytes(points, length: PointVertex.stride(count: points.count), index: 0)
+        renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
+        renderCommandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: points.count)
+        renderCommandEncoder.popDebugGroup()
+        points.removeAll()
+        
+        if lines.isEmpty { return }
+        renderCommandEncoder.pushDebugGroup("Rendering \(lines.count / 2) lines")
+        setDefaults(renderCommandEncoder)
+        renderCommandEncoder.setVertexBytes(lines, length: PointVertex.stride(count: lines.count), index: 0)
+        renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
+        renderCommandEncoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: lines.count)
+        renderCommandEncoder.popDebugGroup()
+        lines.removeAll()
+    }
+    
     public func drawPoints(renderCommandEncoder: MTLRenderCommandEncoder, positions: [simd_float3], color: simd_float4 = simd_float4(1,1,1,1), pointSize: Float = 10) {
         var points: [PointVertex] = []
         var color: simd_float4 = color
@@ -74,7 +107,7 @@ public class Debug_PointAndLine {
         renderCommandEncoder.popDebugGroup()
     }
     
-    public func setDefaults(_ renderCommandEncoder: MTLRenderCommandEncoder) {
+    private func setDefaults(_ renderCommandEncoder: MTLRenderCommandEncoder) {
         renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.PointAndLine])
         renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.Less])
     }

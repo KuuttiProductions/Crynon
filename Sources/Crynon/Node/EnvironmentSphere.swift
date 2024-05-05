@@ -14,9 +14,10 @@ open class EnvironmentSphere: Node {
     override func render(_ renderCommandEncoder: MTLRenderCommandEncoder!) {
         if Preferences.graphics.useSkySphere && Renderer.currentRenderState == .Opaque {
             renderCommandEncoder.pushDebugGroup("Rendering \(name!)")
+            renderCommandEncoder.setRenderPipelineState(GPLibrary.renderPipelineStates[.Sky])
             renderCommandEncoder.setDepthStencilState(GPLibrary.depthStencilStates[.NoWriteLess])
             renderCommandEncoder.setVertexBytes(&self.modelConstant, length: ModelConstant.stride, index: 1)
-            AssetLibrary.meshes["Sphere"].draw(renderCommandEncoder, materials: [material])
+            AssetLibrary.meshes["Sphere"].draw(renderCommandEncoder, materials: [material], applyRPState: false)
             super.render(renderCommandEncoder)
         }
     }
