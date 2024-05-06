@@ -31,6 +31,7 @@ final class PhysicsManager {
                 Debug.pointAndLine.addPointsToDraw(points: [PointVertex(position: x.position)])
                 Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactNormal)])
                 Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactTangentA)])
+                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactTangentB)])
             }
         }
         

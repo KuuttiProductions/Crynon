@@ -299,7 +299,7 @@ extension Renderer: MTKViewDelegate {
         let commandBuffer = Core.commandQueue.makeCommandBuffer()
         commandBuffer?.label = "Main CommandBuffer"
         
-        Renderer.currentDeltaTime = 1/Float(view.preferredFramesPerSecond)
+        Renderer.currentDeltaTime = 1.0 / Float(view.preferredFramesPerSecond)
         Renderer.time += Renderer.currentDeltaTime
         
         //Update scene

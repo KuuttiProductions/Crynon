@@ -94,7 +94,7 @@ class Arbiter {
             c.massTangent = 1.0 / kTangent
             
             // Precompute bias
-            c.bias = -biasFactor * (1.0 / deltaTime) * min(0.0, c.depth + allowedPenetration)
+            c.bias = -biasFactor * (1.0 / deltaTime) * min(0.0, -c.depth + allowedPenetration)
             
             manifold[i] = c
             
@@ -122,6 +122,7 @@ class Arbiter {
 
             let vn = dot(dv, c.contactNormal) // Relative velocity along normal
             
+            Debug.viewStateCenter.param1 = c.bias
             var dPn: Float = c.massNormal * (-vn + c.bias) // Magnitude of normal impulse
             
             if Preferences.physics.accumulateImpulses {
