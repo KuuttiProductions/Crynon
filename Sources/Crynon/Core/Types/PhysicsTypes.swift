@@ -24,22 +24,21 @@ internal struct Contact {
     var position: simd_float3!
     var contactPointA: simd_float3!
     var contactPointB: simd_float3!
-    var localContactPointA: simd_float3!
-    var localContactPointB: simd_float3!
     
     var contactNormal: simd_float3!
-    
     var contactTangentA: simd_float3!
     var contactTangentB: simd_float3!
     
     var depth: Float!
     
     var pn: Float!
-    var pt: Float!
+    var pta: Float!
+    var ptb: Float!
     var pnb: Float!
     
     var massNormal: Float!
-    var massTangent: Float!
+    var massTangentA: Float!
+    var massTangentB: Float!
     var bias: Float!
     
     var r1: simd_float3!

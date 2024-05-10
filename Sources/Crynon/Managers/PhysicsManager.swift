@@ -408,9 +408,6 @@ extension PhysicsManager {
             contactData.position = supportA
         }
         
-        contactData.localContactPointA = colliderA.body.globalToLocal(point: contactData.contactPointA)
-        contactData.localContactPointB = colliderB.body.globalToLocal(point: contactData.contactPointB)
-        
         return contactData
     }
 }
