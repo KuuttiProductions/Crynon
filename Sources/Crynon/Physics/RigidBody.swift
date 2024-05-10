@@ -16,7 +16,9 @@ open class RigidBody: Node {
     internal var globalCenterOfMass: simd_float3 = simd_float3(0, 0, 0)
     
     public var gravityScalar: Float = 1.0
-    public var friction: Float = 1.0
+    public var friction: Float = 0.5
+    public var bounciness: Float = 0.0
+    
     public var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
     public var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
     

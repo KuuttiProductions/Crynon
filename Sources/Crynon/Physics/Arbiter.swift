@@ -85,7 +85,7 @@ class Arbiter {
             c.massNormal = 1.0 / kNormal
             
             // Precompute tangent mass
-            var tangent = c.contactTangentA!
+            var tangent = c.contactTangentB!
             let rt1 = dot(r1, tangent)
             let rt2 = dot(r2, tangent)
             var kTangent = bodyA.invMass + bodyB.invMass
@@ -144,31 +144,30 @@ class Arbiter {
             bodyB.linearVelocity += bodyB.invMass * pn
             //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pn)
             
-            //TODO: Friction
-//            dv = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
-//            
-//            var tangent = c.contactTangentA!
-//            var vt = dot(dv, tangent)
-//            var dPt = c.massTangent * -vt
-//            
-//            if Preferences.physics.accumulateImpulses {
-//                let maxPt = friction * c.pn
-//                
-//                let pt0 = c.pt!
-//                c.pt = simd_clamp(pt0 + dPt, -maxPt, maxPt)
-//                dPt = c.pt - pt0
-//            } else {
-//                let maxPt = friction * dPn
-//                dPt = simd_clamp(dPt, -maxPt, maxPt)
-//            }
-//            
-//            var pt = dPt * tangent
-//            
-//            bodyA.linearVelocity -= bodyA.invMass * pt
-//            bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pt)
-//            
-//            bodyB.linearVelocity += bodyB.invMass * pt
-//            bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pt)
+            dv = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+            
+            var tangent = c.contactTangentB!
+            var vt = dot(dv, tangent) // Relative velocity along tangent
+            var dPt = c.massTangent * -vt
+            
+            if Preferences.physics.accumulateImpulses {
+                let maxPt = friction * c.pn
+                
+                let pt0 = c.pt!
+                c.pt = simd_clamp(pt0 + dPt, -maxPt, maxPt)
+                dPt = c.pt - pt0
+            } else {
+                let maxPt = friction * dPn * 0.1
+                dPt = simd_clamp(dPt, -maxPt, maxPt)
+            }
+            
+            var pt = dPt * tangent
+            
+            bodyA.linearVelocity -= bodyA.invMass * pt
+            //bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pt)
+            
+            bodyB.linearVelocity += bodyB.invMass * pt
+            //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pt)
             
             manifold[i] = c
         }
