@@ -53,6 +53,7 @@ final class PhysicsManager {
             
             object.setRot(rotationFromMatrix(object.orientation))
             object.updatePositionFromGlobalCenterOfMass()
+            object.updateOrientation()
         }
     }
         

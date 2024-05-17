@@ -24,7 +24,7 @@ open class Node {
     
     internal var modelConstant = ModelConstant()
     
-    internal var modelMatrix: matrix_float4x4 {
+    open var modelMatrix: matrix_float4x4 {
         var modelMatrix = matrix_identity_float4x4
         modelMatrix.translate(position: position)
         modelMatrix.rotate(direction: rotation.x, axis: .AxisX)

@@ -6,6 +6,7 @@ open class RigidBody: Node {
     //Physics variables
     internal var orientation: simd_float3x3 = matrix_identity_float3x3 // Rotation
     internal var invOrientation: simd_float3x3 = matrix_identity_float3x3
+    internal var rotationMatrix: simd_float4x4 = matrix_identity_float4x4
     
     internal var InvInertiaTensor: simd_float3x3 = matrix_identity_float3x3
     
@@ -109,6 +110,15 @@ open class RigidBody: Node {
         ]
     }
     
+    // Override modelMatrix to use RigidBodies rotationMatrix
+    public override var modelMatrix: matrix_float4x4 {
+        var modelMatrix = matrix_identity_float4x4
+        modelMatrix.translate(position: position)
+        modelMatrix = matrix_multiply(modelMatrix, rotationMatrix)
+        modelMatrix.scale(scale)
+        return modelMatrix
+    }
+    
     public func addCollider(_ mesh: String) {
         self.addCollider(Collider(mesh: mesh))
     }
@@ -126,6 +136,13 @@ open class RigidBody: Node {
         return orientation * dir
     }
     
+    // Re-orthogonalize orientation and update rotationMatrix
+    internal func updateOrientation() {
+        let quaternion: simd_quatf = simd_quatf(orientation)
+        let unitQuaternion = quaternion.normalized
+        orientation = matrix_float3x3(unitQuaternion)
+        rotationMatrix = matrix_float4x4(unitQuaternion)
+    }
     internal func updateGlobalCenterOfMassFromPosition() {
         globalCenterOfMass = orientation * localCenterOfMass + position
     }

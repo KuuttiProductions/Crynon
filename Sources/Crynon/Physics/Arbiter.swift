@@ -154,6 +154,7 @@ class Arbiter {
             bodyB.linearVelocity += bodyB.invMass * pn
             //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pn)
             
+            // TANGENT A
             dv = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
             
             var tangent = c.contactTangentA!
@@ -179,6 +180,9 @@ class Arbiter {
             bodyB.linearVelocity += bodyB.invMass * pt
             //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pt)
             
+            // TANGENT B
+            dv = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+        
             tangent = c.contactTangentB!
             vt = dot(dv, tangent) // Relative velocity along tangent
             dPt = c.massTangentB * -vt
