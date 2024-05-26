@@ -142,6 +142,7 @@ open class RigidBody: Node {
         let unitQuaternion = quaternion.normalized
         orientation = matrix_float3x3(unitQuaternion)
         rotationMatrix = matrix_float4x4(unitQuaternion)
+        invOrientation = orientation.inverse
     }
     internal func updateGlobalCenterOfMassFromPosition() {
         globalCenterOfMass = orientation * localCenterOfMass + position
@@ -174,6 +175,8 @@ open class RigidBody: Node {
             
             localInertiaTensor += collider.localInertiaTensor + collider.mass * (rDotR * matrix_identity_float3x3 - rOutR)
         }
+        
+        invOrientation = orientation.inverse
     }
     
     public  func addForce(force: simd_float3, at: simd_float3) {

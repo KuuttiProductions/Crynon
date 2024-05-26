@@ -8,5 +8,5 @@ public class PhysicsPreferences {
     public var positionCorrection: Bool = true
     public var warmStarting: Bool = true
     
-    public var iterations: Int = 4
+    public var iterations: Int = 8
 }

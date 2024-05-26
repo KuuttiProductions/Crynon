@@ -18,6 +18,7 @@ class Arbiter {
     var bodyB: RigidBody
     
     var friction: Float
+    var bounciness: Float
     
     init(a: RigidBody, b: RigidBody, simplex: [simd_float3]) {
         self.bodyA = a
@@ -27,6 +28,8 @@ class Arbiter {
                                                            colliderB: bodyB.colliders[0],
                                                            simplex: simplex)
         friction = sqrtf(bodyA.friction * bodyB.friction)
+        bounciness = sqrtf(bodyA.bounciness * bodyB.bounciness)
+        
         manifold.append(collision)
     }
     
@@ -155,7 +158,7 @@ class Arbiter {
             //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pn)
             
             // TANGENT A
-            dv = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+            dv = bodyB.linearVelocity - bodyA.linearVelocity
             
             var tangent = c.contactTangentA!
             var vt = dot(dv, tangent) // Relative velocity along tangent
@@ -181,7 +184,7 @@ class Arbiter {
             //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pt)
             
             // TANGENT B
-            dv = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+            dv = bodyB.linearVelocity - bodyA.linearVelocity
         
             tangent = c.contactTangentB!
             vt = dot(dv, tangent) // Relative velocity along tangent

@@ -28,6 +28,7 @@ final class PhysicsManager {
         for arbiter in _arbiters {
             arbiter.value.preStep(deltaTime: deltaTime)
             for x in arbiter.value.manifold {
+                Debug.viewStateCenter.param1 = x.depth
                 Debug.pointAndLine.addPointsToDraw(points: [PointVertex(position: x.position)])
                 Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactNormal)])
                 Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactTangentA)])
