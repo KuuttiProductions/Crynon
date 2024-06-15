@@ -19,6 +19,8 @@ open class RigidBody: Node {
     public var gravityScalar: Float = 1.0
     public var friction: Float = 0.5
     public var bounciness: Float = 0.0
+    public var volume: Float = 1.0
+    public var height: Float = 1.0
     
     public var linearVelocity: simd_float3 = simd_float3(0, 0, 0)
     public var angularVelocity: simd_float3 = simd_float3(0, 0, 0)
@@ -108,6 +110,8 @@ open class RigidBody: Node {
             simd_float3(maxX, minY, maxZ),
             simd_float3(maxX, minY, minZ)
         ]
+        
+        volume = (maxX - minX) * (maxY - minY) * (maxZ - minZ)
     }
     
     // Override modelMatrix to use RigidBodies rotationMatrix
@@ -142,7 +146,9 @@ open class RigidBody: Node {
         let unitQuaternion = quaternion.normalized
         orientation = matrix_float3x3(unitQuaternion)
         rotationMatrix = matrix_float4x4(unitQuaternion)
-        invOrientation = orientation.inverse
+        if mass < .greatestFiniteMagnitude {
+            invOrientation = orientation.inverse
+        }
     }
     internal func updateGlobalCenterOfMassFromPosition() {
         globalCenterOfMass = orientation * localCenterOfMass + position
@@ -194,6 +200,7 @@ open class RigidBody: Node {
             self.invMass = 1.0 / mass
         } else {
             self.invMass = 0.0
+            self.InvInertiaTensor = simd_float3x3()
         }
     }
     
@@ -237,6 +244,8 @@ open class RigidBody: Node {
         
         aabbMin = min
         aabbMax = max
+        
+        height = aabbMax.y - aabbMin.y
         
         for i in 0..<8 {
             switch i {

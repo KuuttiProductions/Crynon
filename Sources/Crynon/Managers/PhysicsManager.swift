@@ -16,6 +16,12 @@ final class PhysicsManager {
         // Update velocities. Gravity + game input
         for object in _physicsObjects {
             object.isColliding = false
+  
+            // Water Buoyancy
+            let waterHeight: Float = -5.0
+            let procentInWater = max(waterHeight - object.aabbMin.y, 0) / object.height
+            let displacement = object.volume * procentInWater
+//            object.addForce(force: displacement * -Prefs.physics.gravity * 0.9, at: simd_float3(0, 0, 0))
             
             object.linearVelocity += object.invMass * (Prefs.physics.gravity + object.forceAccumulator) * deltaTime
             object.angularVelocity += object.InvInertiaTensor * (object.torqueAccumulator * deltaTime)
@@ -27,13 +33,6 @@ final class PhysicsManager {
         // Pre-step
         for arbiter in _arbiters {
             arbiter.value.preStep(deltaTime: deltaTime)
-            for x in arbiter.value.manifold {
-                Debug.viewStateCenter.param1 = x.depth
-                Debug.pointAndLine.addPointsToDraw(points: [PointVertex(position: x.position)])
-                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactNormal)])
-                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactTangentA)])
-                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(), PointVertex(position: x.contactTangentB)])
-            }
         }
         
         // Solve collisions
@@ -352,7 +351,7 @@ extension PhysicsManager {
                     var i = 0
                     while i < normals.count {
                         let f = i * 3
-                        if dot(normals[i], (support - vertices[triangles[f]])) > 0 { // Check if triangle can be seen from support point
+                        if dot(normals[i], (support - vertices[triangles[f]])) > 0 { // Check if triangle can be "seen" from support point
                             
                             uniqueEdges = addIfUniqueEdge(edges: uniqueEdges, triangles: triangles, a: f  , b: f+1)
                             uniqueEdges = addIfUniqueEdge(edges: uniqueEdges, triangles: triangles, a: f+1, b: f+2)
@@ -407,7 +406,7 @@ extension PhysicsManager {
             contactData.contactPointA = supportA
             contactData.contactPointB = supportB
             contactData.depth = minDistance
-            contactData.position = supportA
+            contactData.position = supportB
         }
         
         return contactData

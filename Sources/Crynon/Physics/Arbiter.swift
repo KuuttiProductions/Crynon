@@ -131,7 +131,7 @@ class Arbiter {
             c.r2 = c.position - bodyB.position
             
             // Relative velocity at contact point
-            var dv: simd_float3 = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
+            var dv: simd_float3 = bodyB.linearVelocity + cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity - cross(bodyA.angularVelocity, c.r1)
 
             let vn = dot(dv, c.contactNormal) // Relative velocity along normal
             
@@ -151,14 +151,18 @@ class Arbiter {
             // Apply normal/contact impulse
             let pn = dPn * c.contactNormal // Normal impulse
             
+            let px = simd_float3(0, 0.1, 0)
+            
+            Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(position: bodyB.position), PointVertex(position: bodyB.position + c.r2)])
+            
             bodyA.linearVelocity -= bodyA.invMass * pn
-            //bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pn)
+            //bodyA.angularVelocity -= bodyA.InvInertiaTensor * cross(c.r1, pn) * 0.05
             
             bodyB.linearVelocity += bodyB.invMass * pn
-            //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pn)
+            //bodyB.angularVelocity += bodyB.InvInertiaTensor * cross(c.r2, pn) * 0.05
             
             // TANGENT A
-            dv = bodyB.linearVelocity - bodyA.linearVelocity
+            dv = bodyB.linearVelocity - cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
             
             var tangent = c.contactTangentA!
             var vt = dot(dv, tangent) // Relative velocity along tangent
@@ -178,13 +182,13 @@ class Arbiter {
             var pt = dPt * tangent
             
             bodyA.linearVelocity -= bodyA.invMass * pt
-            //bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pt)
+            //bodyA.angularVelocity -= bodyA.invInertiaTensor * cross(c.r1, pt)
             
             bodyB.linearVelocity += bodyB.invMass * pt
-            //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pt)
+            //bodyB.angularVelocity += bodyB.InvInertiaTensor * cross(c.r2, pt)
             
             // TANGENT B
-            dv = bodyB.linearVelocity - bodyA.linearVelocity
+            dv = bodyB.linearVelocity - cross(bodyB.angularVelocity, c.r2) - bodyA.linearVelocity + cross(bodyA.angularVelocity, c.r1)
         
             tangent = c.contactTangentB!
             vt = dot(dv, tangent) // Relative velocity along tangent
@@ -204,10 +208,10 @@ class Arbiter {
             pt = dPt * tangent
             
             bodyA.linearVelocity -= bodyA.invMass * pt
-            //bodyA.angularVelocity -= bodyA.invMass * cross(c.r1, pt)
+            //bodyA.angularVelocity -= bodyA.InvInertiaTensor * cross(c.r1, pt)
             
             bodyB.linearVelocity += bodyB.invMass * pt
-            //bodyB.angularVelocity += bodyB.invMass * cross(c.r2, pt)
+            //bodyB.angularVelocity += bodyB.InvInertiaTensor * cross(c.r2, pt)
             
             manifold[i] = c
         }

@@ -15,15 +15,16 @@ public class Debug_PointAndLine {
     }
     
     internal func render(renderCommandEncoder: MTLRenderCommandEncoder) {
-        var color = simd_float4(0, 1, 0, 1)
-        if points.isEmpty { return }
-        renderCommandEncoder.pushDebugGroup("Rendering \(points.count) points")
-        setDefaults(renderCommandEncoder)
-        renderCommandEncoder.setVertexBytes(points, length: PointVertex.stride(count: points.count), index: 0)
-        renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
-        renderCommandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: points.count)
-        renderCommandEncoder.popDebugGroup()
-        points.removeAll()
+        var color = simd_float4(1, 0, 0, 1)
+        if !points.isEmpty {
+            renderCommandEncoder.pushDebugGroup("Rendering \(points.count) points")
+            setDefaults(renderCommandEncoder)
+            renderCommandEncoder.setVertexBytes(points, length: PointVertex.stride(count: points.count), index: 0)
+            renderCommandEncoder.setFragmentBytes(&color, length: simd_float4.stride, index: 1)
+            renderCommandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: points.count)
+            renderCommandEncoder.popDebugGroup()
+            points.removeAll()
+        }
         
         if lines.isEmpty { return }
         renderCommandEncoder.pushDebugGroup("Rendering \(lines.count / 2) lines")

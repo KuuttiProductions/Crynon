@@ -20,7 +20,7 @@ fragment float ssao_fragment(VertexOut VerOut [[ stage_in ]],
                              texture2d<float> positionTex [[ texture(1) ]],
                              texture2d<float> jitterTex [[ texture(2) ]]) {
     float radius = 0.3f;
-    float bias = 0.01;
+    float bias = 0.03;
     int kernelSize = 16;
     
     float2 texelSize = float2(screenSize.x / 4.0f, screenSize.y / 4.0f);
