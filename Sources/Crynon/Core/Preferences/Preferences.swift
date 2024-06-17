@@ -21,11 +21,15 @@ public class Preferences {
     private static var _audioPreferences: AudioPreferences!
     public static var audio: AudioPreferences { return _audioPreferences }
     
+    private static var _developmentPreferences: DevelopmentPreferences!
+    public static var development: DevelopmentPreferences { return _developmentPreferences }
+    
     static func initialize() {
         _corePreferences = CorePreferences()
         _graphicsPreferences = GraphicsPreferences()
         _metalPreferences = MetalPreferences()
         _physicsPreferences = PhysicsPreferences()
         _audioPreferences = AudioPreferences()
+        _developmentPreferences = DevelopmentPreferences()
     }
 }

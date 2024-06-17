@@ -153,7 +153,11 @@ class Arbiter {
             
             let px = simd_float3(0, 0.1, 0)
             
-            Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(position: bodyB.position), PointVertex(position: bodyB.position + c.r2)])
+            if Prefs.development.PhysicsDebugLevel >= 1 {
+                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(position: bodyB.position), PointVertex(position: c.position)])
+                Debug.pointAndLine.addLinesToDraw(lines: [PointVertex(position: c.position), PointVertex(position: c.position + c.contactNormal)])
+                Debug.pointAndLine.addPointsToDraw(points: [PointVertex(position: c.position)])
+            }
             
             bodyA.linearVelocity -= bodyA.invMass * pn
             //bodyA.angularVelocity -= bodyA.InvInertiaTensor * cross(c.r1, pn) * 0.05

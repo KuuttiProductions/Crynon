@@ -114,7 +114,7 @@ open class RigidBody: Node {
         volume = (maxX - minX) * (maxY - minY) * (maxZ - minZ)
     }
     
-    // Override modelMatrix to use RigidBodies rotationMatrix
+    // Override modelMatrix to use RigidBodies' rotationMatrix
     public override var modelMatrix: matrix_float4x4 {
         var modelMatrix = matrix_identity_float4x4
         modelMatrix.translate(position: position)

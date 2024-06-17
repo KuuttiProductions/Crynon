@@ -96,6 +96,7 @@ public class Renderer: NSObject {
         shadowRenderPassDescriptor.depthAttachment.texture = AssetLibrary.textures["ShadowMap1"]
         shadowRenderPassDescriptor.depthAttachment.loadAction = .clear
         shadowRenderPassDescriptor.depthAttachment.storeAction = .store
+        shadowRenderPassDescriptor.depthAttachment.clearDepth = 1.0
     }
     
     func createOpaqueRenderPassDescriptor() {
@@ -354,6 +355,7 @@ extension Renderer: MTKViewDelegate {
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
         opaqueCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)
         opaqueCommandEncoder?.setFragmentTexture(AssetLibrary.textures[jitterTextureStr], index: 9)
+        opaqueCommandEncoder?.setFragmentSamplerState(GPLibrary.samplerStates[.Shadow], index: 1)
         opaqueCommandEncoder?.pushDebugGroup("Opaque fill")
         Renderer.currentRenderState = .Opaque
         SceneManager.render(opaqueCommandEncoder)
@@ -368,6 +370,7 @@ extension Renderer: MTKViewDelegate {
         
         var screenSize = simd_float2(Renderer.screenWidth, Renderer.screenHeight);
         transparencyCommandEncoder?.setFragmentBytes(&screenSize, length: simd_float2.stride, index: 5)
+        transparencyCommandEncoder?.setFragmentSamplerState(GPLibrary.samplerStates[.Shadow], index: 1)
         transparencyCommandEncoder?.pushDebugGroup("Init imageblocks for transparency")
         transparencyCommandEncoder?.setRenderPipelineState(GPLibrary.renderPipelineStates[.InitTransparency])
         transparencyCommandEncoder?.dispatchThreadsPerTile(optimalTileSize)

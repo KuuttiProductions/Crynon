@@ -36,6 +36,8 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
                                                        constant LightData *lightData [[ buffer(3) ]],
                                                        constant int &lightCount [[ buffer(4) ]],
                                                        constant float2 &screenSize [[ buffer(5) ]],
+                                                       sampler shadowSampler [[ sampler(1) ]],
+                                                       
                                                        depth2d<float> shadowMap1 [[ texture(0) ]],
                                                        texture2d<float> textureColor [[ texture(3) ]],
                                                        texture2d<float> textureJitter [[ texture(9) ]],
@@ -54,7 +56,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     float shadowTerm = 1.0f;
     if (!is_null_texture(shadowMap1)) {
-        shadowTerm = Shadows::getLightness(shadowMap1, lightSpacePosition, textureJitter, VerOut.position.xy, screenSize);
+        shadowTerm = Shadows::getLightness(shadowMap1, lightSpacePosition, VerOut.worldPosition.xyz, VerOut.position.xy, screenSize, shadowSampler);
     }
     
     float3 lighting = PhongShading::getPhongLight(VerOut.position.xyz,

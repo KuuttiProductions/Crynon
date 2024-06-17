@@ -12,6 +12,7 @@ constexpr sampler samplerFragment (min_filter::linear,
 fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
                                   constant ShaderMaterial &mat [[ buffer(1) ]],
                                   constant float2 &screenSize [[ buffer(5) ]],
+                                  sampler shadowSampler [[ sampler(1) ]],
                                   depth2d<float> shadowMap1 [[ texture(0) ]],
                                   depth2d<float> shadowMap2 [[ texture(1) ]],
                                   depth2d<float> shadowMap3 [[ texture(2) ]],
@@ -75,7 +76,7 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
     //Shadow
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
-        gBuffer.normalShadow.a = Shadows::getLightness(shadowMap1, lightSpacePosition, textureJitter, VerOut.position.xy, screenSize);
+        gBuffer.normalShadow.a = Shadows::getLightness(shadowMap1, lightSpacePosition, VerOut.worldPosition.xyz, VerOut.position.xy, screenSize, shadowSampler);
     }
     
     return gBuffer;
