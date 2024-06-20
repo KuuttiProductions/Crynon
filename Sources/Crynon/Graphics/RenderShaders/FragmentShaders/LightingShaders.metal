@@ -48,6 +48,8 @@ fragment float4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
         ambientTerm = min(SSAO, gBMetalRoughAoIOR.b) * 0.3f;
     }
     
+    float shadowTerm = gBufferNormalShadow.sample(samplerFragment, VerOut.textureCoordinate).a;
+    
     // Add Phong Shading
     ShaderMaterial sMat;
     sMat.color = float4(gBColor);
@@ -61,7 +63,7 @@ fragment float4 lighting_fragment(VertexOut VerOut [[ stage_in ]],
                                                   lightCount,
                                                   sMat,
                                                   fragmentSceneConstant.cameraPosition,
-                                                  gBNormalShadow.a,
+                                                  shadowTerm,
                                                   ambientTerm);
     color.rgb = color.rgb * color.a + (1.0f - color.a) * lighting * color.rgb;
     

@@ -45,7 +45,7 @@ public:
         return y / 2.;
     }
     
-    float glow_fwd(float ycIn, float glowGainIn, float glowMid) {
+    float glow_fwd(float ycIn, float glowGainIn, float glowMid) {
         float glowGainOut;
         
         if (ycIn <= 2./3. * glowMid) {

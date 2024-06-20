@@ -8,12 +8,12 @@ constexpr sampler sampler2d (mag_filter::linear,
                              min_filter::linear,
                              address::clamp_to_edge);
 
-struct CompositionConstant {
+struct CompositionConstant {
     float bloomIntensity;
 };
 
 fragment float4 compositing_fragment(VertexIn VerIn [[ stage_in ]],
-                                     constant CompositionConstant &cc [[ buffer(0) ]],
+                                     constant CompositionConstant &cc [[ buffer(0) ]],
                                      texture2d<float> shadedImage [[ texture(0) ]],
                                      texture2d<float> bloomTexture [[ texture(1) ]]) {
     float3 finalColor = float3(0, 0, 0);

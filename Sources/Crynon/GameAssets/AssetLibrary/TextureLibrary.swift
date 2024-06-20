@@ -10,8 +10,8 @@ public class TextureLibrary: Library<String, MTLTexture> {
         
     }
     
-    public func addTexture(textureName: String, ext: String = "png", mipMaps: Bool = true, origin: TextureOrigin = .bottomLeft) {
-        _library.updateValue(textureLoader.loadTexture(name: textureName, extension: ext, mipMaps: mipMaps, origin: origin, engineContent: false), forKey: textureName)
+    public func addTexture(textureName: String, ext: String = "png", mipMaps: Bool = true, origin: TextureOrigin = .bottomLeft, srgb: Bool = false) {
+        _library.updateValue(textureLoader.loadTexture(name: textureName, extension: ext, mipMaps: mipMaps, origin: origin, srgb: srgb, engineContent: false), forKey: textureName)
     }
     
     override subscript(type: String) -> MTLTexture! {

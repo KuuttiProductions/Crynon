@@ -56,7 +56,7 @@ fragment TransparentFragmentStore transparent_fragment(VertexOut VerOut [[ stage
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     float shadowTerm = 1.0f;
     if (!is_null_texture(shadowMap1)) {
-        shadowTerm = Shadows::getLightness(shadowMap1, lightSpacePosition, VerOut.worldPosition.xyz, VerOut.position.xy, screenSize, shadowSampler);
+        shadowTerm = Shadows::getLightness(shadowMap1, lightSpacePosition, VerOut.position.xy, VerOut.worldPosition.xyz, screenSize, shadowSampler);
     }
     
     float3 lighting = PhongShading::getPhongLight(VerOut.position.xyz,

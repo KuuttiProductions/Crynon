@@ -7,15 +7,17 @@ kernel void sharpness(texture2d<float, access::read> textureIn [[ texture(0) ]],
                       const ushort2 posInGrid [[ thread_position_in_grid() ]]) {
     
     short o = 2;
-    ushort2 offsets = (ushort2(-o, o),
-                       ushort2( 0, o),
-                       ushort2( o, o),
-                       ushort2(-o, 0),
-                       ushort2( 0, 0),
-                       ushort2( o, 0),
-                       ushort2(-o,-o),
-                       ushort2( 0,-o),
-                       ushort2( o,-o));
+    ushort2 offsets[9] = {
+        ushort2(-o, o),
+        ushort2( 0, o),
+        ushort2( o, o),
+        ushort2(-o, 0),
+        ushort2( 0, 0),
+        ushort2( o, 0),
+        ushort2(-o,-o),
+        ushort2( 0,-o),
+        ushort2( o,-o)
+    };
     
     float sampleKernel[9] = {
         -1, -1, -1,

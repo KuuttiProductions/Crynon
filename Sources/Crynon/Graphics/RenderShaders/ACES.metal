@@ -46,39 +46,4 @@ public:
         
         return color_tonemapped / white_tonemapped;
     }
-    
-    float3 RRT(float4 input) {
-        float3 aces = input.rgb;
-        
-        // Glow Module
-        
-        float saturation = utils.rgb_2_saturation(aces);
-        float ycIn = utils.rgb_2_yc(aces);
-        float s = utils.sigmoid_shaper((saturation - 0.4) / 2.0);
-        float addedGlow = 1. + utils.glow_fwd(ycIn, RRT_GLOW_GAIN * s, RRT_GLOW_MID);
-        
-        aces = addedGlow * aces;
-
-        // Red modifier
-        
-        float hue = utils.rgb_2_hue(aces);
-        float centeredHue = utils.center_hue(hue, RRT_RED_HUE);
-        float hueWeight = utils.cubic_basis_shaper(centeredHue, RRT_RED_WIDTH);
-        
-        aces.r = aces.r + hueWeight * saturation * (RRT_RED_PIVOT - aces.r) * (1. - RRT_RED_SCALE);
-        
-        // ACES to RGB rendering space
-        
-        //aces = clamp_f3(aces, 0., AP0_2_AP1_MAT);
-        
-        // Global desaturation
-        
-        // Apply tonescale independently in rendering space RGB
-        
-        // RGB rendering space to OCES
-        
-        float3 rgbOces;
-        
-        return rgbOces;
-    };
 };

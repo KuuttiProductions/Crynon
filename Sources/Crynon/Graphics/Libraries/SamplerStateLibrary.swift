@@ -58,7 +58,7 @@ class ShadowSamplerState: SamplerState {
         descriptor = MTLSamplerDescriptor()
         descriptor.magFilter = .linear
         descriptor.minFilter = .linear
-        descriptor.compareFunction = .greater
+        descriptor.compareFunction = .greaterEqual
         descriptor.label = "Shadow SamplerState"
         create()
     }

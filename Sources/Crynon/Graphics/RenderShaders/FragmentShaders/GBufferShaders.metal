@@ -76,7 +76,7 @@ fragment GBuffer gBuffer_fragment(VertexOut VerOut [[ stage_in ]],
     //Shadow
     float3 lightSpacePosition = VerOut.lightSpacePosition.xyz / VerOut.lightSpacePosition.w;
     if (!is_null_texture(shadowMap1)) {
-        gBuffer.normalShadow.a = Shadows::getLightness(shadowMap1, lightSpacePosition, VerOut.worldPosition.xyz, VerOut.position.xy, screenSize, shadowSampler);
+        gBuffer.normalShadow.a = Shadows::getLightness(shadowMap1, lightSpacePosition, VerOut.position.xy, VerOut.worldPosition.xyz, screenSize, shadowSampler);
     }
     
     return gBuffer;

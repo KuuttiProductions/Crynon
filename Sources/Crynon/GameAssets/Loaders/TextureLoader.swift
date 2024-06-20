@@ -11,6 +11,7 @@ class TextureLoader {
                      extension: String = "png",
                      mipMaps: Bool = true,
                      origin: TextureOrigin = .bottomLeft,
+                     srgb: Bool = false,
                      engineContent: Bool = false)-> MTLTexture {
         var url: URL!
         if engineContent {
@@ -23,6 +24,7 @@ class TextureLoader {
         let origin = origin == .bottomLeft ? MTKTextureLoader.Origin.bottomLeft : MTKTextureLoader.Origin.topLeft
         let options: [ MTKTextureLoader.Option : Any ] = [MTKTextureLoader.Option.generateMipmaps : mipMaps,
                                                           MTKTextureLoader.Option.textureStorageMode : MTLStorageMode.shared.rawValue,
+                                                          MTKTextureLoader.Option.SRGB : srgb,
                                                           MTKTextureLoader.Option.origin : origin]
         var texture: MTLTexture!
         
